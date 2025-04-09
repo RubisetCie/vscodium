@@ -69,16 +69,13 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install libkrb5-dev
+      - name: Install Kerberos
         run: sudo apt-get update -y && sudo apt-get install -y libkrb5-dev
 
       - name: Clone VSCode repo
         run: ./get_repo.sh
 
       - name: Build
-        env:
-          SHOULD_BUILD_REH: 'no'
-          SHOULD_BUILD_REH_WEB: 'no'
         run: ./build.sh
 
       - name: Compress vscode artifact
@@ -105,7 +102,7 @@ jobs:
       matrix:
         vscode_arch:
           - x64
-          - arm64
+#          - arm64
     defaults:
       run:
         shell: bash
@@ -147,30 +144,6 @@ jobs:
 
       - name: Prepare assets
         run: ./prepare_assets.sh
-
-      - name: Upload unsigned artifacts
-        id: upload-unsigned-artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: unsigned-${{ matrix.vscode_arch }}
-          path: |
-            assets/*.exe
-            assets/*.msi
-          retention-days: 1
-
-      - name: Signing
-        uses: signpath/github-action-submit-signing-request@v1
-        with:
-          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
-          organization-id: ${{ secrets.SIGNPATH_ORGANIZATION_ID }}
-          project-slug: ${{ secrets.SIGNPATH_PROJECT_SLUG }}
-          signing-policy-slug: ${{ secrets.SIGNPATH_POLICY_SLUG }}
-          github-artifact-id: ${{ steps.upload-unsigned-artifacts.outputs.artifact-id }}
-          artifact-configuration-slug: ${{ matrix.vscode_arch }}
-          wait-for-completion: true
-          # 3h to manually approve the request
-          wait-for-completion-timeout-in-seconds: 10800
-          output-artifact-directory: assets/
 
       - name: Prepare checksums
         run: ./prepare_checksums.sh

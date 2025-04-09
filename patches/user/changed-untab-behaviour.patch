@@ -1,0 +1,253 @@
+From bba92c95ea65fcd27fc8a07e5128461d9d4e385b Mon Sep 17 00:00:00 2001
+From: Matthieu Carteron <rubisetcie@gmail.com>
+Date: Wed, 9 Apr 2025 22:42:26 +0200
+Subject: [PATCH] Changed 'Shift+TAB' (untab) behaviour to outdent from the cursor's position when no selection.
+
+---
+ src/vs/editor/browser/coreCommands.ts         |  6 +--
+ .../common/cursor/cursorDeleteOperations.ts   | 24 +---------
+ .../common/cursor/cursorTypeEditOperations.ts | 45 ++++++++++++++++++-
+ .../common/cursor/cursorTypeOperations.ts     | 10 ++++-
+ .../browser/linesOperations.ts                |  9 +++-
+ .../test/browser/controller/cursor.test.ts    |  6 +--
+ 6 files changed, 68 insertions(+), 32 deletions(-)
+
+diff --git a/src/vs/editor/browser/coreCommands.ts b/src/vs/editor/browser/coreCommands.ts
+index 8f1459c1fea..7dd18926828 100644
+--- a/src/vs/editor/browser/coreCommands.ts
++++ b/src/vs/editor/browser/coreCommands.ts
+@@ -1993,10 +1993,10 @@ export namespace CoreEditingCommands {
+ 		}
+ 	});
+ 
+-	export const Outdent: EditorCommand = registerEditorCommand(new class extends CoreEditingCommand {
++	export const Untab: EditorCommand = registerEditorCommand(new class extends CoreEditingCommand {
+ 		constructor() {
+ 			super({
+-				id: 'outdent',
++				id: 'untab',
+ 				precondition: EditorContextKeys.writable,
+ 				kbOpts: {
+ 					weight: CORE_WEIGHT,
+@@ -2011,7 +2011,7 @@ export namespace CoreEditingCommands {
+ 
+ 		public runCoreEditingCommand(editor: ICodeEditor, viewModel: IViewModel, args: unknown): void {
+ 			editor.pushUndoStop();
+-			editor.executeCommands(this.id, TypeOperations.outdent(viewModel.cursorConfig, viewModel.model, viewModel.getCursorStates().map(s => s.modelState.selection)));
++			editor.executeCommands(this.id, TypeOperations.untab(viewModel.cursorConfig, viewModel.model, viewModel.getCursorStates().map(s => s.modelState.selection)));
+ 			editor.pushUndoStop();
+ 		}
+ 	});
+diff --git a/src/vs/editor/common/cursor/cursorDeleteOperations.ts b/src/vs/editor/common/cursor/cursorDeleteOperations.ts
+index acf11b2d3ba..5d4ff03ea52 100644
+--- a/src/vs/editor/common/cursor/cursorDeleteOperations.ts
++++ b/src/vs/editor/common/cursor/cursorDeleteOperations.ts
+@@ -7,7 +7,6 @@ import * as strings from '../../../base/common/strings.js';
+ import { ReplaceCommand } from '../commands/replaceCommand.js';
+ import { EditorAutoClosingEditStrategy, EditorAutoClosingStrategy } from '../config/editorOptions.js';
+ import { CursorConfiguration, EditOperationResult, EditOperationType, ICursorSimpleModel, isQuote } from '../cursorCommon.js';
+-import { CursorColumns } from '../core/cursorColumns.js';
+ import { MoveOperations } from './cursorMoveOperations.js';
+ import { Range } from '../core/range.js';
+ import { Selection } from '../core/selection.js';
+@@ -150,7 +149,7 @@ export class DeleteOperations {
+ 		const commands: Array<ICommand | null> = [];
+ 		let shouldPushStackElementBefore = (prevEditOperationType !== EditOperationType.DeletingLeft);
+ 		for (let i = 0, len = selections.length; i < len; i++) {
+-			const deleteRange = DeleteOperations.getDeleteRange(selections[i], model, config);
++			const deleteRange = DeleteOperations.getDeleteRange(selections[i], model);
+ 
+ 			// Ignore empty delete ranges, as they have no effect
+ 			// They happen if the cursor is at the beginning of the file.
+@@ -169,32 +168,13 @@ export class DeleteOperations {
+ 
+ 	}
+ 
+-	private static getDeleteRange(selection: Selection, model: ICursorSimpleModel, config: CursorConfiguration,): Range {
++	private static getDeleteRange(selection: Selection, model: ICursorSimpleModel): Range {
+ 		if (!selection.isEmpty()) {
+ 			return selection;
+ 		}
+ 
+ 		const position = selection.getPosition();
+ 
+-		// Unintend when using tab stops and cursor is within indentation
+-		if (config.useTabStops && position.column > 1) {
+-			const lineContent = model.getLineContent(position.lineNumber);
+-
+-			const firstNonWhitespaceIndex = strings.firstNonWhitespaceIndex(lineContent);
+-			const lastIndentationColumn = (
+-				firstNonWhitespaceIndex === -1
+-					? /* entire string is whitespace */ lineContent.length + 1
+-					: firstNonWhitespaceIndex + 1
+-			);
+-
+-			if (position.column <= lastIndentationColumn) {
+-				const fromVisibleColumn = config.visibleColumnFromColumn(model, position);
+-				const toVisibleColumn = CursorColumns.prevIndentTabStop(fromVisibleColumn, config.indentSize);
+-				const toColumn = config.columnFromVisibleColumn(model, position.lineNumber, toVisibleColumn);
+-				return new Range(position.lineNumber, toColumn, position.lineNumber, position.column);
+-			}
+-		}
+-
+ 		return Range.fromPositions(DeleteOperations.getPositionAfterDeleteLeft(position, model), position);
+ 	}
+ 
+diff --git a/src/vs/editor/common/cursor/cursorTypeEditOperations.ts b/src/vs/editor/common/cursor/cursorTypeEditOperations.ts
+index e250bb74431..609720de874 100644
+--- a/src/vs/editor/common/cursor/cursorTypeEditOperations.ts
++++ b/src/vs/editor/common/cursor/cursorTypeEditOperations.ts
+@@ -812,6 +812,33 @@ export class TabOperation {
+ 		return commands;
+ 	}
+ 
++	public static untabCommand(config: CursorConfiguration, model: ITextModel, selections: Selection[]) {
++		const commands: ICommand[] = [];
++		for (let i = 0, len = selections.length; i < len; i++) {
++			const selection = selections[i];
++			const columnText = selection.selectionStartColumn;
++
++			if (selection.isEmpty() && columnText > 1) {
++				// Check if the previous character is blank
++				const character = model.getLineContent(selection.startLineNumber).charAt(columnText-2);
++				if (character === '\t' || character === ' ') {
++					commands[i] = this._replaceJumpToPreviousIndent(config, model, selection);
++					continue;
++				}
++			}
++
++			commands[i] = new ShiftCommand(selections[i], {
++				isUnshift: true,
++				tabSize: config.tabSize,
++				indentSize: config.indentSize,
++				insertSpaces: config.insertSpaces,
++				useTabStops: config.useTabStops,
++				autoIndent: config.autoIndent
++			}, config.languageConfigurationService);
++		}
++		return commands;
++	}
++
+ 	private static _goodIndentForLine(config: CursorConfiguration, model: ITextModel, lineNumber: number): string | null {
+ 		let action: IndentAction | EnterAction | null = null;
+ 		let indentation: string = '';
+@@ -855,8 +882,8 @@ export class TabOperation {
+ 
+ 	private static _replaceJumpToNextIndent(config: CursorConfiguration, model: ICursorSimpleModel, selection: Selection, insertsAutoWhitespace: boolean): ReplaceCommand {
+ 		let typeText = '';
+-		const position = selection.getStartPosition();
+ 		if (config.insertSpaces) {
++			const position = selection.getStartPosition();
+ 			const visibleColumnFromColumn = config.visibleColumnFromColumn(model, position);
+ 			const indentSize = config.indentSize;
+ 			const spacesCnt = indentSize - (visibleColumnFromColumn % indentSize);
+@@ -868,6 +895,22 @@ export class TabOperation {
+ 		}
+ 		return new ReplaceCommand(selection, typeText, insertsAutoWhitespace);
+ 	}
++
++	private static _replaceJumpToPreviousIndent(config: CursorConfiguration, model: ICursorSimpleModel, selection: Selection): ReplaceCommand {
++		let len = 0;
++
++		if (config.insertSpaces) {
++			const position = selection.getStartPosition();
++			const visibleColumnFromColumn = config.visibleColumnFromColumn(model, position);
++			const indentSize = config.indentSize;
++			const spacesCnt = visibleColumnFromColumn % indentSize;
++			len += spacesCnt !== 0 ? spacesCnt : 4;
++		} else {
++			len = 1;
++		}
++
++		return new ReplaceCommand(new Range(selection.startLineNumber, selection.startColumn - len, selection.startLineNumber, selection.startColumn), '');
++	}
+ }
+ 
+ export class BaseTypeWithAutoClosingCommand extends ReplaceCommandWithOffsetCursorState {
+diff --git a/src/vs/editor/common/cursor/cursorTypeOperations.ts b/src/vs/editor/common/cursor/cursorTypeOperations.ts
+index b6d1a559cd0..4b70e7c48f6 100644
+--- a/src/vs/editor/common/cursor/cursorTypeOperations.ts
++++ b/src/vs/editor/common/cursor/cursorTypeOperations.ts
+@@ -34,7 +34,11 @@ export class TypeOperations {
+ 		return commands;
+ 	}
+ 
+-	public static outdent(config: CursorConfiguration, model: ICursorSimpleModel, selections: Selection[]): ICommand[] {
++	public static outdent(config: CursorConfiguration, model: ICursorSimpleModel | null, selections: Selection[] | null): ICommand[] {
++		if (model === null || selections === null) {
++			return [];
++		}
++
+ 		const commands: ICommand[] = [];
+ 		for (let i = 0, len = selections.length; i < len; i++) {
+ 			commands[i] = new ShiftCommand(selections[i], {
+@@ -65,6 +69,10 @@ export class TypeOperations {
+ 		return TabOperation.getCommands(config, model, selections);
+ 	}
+ 
++	public static untab(config: CursorConfiguration, model: ITextModel, selections: Selection[]): ICommand[] {
++		return TabOperation.untabCommand(config, model, selections);
++	}
++
+ 	public static compositionType(prevEditOperationType: EditOperationType, config: CursorConfiguration, model: ITextModel, selections: Selection[], text: string, replacePrevCharCnt: number, replaceNextCharCnt: number, positionDelta: number): EditOperationResult {
+ 		return CompositionOperation.getEdits(prevEditOperationType, config, model, selections, text, replacePrevCharCnt, replaceNextCharCnt, positionDelta);
+ 	}
+diff --git a/src/vs/editor/contrib/linesOperations/browser/linesOperations.ts b/src/vs/editor/contrib/linesOperations/browser/linesOperations.ts
+index 0ca8dd2abfb..ac975226608 100644
+--- a/src/vs/editor/contrib/linesOperations/browser/linesOperations.ts
++++ b/src/vs/editor/contrib/linesOperations/browser/linesOperations.ts
+@@ -4,7 +4,6 @@
+  *--------------------------------------------------------------------------------------------*/
+ 
+ import { KeyChord, KeyCode, KeyMod } from '../../../../base/common/keyCodes.js';
+-import { CoreEditingCommands } from '../../../browser/coreCommands.js';
+ import { IActiveCodeEditor, ICodeEditor } from '../../../browser/editorBrowser.js';
+ import { EditorAction, IActionOptions, registerEditorAction, ServicesAccessor } from '../../../browser/editorExtensions.js';
+ import { ReplaceCommand, ReplaceCommandThatPreservesSelection, ReplaceCommandThatSelectsText } from '../../../common/commands/replaceCommand.js';
+@@ -558,7 +557,13 @@ class OutdentLinesAction extends EditorAction {
+ 	}
+ 
+ 	public run(_accessor: ServicesAccessor, editor: ICodeEditor): void {
+-		CoreEditingCommands.Outdent.runEditorCommand(_accessor, editor, null);
++		const viewModel = editor._getViewModel();
++		if (!viewModel) {
++			return;
++		}
++		editor.pushUndoStop();
++		editor.executeCommands(this.id, TypeOperations.outdent(viewModel.cursorConfig, editor.getModel(), editor.getSelections()));
++		editor.pushUndoStop();
+ 	}
+ }
+ 
+diff --git a/src/vs/editor/test/browser/controller/cursor.test.ts b/src/vs/editor/test/browser/controller/cursor.test.ts
+index fe7c5e59c46..24404552640 100644
+--- a/src/vs/editor/test/browser/controller/cursor.test.ts
++++ b/src/vs/editor/test/browser/controller/cursor.test.ts
+@@ -1853,7 +1853,7 @@ suite('Editor Controller', () => {
+ 			moveTo(editor, viewModel, 1, 6, false);
+ 			assertCursor(viewModel, new Selection(1, 6, 1, 6));
+ 
+-			CoreEditingCommands.Outdent.runEditorCommand(null, editor, null);
++			CoreEditingCommands.Untab.runEditorCommand(null, editor, null);
+ 			assert.strictEqual(model.getLineContent(1), '    function baz() {');
+ 			assertCursor(viewModel, new Selection(1, 5, 1, 5));
+ 		});
+@@ -1870,7 +1870,7 @@ suite('Editor Controller', () => {
+ 			moveTo(editor, viewModel, 1, 7, false);
+ 			assertCursor(viewModel, new Selection(1, 7, 1, 7));
+ 
+-			CoreEditingCommands.Outdent.runEditorCommand(null, editor, null);
++			CoreEditingCommands.Untab.runEditorCommand(null, editor, null);
+ 			assert.strictEqual(model.getLineContent(1), '    ');
+ 			assertCursor(viewModel, new Selection(1, 5, 1, 5));
+ 		});
+@@ -1887,7 +1887,7 @@ suite('Editor Controller', () => {
+ 			moveTo(editor, viewModel, 1, 9, false);
+ 			assertCursor(viewModel, new Selection(1, 9, 1, 9));
+ 
+-			CoreEditingCommands.Outdent.runEditorCommand(null, editor, null);
++			CoreEditingCommands.Untab.runEditorCommand(null, editor, null);
+ 			assert.strictEqual(model.getLineContent(1), '    ');
+ 			assertCursor(viewModel, new Selection(1, 5, 1, 5));
+ 		});
+-- 

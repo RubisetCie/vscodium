@@ -1,0 +1,24 @@
+From adb2dc864a10edd0c88f706b9bcdce96e860858b Mon Sep 17 00:00:00 2001
+From: Matthieu Carteron <rubisetcie@gmail.com>
+Date: Wed, 9 Apr 2025 22:10:46 +0200
+Subject: [PATCH] Removed auto-closing pair for double quotes in comments.
+
+---
+ extensions/cpp/language-configuration.json | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/extensions/cpp/language-configuration.json b/extensions/cpp/language-configuration.json
+index cb1fb733b99..cb60da898a5 100644
+--- a/extensions/cpp/language-configuration.json
++++ b/extensions/cpp/language-configuration.json
+@@ -45,7 +45,8 @@
+ 			"open": "\"",
+ 			"close": "\"",
+ 			"notIn": [
+-				"string"
++				"string",
++				"comment"
+ 			]
+ 		},
+ 		{
+-- 

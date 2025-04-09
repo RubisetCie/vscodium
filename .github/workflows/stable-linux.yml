@@ -67,16 +67,13 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install libkrb5-dev
+      - name: Install Kerberos
         run: sudo apt-get update -y && sudo apt-get install -y libkrb5-dev
 
       - name: Clone VSCode repo
         run: ./get_repo.sh
 
       - name: Build
-        env:
-          SHOULD_BUILD_REH: 'no'
-          SHOULD_BUILD_REH_WEB: 'no'
         run: ./build.sh
 
       - name: Compress vscode artifact
@@ -106,26 +103,26 @@ jobs:
           vscode_arch: x64
           npm_arch: x64
           image: vscodium/vscodium-linux-build-agent:focal-x64
-        - slug: ARM64
-          vscode_arch: arm64
-          npm_arch: arm64
-          image: vscodium/vscodium-linux-build-agent:focal-arm64
-        - slug: ARM32
-          vscode_arch: armhf
-          npm_arch: arm
-          image: vscodium/vscodium-linux-build-agent:focal-armhf
-        - slug: RISCV64
-          vscode_arch: riscv64
-          npm_arch: riscv64
-          image: vscodium/vscodium-linux-build-agent:focal-riscv64
-        - slug: LOONG64
-          vscode_arch: loong64
-          npm_arch: loong64
-          image: vscodium/vscodium-linux-build-agent:beige-loong64
-        - slug: PPC64
-          vscode_arch: ppc64le
-          npm_arch: ppc64
-          image: vscodium/vscodium-linux-build-agent:focal-ppc64le
+#        - slug: ARM64
+#          vscode_arch: arm64
+#          npm_arch: arm64
+#          image: vscodium/vscodium-linux-build-agent:focal-arm64
+#        - slug: ARM32
+#          vscode_arch: armhf
+#          npm_arch: arm
+#          image: vscodium/vscodium-linux-build-agent:focal-armhf
+#        - slug: RISCV64
+#          vscode_arch: riscv64
+#          npm_arch: riscv64
+#          image: vscodium/vscodium-linux-build-agent:focal-riscv64
+#        - slug: LOONG64
+#          vscode_arch: loong64
+#          npm_arch: loong64
+#          image: vscodium/vscodium-linux-build-agent:beige-loong64
+#        - slug: PPC64
+#          vscode_arch: ppc64le
+#          npm_arch: ppc64
+#          image: vscodium/vscodium-linux-build-agent:focal-ppc64le
     container:
       image: ${{ matrix.image }}
     env:
@@ -144,7 +141,7 @@ jobs:
           ref: ${{ env.GITHUB_BRANCH }}
         if: env.DISABLED != 'yes'
 
-      - name: Install libkrb5-dev
+      - name: Install Kerberos
         run: sudo apt-get update -y && sudo apt-get install -y libkrb5-dev
         if: env.DISABLED != 'yes'
 
@@ -162,9 +159,6 @@ jobs:
         if: env.DISABLED != 'yes'
 
       - name: Prepare assets
-        env:
-          SHOULD_BUILD_REH: 'no'
-          SHOULD_BUILD_REH_WEB: 'no'
         run: ./prepare_assets.sh
         if: env.DISABLED != 'yes'
 
@@ -188,24 +182,24 @@ jobs:
         - slug: X64
           vscode_arch: x64
           npm_arch: x64
-        - slug: ARM64
-          vscode_arch: arm64
-          npm_arch: arm64
-        - slug: ARM32
-          vscode_arch: armhf
-          npm_arch: arm
-        - slug: PPC64
-          vscode_arch: ppc64le
-          npm_arch: ppc64
-        - slug: RISCV64
-          vscode_arch: riscv64
-          npm_arch: riscv64
-        - slug: LOONG64
-          vscode_arch: loong64
-          npm_arch: loong64
-        - slug: S390X
-          vscode_arch: s390x
-          npm_arch: s390x
+#        - slug: ARM64
+#          vscode_arch: arm64
+#          npm_arch: arm64
+#        - slug: ARM32
+#          vscode_arch: armhf
+#          npm_arch: arm
+#        - slug: PPC64
+#          vscode_arch: ppc64le
+#          npm_arch: ppc64
+#        - slug: RISCV64
+#          vscode_arch: riscv64
+#          npm_arch: riscv64
+#        - slug: LOONG64
+#          vscode_arch: loong64
+#          npm_arch: loong64
+#        - slug: S390X
+#          vscode_arch: s390x
+#          npm_arch: s390x
     env:
       BUILD_SOURCEVERSION: ${{ needs.compile.outputs.BUILD_SOURCEVERSION }}
       DISABLED: ${{ vars[format('DISABLE_STABLE_LINUX_REH_{0}', matrix.slug)] }}
@@ -239,7 +233,7 @@ jobs:
           python-version: '3.11'
         if: env.DISABLED != 'yes'
 
-      - name: Install libkrb5-dev
+      - name: Install Kerberos
         run: sudo apt-get update -y && sudo apt-get install -y libkrb5-dev
         if: env.DISABLED != 'yes'
 
@@ -276,9 +270,9 @@ jobs:
         - slug: X64
           vscode_arch: x64
           npm_arch: x64
-        - slug: ARM64
-          vscode_arch: arm64
-          npm_arch: arm64
+#        - slug: ARM64
+#          vscode_arch: arm64
+#          npm_arch: arm64
     env:
       BUILD_SOURCEVERSION: ${{ needs.compile.outputs.BUILD_SOURCEVERSION }}
       DISABLED: ${{ vars[format('DISABLE_STABLE_ALPINE_REH_{0}', matrix.slug)] }}
@@ -301,7 +295,7 @@ jobs:
           platform: x64
         if: env.DISABLED != 'yes'
 
-      - name: Install libkrb5-dev
+      - name: Install Kerberos
         run: sudo apt-get update -y && sudo apt-get install -y libkrb5-dev
         if: env.DISABLED != 'yes'
 
