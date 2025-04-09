@@ -5,7 +5,6 @@ set -ex
 
 . version.sh
 
-if [[ "${SHOULD_BUILD}" == "yes" ]]; then
   echo "MS_COMMIT=\"${MS_COMMIT}\""
 
   . prepare_vscode.sh
@@ -70,4 +69,3 @@ if [[ "${SHOULD_BUILD}" == "yes" ]]; then
   fi
 
   cd ..
-fi

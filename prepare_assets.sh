@@ -167,14 +167,6 @@ else
 
   cd ..
 
-  if [[ "${CI_BUILD}" == "no" ]]; then
-    . ./stores/snapcraft/build.sh
-
-    if [[ "${SKIP_ASSETS}" == "no" ]]; then
-      mv stores/snapcraft/build/*.snap assets/
-    fi
-  fi
-
   if [[ "${SHOULD_BUILD_TAR}" != "no" ]]; then
     echo "Building and moving TAR"
     cd "VSCode-linux-${VSCODE_ARCH}"

@@ -1,17 +1,7 @@
 name: stable-macos
 
 on:
-  workflow_dispatch:
-    inputs:
-      force_version:
-        type: boolean
-        description: Force update version
-      generate_assets:
-        type: boolean
-        description: Generate assets
-      checkout_pr:
-        type: string
-        description: Checkout PR
+  workflow_dispatch
 
 env:
   APP_NAME: VSCodium
@@ -42,11 +32,6 @@ jobs:
         with:
           ref: ${{ env.GITHUB_BRANCH }}
 
-      - name: Switch to relevant branch
-        env:
-          PULL_REQUEST_ID: ${{ github.event.inputs.checkout_pr }}
-        run: . get_pr.sh
-
       - name: Setup Node.js environment
         uses: actions/setup-node@v4
         with:
@@ -62,21 +47,12 @@ jobs:
         run: . get_repo.sh
 
       - name: Check PR or cron
-        env:
-          GENERATE_ASSETS: ${{ github.event.inputs.generate_assets }}
         run: . check_cron_or_pr.sh
-
-      - name: Check existing VSCodium tags/releases
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: . check_tags.sh
-        if: env.SHOULD_DEPLOY == 'yes'
 
       - name: Build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./build.sh
-        if: env.SHOULD_BUILD == 'yes'
 
       - name: Prepare assets
         env:
@@ -86,21 +62,6 @@ jobs:
           CERTIFICATE_OSX_P12_PASSWORD: ${{ secrets.CERTIFICATE_OSX_NEW_P12_PASSWORD }}
           CERTIFICATE_OSX_TEAM_ID: ${{ secrets.CERTIFICATE_OSX_NEW_TEAM_ID }}
         run: ./prepare_assets.sh
-        if: env.SHOULD_BUILD == 'yes' && (env.SHOULD_DEPLOY == 'yes' || github.event.inputs.generate_assets == 'true')
-
-      - name: Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./release.sh
-        if: env.SHOULD_BUILD == 'yes' && env.SHOULD_DEPLOY == 'yes'
-
-      - name: Update versions repo
-        env:
-          FORCE_UPDATE: ${{ github.event.inputs.force_version }}
-          GITHUB_TOKEN: ${{ secrets.STRONGER_GITHUB_TOKEN }}
-          GITHUB_USERNAME: ${{ github.repository_owner }}
-        run: ./update_version.sh
-        if: env.SHOULD_DEPLOY == 'yes'
 
       - name: Upload assets
         uses: actions/upload-artifact@v4
@@ -108,7 +69,6 @@ jobs:
           name: bin-${{ matrix.vscode_arch }}
           path: assets/
           retention-days: 3
-        if: env.SHOULD_BUILD == 'yes' && env.SHOULD_DEPLOY == 'no' && github.event.inputs.generate_assets == 'true'
 
       - name: Clean up keychain
         if: always()

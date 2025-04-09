@@ -7,7 +7,6 @@
   - [MacOS](#dependencies-macos)
   - [Windows](#dependencies-windows)
 - [Build Scripts](#build-scripts)
-- [Build Snap](#build-snap)
 - [Patch Update Process](#patch-update-process)
   - [Semi-Automated](#patch-update-process-semiauto)
   - [Manual](#patch-update-process-manual)
@@ -34,7 +33,6 @@
 - rpmbuild
 - dpkg
 - imagemagick (for AppImage)
-- snapcraft
 
 ### <a id="dependencies-macos"></a>MacOS
 
@@ -71,22 +69,6 @@ The script `dev/build.sh` provides several flags:
 - `-o`: skip the build step
 - `-p`: generate the packages/assets/installers
 - `-s`: do not retrieve the source code of Visual Studio Code, it won't delete the existing build
-
-## <a id="build-snap"></a>Build Snap
-
-```
-# for the stable version
-cd ./stores/snapcraft/stable
-
-# for the insider version
-cd ./stores/snapcraft/insider
-
-# create the snap
-snapcraft --use-lxd
-
-# verify the snap
-review-tools.snap-review --allow-classic codium*.snap
-```
 
 ## <a id="patch-update-process"></a>Patch Update Process
 
