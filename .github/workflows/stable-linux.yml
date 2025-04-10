@@ -1,19 +1,22 @@
 name: stable-linux
 
 on:
-  workflow_dispatch
+  workflow_dispatch:
+    inputs:
+      version_tag:
+        type: string
+        description: Specify version tag
 
 env:
   ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
   APP_NAME: VSCodium
   ASSETS_REPOSITORY: ${{ github.repository }}
   BINARY_NAME: codium
-  DISABLE_UPDATE: 'yes'
   GH_REPO_PATH: ${{ github.repository }}
   ORG_NAME: ${{ github.repository_owner }}
   OS_NAME: linux
-  VERSIONS_REPOSITORY: ${{ github.repository_owner }}/versions
   VSCODE_QUALITY: stable
+  RELEASE_VERSION: ${{github.event.inputs.version}}
 
 jobs:
   check:

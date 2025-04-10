@@ -1,7 +1,11 @@
 name: stable-macos
 
 on:
-  workflow_dispatch
+  workflow_dispatch:
+    inputs:
+      version_tag:
+        type: string
+        description: Specify version tag
 
 env:
   APP_NAME: VSCodium
@@ -10,8 +14,8 @@ env:
   GH_REPO_PATH: ${{ github.repository }}
   ORG_NAME: ${{ github.repository_owner }}
   OS_NAME: osx
-  VERSIONS_REPOSITORY: ${{ github.repository_owner }}/versions
   VSCODE_QUALITY: stable
+  RELEASE_VERSION: ${{github.event.inputs.version_tag}}
 
 jobs:
   build:
@@ -66,7 +70,7 @@ jobs:
       - name: Upload assets
         uses: actions/upload-artifact@v4
         with:
-          name: bin-${{ matrix.vscode_arch }}
+          name: ${{ env.VSCodium }}-${{ matrix.vscode_arch }}
           path: assets/
           retention-days: 3
 

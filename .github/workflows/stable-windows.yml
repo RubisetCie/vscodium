@@ -1,11 +1,11 @@
 name: stable-windows
 
 on:
-  workflow_dispatch
-#    inputs:
-#      force_version:
-#        type: boolean
-#        description: Force update version
+  workflow_dispatch:
+    inputs:
+      version_tag:
+        type: string
+        description: Specify version tag
 
 env:
   APP_NAME: VSCodium
@@ -14,8 +14,8 @@ env:
   GH_REPO_PATH: ${{ github.repository }}
   ORG_NAME: ${{ github.repository_owner }}
   OS_NAME: windows
-  VERSIONS_REPOSITORY: ${{ github.repository_owner }}/versions
   VSCODE_QUALITY: stable
+  RELEASE_VERSION: ${{github.event.inputs.version_tag}}
 
 jobs:
   check:
@@ -88,9 +88,9 @@ jobs:
       - name: Upload vscode artifact
         uses: actions/upload-artifact@v4
         with:
-          name: vscode
+          name: Sources
           path: ./vscode.tar.gz
-          retention-days: ${{ needs.check.outputs.SHOULD_DEPLOY == 'yes' && 30 || 1 }}
+          retention-days: 1
 
   build:
     needs:
@@ -133,7 +133,7 @@ jobs:
       - name: Download vscode artifact
         uses: actions/download-artifact@v4
         with:
-          name: vscode
+          name: Sources
 
       - name: Build
         env:
@@ -145,12 +145,9 @@ jobs:
       - name: Prepare assets
         run: ./prepare_assets.sh
 
-      - name: Prepare checksums
-        run: ./prepare_checksums.sh
-
       - name: Upload assets
         uses: actions/upload-artifact@v4
         with:
-          name: bin-${{ matrix.vscode_arch }}
+          name: ${{ env.VSCodium }}-${{ matrix.vscode_arch }}
           path: assets/
           retention-days: 3

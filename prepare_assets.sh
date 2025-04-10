@@ -49,7 +49,7 @@ if [[ "${OS_NAME}" == "osx" ]]; then
     cd "VSCode-darwin-${VSCODE_ARCH}"
     ZIP_FILE="./${APP_NAME}-darwin-${VSCODE_ARCH}-${RELEASE_VERSION}.zip"
 
-    zip -r -X -y "${ZIP_FILE}" ./*.app
+    zip -r -X -y -9 "${ZIP_FILE}" ./*.app
 
     xcrun notarytool store-credentials "${APP_NAME}" --apple-id "${CERTIFICATE_OSX_ID}" --team-id "${CERTIFICATE_OSX_TEAM_ID}" --password "${CERTIFICATE_OSX_APP_PASSWORD}" --keychain "${KEYCHAIN}"
     # xcrun notarytool history --keychain-profile "${APP_NAME}" --keychain "${KEYCHAIN}"
@@ -67,7 +67,7 @@ if [[ "${OS_NAME}" == "osx" ]]; then
   if [[ "${SHOULD_BUILD_ZIP}" != "no" ]]; then
     echo "Building and moving ZIP"
     cd "VSCode-darwin-${VSCODE_ARCH}"
-    zip -r -X -y "../assets/${APP_NAME}-darwin-${VSCODE_ARCH}-${RELEASE_VERSION}.zip" ./*.app
+    zip -r -X -y -9 "../assets/${APP_NAME}-darwin-${VSCODE_ARCH}-${RELEASE_VERSION}.zip" ./*.app
     cd ..
   fi
 
@@ -113,10 +113,6 @@ elif [[ "${OS_NAME}" == "windows" ]]; then
     if [[ "${SHOULD_BUILD_MSI}" != "no" ]]; then
       . ../build/windows/msi/build.sh
     fi
-
-    if [[ "${SHOULD_BUILD_MSI_NOUP}" != "no" ]]; then
-      . ../build/windows/msi/build-updates-disabled.sh
-    fi
   fi
 
   cd ..
@@ -135,11 +131,6 @@ elif [[ "${OS_NAME}" == "windows" ]]; then
     if [[ "${SHOULD_BUILD_MSI}" != "no" ]]; then
       echo "Moving MSI"
       mv "build\\windows\\msi\\releasedir\\${APP_NAME}-${VSCODE_ARCH}-${RELEASE_VERSION}.msi" assets/
-    fi
-
-    if [[ "${SHOULD_BUILD_MSI_NOUP}" != "no" ]]; then
-      echo "Moving MSI with disabled updates"
-      mv "build\\windows\\msi\\releasedir\\${APP_NAME}-${VSCODE_ARCH}-updates-disabled-${RELEASE_VERSION}.msi" assets/
     fi
   fi
 
