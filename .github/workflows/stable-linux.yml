@@ -1,4 +1,4 @@
-name: stable-linux
+name: Linux (Stable)
 
 on:
   workflow_dispatch:
@@ -6,6 +6,26 @@ on:
       version_tag:
         type: string
         description: Specify version tag
+      build_appimage:
+        description: 'Build AppImage'
+        type: boolean
+        required: true
+        default: false
+      build_deb:
+        description: 'Build DEB'
+        type: boolean
+        required: true
+        default: true
+      build_rpm:
+        description: 'Build RPM'
+        type: boolean
+        required: true
+        default: true
+      build_tar:
+        description: 'Build TAR'
+        type: boolean
+        required: true
+        default: false
 
 env:
   ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
@@ -16,7 +36,11 @@ env:
   ORG_NAME: ${{ github.repository_owner }}
   OS_NAME: linux
   VSCODE_QUALITY: stable
-  RELEASE_VERSION: ${{github.event.inputs.version}}
+  RELEASE_VERSION: ${{ github.event.inputs.version }}
+  SHOULD_BUILD_APPIMAGE: ${{ github.event.inputs.build_appimage == 'true' && 'yes' || 'no' }}
+  SHOULD_BUILD_DEB: ${{ github.event.inputs.build_deb == 'true' && 'yes' || 'no' }}
+  SHOULD_BUILD_RPM: ${{ github.event.inputs.build_rpm == 'true' && 'yes' || 'no' }}
+  SHOULD_BUILD_TAR: ${{ github.event.inputs.build_tar == 'true' && 'yes' || 'no' }}
 
 jobs:
   check:
@@ -34,7 +58,7 @@ jobs:
       - name: Clone VSCode repo
         run: ./get_repo.sh
 
-      - name: Check PR or cron
+      - name: Set variables
         run: ./check_cron_or_pr.sh
 
   compile:
@@ -106,14 +130,14 @@ jobs:
           vscode_arch: x64
           npm_arch: x64
           image: vscodium/vscodium-linux-build-agent:focal-x64
-#        - slug: ARM64
-#          vscode_arch: arm64
-#          npm_arch: arm64
-#          image: vscodium/vscodium-linux-build-agent:focal-arm64
-#        - slug: ARM32
-#          vscode_arch: armhf
-#          npm_arch: arm
-#          image: vscodium/vscodium-linux-build-agent:focal-armhf
+        - slug: ARM64
+          vscode_arch: arm64
+          npm_arch: arm64
+          image: vscodium/vscodium-linux-build-agent:focal-arm64
+        - slug: ARM32
+          vscode_arch: armhf
+          npm_arch: arm
+          image: vscodium/vscodium-linux-build-agent:focal-armhf
 #        - slug: RISCV64
 #          vscode_arch: riscv64
 #          npm_arch: riscv64
@@ -185,12 +209,12 @@ jobs:
         - slug: X64
           vscode_arch: x64
           npm_arch: x64
-#        - slug: ARM64
-#          vscode_arch: arm64
-#          npm_arch: arm64
-#        - slug: ARM32
-#          vscode_arch: armhf
-#          npm_arch: arm
+        - slug: ARM64
+          vscode_arch: arm64
+          npm_arch: arm64
+        - slug: ARM32
+          vscode_arch: armhf
+          npm_arch: arm
 #        - slug: PPC64
 #          vscode_arch: ppc64le
 #          npm_arch: ppc64

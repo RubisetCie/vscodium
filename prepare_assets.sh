@@ -184,7 +184,3 @@ else
 
   VSCODE_PLATFORM="linux"
 fi
-
-if [[ "${OS_NAME}" != "windows" ]]; then
-  ./prepare_checksums.sh
-fi

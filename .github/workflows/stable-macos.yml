@@ -1,4 +1,4 @@
-name: stable-macos
+name: MacOS (Stable)
 
 on:
   workflow_dispatch:
@@ -6,6 +6,21 @@ on:
       version_tag:
         type: string
         description: Specify version tag
+      build_zip:
+        description: 'Build ZIP'
+        type: boolean
+        required: true
+        default: true
+      build_dmg:
+        description: 'Build DMG'
+        type: boolean
+        required: true
+        default: true
+      build_src:
+        description: 'Build source'
+        type: boolean
+        required: true
+        default: false
 
 env:
   APP_NAME: VSCodium
@@ -15,7 +30,10 @@ env:
   ORG_NAME: ${{ github.repository_owner }}
   OS_NAME: osx
   VSCODE_QUALITY: stable
-  RELEASE_VERSION: ${{github.event.inputs.version_tag}}
+  RELEASE_VERSION: ${{ github.event.inputs.version_tag }}
+  SHOULD_BUILD_ZIP: ${{ github.event.inputs.build_zip == 'true' && 'yes' || 'no' }}
+  SHOULD_BUILD_DMG: ${{ github.event.inputs.build_dmg == 'true' && 'yes' || 'no' }}
+  SHOULD_BUILD_SRC: ${{ github.event.inputs.build_src == 'true' && 'yes' || 'no' }}
 
 jobs:
   build:
@@ -50,7 +68,7 @@ jobs:
       - name: Clone VSCode repo
         run: . get_repo.sh
 
-      - name: Check PR or cron
+      - name: Set variables
         run: . check_cron_or_pr.sh
 
       - name: Build
@@ -70,7 +88,7 @@ jobs:
       - name: Upload assets
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.VSCodium }}-${{ matrix.vscode_arch }}
+          name: VSCodium-${{ matrix.vscode_arch }}
           path: assets/
           retention-days: 3
 

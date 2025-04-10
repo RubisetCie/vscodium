@@ -16,7 +16,7 @@ set -ex
   npm run monaco-compile-check
   npm run valid-layers-check
 
-  npm run gulp compile-build-without-mangling
+  npm run gulp compile-build
   npm run gulp compile-extension-media
   npm run gulp compile-extensions-build
   npm run gulp minify-vscode

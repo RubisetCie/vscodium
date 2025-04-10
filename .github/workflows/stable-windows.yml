@@ -1,4 +1,4 @@
-name: stable-windows
+name: Windows (Stable)
 
 on:
   workflow_dispatch:
@@ -6,6 +6,26 @@ on:
       version_tag:
         type: string
         description: Specify version tag
+      build_zip:
+        description: 'Build ZIP'
+        type: boolean
+        required: true
+        default: true
+      build_msi:
+        description: 'Build MSI'
+        type: boolean
+        required: true
+        default: true
+      build_system_exe:
+        description: 'Build system-wide installer'
+        type: boolean
+        required: true
+        default: true
+      build_user_exe:
+        description: 'Build user-wide installer'
+        type: boolean
+        required: true
+        default: true
 
 env:
   APP_NAME: VSCodium
@@ -15,7 +35,11 @@ env:
   ORG_NAME: ${{ github.repository_owner }}
   OS_NAME: windows
   VSCODE_QUALITY: stable
-  RELEASE_VERSION: ${{github.event.inputs.version_tag}}
+  RELEASE_VERSION: ${{ github.event.inputs.version_tag }}
+  SHOULD_BUILD_ZIP: ${{ github.event.inputs.build_zip == 'true' && 'yes' || 'no' }}
+  SHOULD_BUILD_EXE_SYS: ${{ github.event.inputs.build_system_exe == 'true' && 'yes' || 'no' }}
+  SHOULD_BUILD_EXE_USR: ${{ github.event.inputs.build_user_exe == 'true' && 'yes' || 'no' }}
+  SHOULD_BUILD_MSI: ${{ github.event.inputs.build_msi == 'true' && 'yes' || 'no' }}
 
 jobs:
   check:
@@ -33,7 +57,7 @@ jobs:
       - name: Clone VSCode repo
         run: ./get_repo.sh
 
-      - name: Check PR or cron
+      - name: Set variables
         run: ./check_cron_or_pr.sh
 
   compile:
@@ -102,7 +126,7 @@ jobs:
       matrix:
         vscode_arch:
           - x64
-#          - arm64
+          - arm64
     defaults:
       run:
         shell: bash
@@ -148,6 +172,6 @@ jobs:
       - name: Upload assets
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.VSCodium }}-${{ matrix.vscode_arch }}
+          name: VSCodium-${{ matrix.vscode_arch }}
           path: assets/
           retention-days: 3
