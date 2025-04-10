@@ -5,19 +5,24 @@ on:
     inputs:
       version_tag:
         type: string
-        description: Specify version tag
+        description: Override version tag
+      enable_mangling:
+        description: Enable mangling (longer compilation)
+        type: boolean
+        required: true
+        default: true
       build_zip:
-        description: 'Build ZIP'
+        description: Build ZIP
         type: boolean
         required: true
         default: true
       build_dmg:
-        description: 'Build DMG'
+        description: Build DMG
         type: boolean
         required: true
         default: true
       build_src:
-        description: 'Build source'
+        description: Build source
         type: boolean
         required: true
         default: false
@@ -68,12 +73,13 @@ jobs:
       - name: Clone VSCode repo
         run: . get_repo.sh
 
-      - name: Set variables
-        run: . check_cron_or_pr.sh
+#      - name: Set variables
+#        run: . check_cron_or_pr.sh
 
       - name: Build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NO_MANGLING: ${{ github.event.inputs.enable_mangling == 'true' && 'no' || 'yes' }}
         run: ./build.sh
 
       - name: Prepare assets

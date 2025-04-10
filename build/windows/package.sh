@@ -26,4 +26,12 @@ node build/azure-pipelines/distro/mixin-npm
 
 npm run gulp "vscode-win32-${VSCODE_ARCH}-min-ci"
 
+# build command-line if everything is set-up
+if [[ "${RUST_TOOLCHAIN}" != "none" ]]; then
+  export VCPKG_ROOT=$VCPKG_INSTALLATION_ROOT
+  wd="$PWD"
+  cd cli && cargo build --release --target "${RUST_TARGET}" && mv "target/${RUST_TARGET}/release/code.exe" "$wd/../VSCode-win32-${VSCODE_ARCH}/bin/codium-tunnel.exe"
+  cd "$wd"
+fi
+
 cd ..

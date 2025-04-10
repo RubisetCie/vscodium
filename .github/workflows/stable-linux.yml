@@ -5,24 +5,29 @@ on:
     inputs:
       version_tag:
         type: string
-        description: Specify version tag
+        description: Override version tag
+      enable_mangling:
+        description: 'Enable mangling (longer compilation)'
+        type: boolean
+        required: true
+        default: true
       build_appimage:
-        description: 'Build AppImage'
+        description: Build AppImage
         type: boolean
         required: true
         default: false
       build_deb:
-        description: 'Build DEB'
+        description: Build DEB
         type: boolean
         required: true
         default: true
       build_rpm:
-        description: 'Build RPM'
+        description: Build RPM
         type: boolean
         required: true
         default: true
       build_tar:
-        description: 'Build TAR'
+        description: Build TAR
         type: boolean
         required: true
         default: false
@@ -57,9 +62,6 @@ jobs:
 
       - name: Clone VSCode repo
         run: ./get_repo.sh
-
-      - name: Set variables
-        run: ./check_cron_or_pr.sh
 
   compile:
     needs:
@@ -101,19 +103,21 @@ jobs:
         run: ./get_repo.sh
 
       - name: Build
+        env:
+          NO_MANGLING: ${{ github.event.inputs.enable_mangling == 'true' && 'no' || 'yes' }}
         run: ./build.sh
 
-      - name: Compress vscode artifact
+      - name: Compress sources artifact
         run: |
           find vscode -type f -not -path "*/node_modules/*" -not -path "vscode/.build/node/*" -not -path "vscode/.git/*" > vscode.txt
           echo "vscode/.build/extensions/node_modules" >> vscode.txt
           echo "vscode/.git" >> vscode.txt
           tar -czf vscode.tar.gz -T vscode.txt
 
-      - name: Upload vscode artifact
+      - name: Upload sources artifact
         uses: actions/upload-artifact@v4
         with:
-          name: vscode
+          name: Sources
           path: ./vscode.tar.gz
           retention-days: 1
 
@@ -172,10 +176,10 @@ jobs:
         run: sudo apt-get update -y && sudo apt-get install -y libkrb5-dev
         if: env.DISABLED != 'yes'
 
-      - name: Download vscode artifact
+      - name: Download sources artifact
         uses: actions/download-artifact@v4
         with:
-          name: vscode
+          name: Sources
         if: env.DISABLED != 'yes'
 
       - name: Build
@@ -264,10 +268,10 @@ jobs:
         run: sudo apt-get update -y && sudo apt-get install -y libkrb5-dev
         if: env.DISABLED != 'yes'
 
-      - name: Download vscode artifact
+      - name: Download sources artifact
         uses: actions/download-artifact@v4
         with:
-          name: vscode
+          name: Sources
         if: env.DISABLED != 'yes'
 
       - name: Build
@@ -326,10 +330,10 @@ jobs:
         run: sudo apt-get update -y && sudo apt-get install -y libkrb5-dev
         if: env.DISABLED != 'yes'
 
-      - name: Download vscode artifact
+      - name: Download sources artifact
         uses: actions/download-artifact@v4
         with:
-          name: vscode
+          name: Sources
         if: env.DISABLED != 'yes'
 
       - name: Build

@@ -5,24 +5,34 @@ on:
     inputs:
       version_tag:
         type: string
-        description: Specify version tag
+        description: Override version tag
+      enable_mangling:
+        description: Enable mangling (longer compilation)
+        type: boolean
+        required: true
+        default: true
+      build_command_line:
+        description: Build command-line tools
+        type: boolean
+        required: true
+        default: true
       build_zip:
-        description: 'Build ZIP'
+        description: Build ZIP
         type: boolean
         required: true
         default: true
       build_msi:
-        description: 'Build MSI'
+        description: Build MSI
         type: boolean
         required: true
         default: true
       build_system_exe:
-        description: 'Build system-wide installer'
+        description: Build system-wide installer
         type: boolean
         required: true
         default: true
       build_user_exe:
-        description: 'Build user-wide installer'
+        description: Build user-wide installer
         type: boolean
         required: true
         default: true
@@ -56,9 +66,6 @@ jobs:
 
       - name: Clone VSCode repo
         run: ./get_repo.sh
-
-      - name: Set variables
-        run: ./check_cron_or_pr.sh
 
   compile:
     needs:
@@ -100,16 +107,18 @@ jobs:
         run: ./get_repo.sh
 
       - name: Build
+        env:
+          NO_MANGLING: ${{ github.event.inputs.enable_mangling == 'true' && 'no' || 'yes' }}
         run: ./build.sh
 
-      - name: Compress vscode artifact
+      - name: Compress sources artifact
         run: |
           find vscode -type f -not -path "*/node_modules/*" -not -path "vscode/.build/node/*" -not -path "vscode/.git/*" > vscode.txt
           echo "vscode/.build/extensions/node_modules" >> vscode.txt
           echo "vscode/.git" >> vscode.txt
           tar -czf vscode.tar.gz -T vscode.txt
 
-      - name: Upload vscode artifact
+      - name: Upload sources artifact
         uses: actions/upload-artifact@v4
         with:
           name: Sources
@@ -124,9 +133,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        vscode_arch:
-          - x64
-          - arm64
+        include:
+          - vscode_arch: x64
+            vcpkg_arch: x64
+            cargo_toolchain: x86_64
+          - vscode_arch: arm64
+            vcpkg_arch: arm64
+            cargo_toolchain: aarch64
     defaults:
       run:
         shell: bash
@@ -154,7 +167,19 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Download vscode artifact
+      - name: Setup OpenSSL
+        run: |
+          export VCPKG_ROOT=$VCPKG_INSTALLATION_ROOT
+          vcpkg install openssl:${{ matrix.vcpkg_arch }}-windows-static
+
+      - name: Setup Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          target: ${{ matrix.cargo_toolchain }}-pc-windows-msvc
+        if: ${{ (matrix.cargo_toolchain != 'none') && (github.event.inputs.build_command_line == 'true') }}
+
+      - name: Download sources artifact
         uses: actions/download-artifact@v4
         with:
           name: Sources
@@ -162,6 +187,8 @@ jobs:
       - name: Build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUST_TOOLCHAIN: ${{ (github.event.inputs.build_command_line == 'true' && matrix.cargo_toolchain != 'none') && matrix.cargo_toolchain || 'none' }}
+          RUST_TARGET: ${{ matrix.cargo_toolchain }}-pc-windows-msvc
           npm_config_arch: ${{ matrix.vscode_arch }}
           npm_config_target_arch: ${{ matrix.vscode_arch }}
         run: ./build/windows/package.sh

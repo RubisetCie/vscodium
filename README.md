@@ -11,10 +11,6 @@
 [![License](https://img.shields.io/github/license/VSCodium/vscodium.svg)](https://github.com/RubisetCie/vscodium/blob/master/LICENSE)
 [![Gitter](https://img.shields.io/gitter/room/vscodium/vscodium.svg)](https://gitter.im/VSCodium/Lobby)
 
-[![build status (linux)](https://img.shields.io/github/actions/workflow/status/VSCodium/vscodium/stable-linux.yml?branch=master&label=build%28linux%29)](https://github.com/VSCodium/vscodium/actions/workflows/stable-linux.yml?query=branch%3Amaster)
-[![build status (macos)](https://img.shields.io/github/actions/workflow/status/VSCodium/vscodium/stable-macos.yml?branch=master&label=build%28macOS%29)](https://github.com/VSCodium/vscodium/actions/workflows/stable-macos.yml?query=branch%3Amaster)
-[![build status (windows)](https://img.shields.io/github/actions/workflow/status/VSCodium/vscodium/stable-windows.yml?branch=master&label=build%28windows%29)](https://github.com/VSCodium/vscodium/actions/workflows/stable-windows.yml?query=branch%3Amaster)
-
 </div>
 
 **This is not a fork. This is a repository of scripts to automatically build [Microsoft's `vscode` repository](https://github.com/microsoft/vscode) into freely-licensed binaries with a community-driven default configuration.**
@@ -29,17 +25,15 @@
 
 ## <a id="download-install"></a>Download/Install
 
-:tada: :tada:
 Download latest release here:
 [stable](https://github.com/RubisetCie/vscodium/releases)
-:tada: :tada:
 
-[More info / helpful tips are here.](https://github.com/RubisetCie/vscodium/blob/master/docs/index.md)
+[More info / helpful tips are here](https://github.com/RubisetCie/vscodium/blob/master/docs/index.md)
 
 
 ## <a id="build"></a>Build
 
-Build instructions can be found [here](https://github.com/RubisetCie/vscodium/blob/master/docs/howto-build.md)
+Build instructions can be found [here](https://github.com/RubisetCie/vscodium/blob/master/docs/howto-build.md).
 
 ## <a id="why"></a>Why Does This Exist
 

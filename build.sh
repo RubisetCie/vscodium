@@ -16,7 +16,12 @@ set -ex
   npm run monaco-compile-check
   npm run valid-layers-check
 
-  npm run gulp compile-build
+if [[ "${NO_MANGLING}" == "no" ]]; then
+  npm run gulp compile-build-with-mangling
+else
+  npm run gulp compile-build-without-mangling
+fi
+
   npm run gulp compile-extension-media
   npm run gulp compile-extensions-build
   npm run gulp minify-vscode
