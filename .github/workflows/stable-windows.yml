@@ -135,10 +135,8 @@ jobs:
       matrix:
         include:
           - vscode_arch: x64
-            vcpkg_arch: x64
             cargo_toolchain: x86_64
           - vscode_arch: arm64
-            vcpkg_arch: arm64
             cargo_toolchain: aarch64
     defaults:
       run:
@@ -170,7 +168,8 @@ jobs:
       - name: Setup OpenSSL
         run: |
           export VCPKG_ROOT=$VCPKG_INSTALLATION_ROOT
-          vcpkg install openssl:${{ matrix.vcpkg_arch }}-windows-static
+          vcpkg install openssl:${{ matrix.vscode_arch }}-windows-static
+        if: ${{ (matrix.cargo_toolchain != 'none') && (github.event.inputs.build_command_line == 'true') }}
 
       - name: Setup Rust
         uses: actions-rs/toolchain@v1

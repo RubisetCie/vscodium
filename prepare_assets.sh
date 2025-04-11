@@ -167,7 +167,10 @@ else
 
   if [[ "${SHOULD_BUILD_DEB}" != "no" ]]; then
     echo "Moving DEB"
-    mv vscode/.build/linux/deb/*/deb/*.deb assets/
+    files=( vscode/.build/linux/deb/*/deb/*.deb )
+    filenew="${files[0]##*/}"
+    filenew="${filenew//_/-}"
+    mv "${files[0]}" "assets/$filenew"
   fi
 
   if [[ "${SHOULD_BUILD_RPM}" != "no" ]]; then
