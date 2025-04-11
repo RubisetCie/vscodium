@@ -136,11 +136,6 @@ fi
 
 find "../VSCode-linux-${VSCODE_ARCH}" -print0 | xargs -0 touch -c
 
-# build command-line if everything is set-up
-if [[ "${RUST_TOOLCHAIN}" != "none" ]]; then
-  wd="$PWD"
-  cd cli && cargo build --release --target "${RUST_TARGET}" && mv "target/${RUST_TARGET}/release/code" "$wd/../VSCode-linux-${VSCODE_ARCH}/bin/codium-tunnel"
-  cd "$wd"
-fi
+. ../build_cli.sh
 
 cd ..

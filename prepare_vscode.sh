@@ -118,13 +118,13 @@ cp product.json{,.bak}
 
 setpath "product" "checksumFailMoreInfoUrl" "https://go.microsoft.com/fwlink/?LinkId=828886"
 setpath "product" "documentationUrl" "https://go.microsoft.com/fwlink/?LinkID=533484#vscode"
-setpath_json "product" "extensionsGallery" '{"serviceUrl": "https://open-vsx.org/vscode/gallery", "itemUrl": "https://open-vsx.org/vscode/item", "extensionUrlTemplate": "https://open-vsx.org/vscode/gallery/{publisher}/{name}/latest", "controlUrl": "https://raw.githubusercontent.com/EclipseFdn/publish-extensions/refs/heads/master/extension-control/extensions.json"}'
+setpath_json "product" "extensionsGallery" '{"serviceUrl":"https://marketplace.visualstudio.com/_apis/public/gallery","itemUrl":"https://marketplace.visualstudio.com/items","extensionUrlTemplate":"https://www.vscode-unpkg.net/_gallery/{publisher}/{name}/latest","resourceUrlTemplate":"https://{publisher}.vscode-unpkg.net/{publisher}/{name}/{version}/{path}","controlUrl":"https://main.vscode-cdn.net/extensions/marketplace.json","publisherUrl":"https://marketplace.visualstudio.com/publishers","nlsBaseUrl":"https://www.vscode-unpkg.net/_lp/"}'
 setpath "product" "introductoryVideosUrl" "https://go.microsoft.com/fwlink/?linkid=832146"
 setpath "product" "keyboardShortcutsUrlLinux" "https://go.microsoft.com/fwlink/?linkid=832144"
 setpath "product" "keyboardShortcutsUrlMac" "https://go.microsoft.com/fwlink/?linkid=832143"
 setpath "product" "keyboardShortcutsUrlWin" "https://go.microsoft.com/fwlink/?linkid=832145"
 setpath "product" "licenseUrl" "https://github.com/RubisetCie/vscodium/blob/master/LICENSE"
-setpath_json "product" "linkProtectionTrustedDomains" '["https://open-vsx.org"]'
+setpath_json "product" "linkProtectionTrustedDomains" '["https://*.visualstudio.com","https://*.microsoft.com","https://aka.ms","https://*.gallerycdn.vsassets.io","https://*.github.com","https://login.microsoftonline.com","https://*.vscode.dev","https://*.github.dev","https://gh.io","https://portal.azure.com","https://raw.githubusercontent.com","https://private-user-images.githubusercontent.com","https://avatars.githubusercontent.com"]'
 setpath "product" "releaseNotesUrl" "https://go.microsoft.com/fwlink/?LinkID=533483#vscode"
 setpath "product" "reportIssueUrl" "https://github.com/RubisetCie/vscodium/issues/new"
 setpath "product" "requestFeatureUrl" "https://go.microsoft.com/fwlink/?LinkID=533482"
@@ -154,6 +154,9 @@ if [[ "${VSCODE_QUALITY}" == "insider" ]]; then
   setpath "product" "win32UserAppId" "{{ED2E5618-3E7E-4888-BF3C-A6CCC84F586F}"
   setpath "product" "win32x64UserAppId" "{{20F79D0D-A9AC-4220-9A81-CE675FFB6B41}"
   setpath "product" "win32arm64UserAppId" "{{2E362F92-14EA-455A-9ABD-3E656BBBFE71}"
+  setpath "product" "tunnelApplicationName" "codium-tunnel-insiders"
+  setpath "product" "win32TunnelServiceMutex" "vscodiuminsiders-tunnelservice"
+  setpath "product" "win32TunnelMutex" "vscodiuminsiders-tunnel"
 else
   setpath "product" "nameShort" "VSCodium"
   setpath "product" "nameLong" "VSCodium"
@@ -176,6 +179,9 @@ else
   setpath "product" "win32UserAppId" "{{0FD05EB4-651E-4E78-A062-515204B47A3A}"
   setpath "product" "win32x64UserAppId" "{{2E1F05D1-C245-4562-81EE-28188DB6FD17}"
   setpath "product" "win32arm64UserAppId" "{{57FD70A5-1B8D-4875-9F40-C5553F094828}"
+  setpath "product" "tunnelApplicationName" "codium-tunnel"
+  setpath "product" "win32TunnelServiceMutex" "vscodium-tunnelservice"
+  setpath "product" "win32TunnelMutex" "vscodium-tunnel"
 fi
 
 jsonTmp=$( jq -s '.[0] * .[1]' product.json ../product.json )
@@ -189,6 +195,16 @@ cp package.json{,.bak}
 setpath "package" "version" "${RELEASE_VERSION%-insider}"
 
 replace 's|Microsoft Corporation|VSCodium|' package.json
+
+cp resources/server/manifest.json{,.bak}
+
+if [[ "${VSCODE_QUALITY}" == "insider" ]]; then
+  setpath "resources/server/manifest" "name" "VSCodium - Insiders"
+  setpath "resources/server/manifest" "short_name" "VSCodium - Insiders"
+else
+  setpath "resources/server/manifest" "name" "VSCodium"
+  setpath "resources/server/manifest" "short_name" "VSCodium"
+fi
 
 # announcements
 replace "s|\\[\\/\\* BUILTIN_ANNOUNCEMENTS \\*\\/\\]|$( tr -d '\n' < ../announcements-builtin.json )|" src/vs/workbench/contrib/welcomeGettingStarted/browser/gettingStarted.ts

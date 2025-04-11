@@ -11,11 +11,6 @@ on:
         type: boolean
         required: true
         default: true
-      build_command_line:
-        description: Build command-line tools
-        type: boolean
-        required: true
-        default: true
       build_zip:
         description: Build ZIP
         type: boolean
@@ -70,7 +65,7 @@ jobs:
   compile:
     needs:
       - check
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     env:
       MS_COMMIT: ${{ needs.check.outputs.MS_COMMIT }}
       MS_TAG: ${{ needs.check.outputs.MS_TAG }}
@@ -108,6 +103,8 @@ jobs:
 
       - name: Build
         env:
+          SHOULD_BUILD_REH: 'no'
+          SHOULD_BUILD_REH_WEB: 'no'
           NO_MANGLING: ${{ github.event.inputs.enable_mangling == 'true' && 'no' || 'yes' }}
         run: ./build.sh
 
@@ -133,11 +130,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - vscode_arch: x64
-            cargo_toolchain: x86_64
-          - vscode_arch: arm64
-            cargo_toolchain: aarch64
+        vscode_arch:
+          - x64
+          - arm64
     defaults:
       run:
         shell: bash
@@ -165,19 +160,6 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Setup OpenSSL
-        run: |
-          export VCPKG_ROOT=$VCPKG_INSTALLATION_ROOT
-          vcpkg install openssl:${{ matrix.vscode_arch }}-windows-static
-        if: ${{ (matrix.cargo_toolchain != 'none') && (github.event.inputs.build_command_line == 'true') }}
-
-      - name: Setup Rust
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          target: ${{ matrix.cargo_toolchain }}-pc-windows-msvc
-        if: ${{ (matrix.cargo_toolchain != 'none') && (github.event.inputs.build_command_line == 'true') }}
-
       - name: Download sources artifact
         uses: actions/download-artifact@v4
         with:
@@ -186,8 +168,6 @@ jobs:
       - name: Build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RUST_TOOLCHAIN: ${{ (github.event.inputs.build_command_line == 'true' && matrix.cargo_toolchain != 'none') && matrix.cargo_toolchain || 'none' }}
-          RUST_TARGET: ${{ matrix.cargo_toolchain }}-pc-windows-msvc
           npm_config_arch: ${{ matrix.vscode_arch }}
           npm_config_target_arch: ${{ matrix.vscode_arch }}
         run: ./build/windows/package.sh

@@ -34,6 +34,8 @@ fi
 
     find "../VSCode-darwin-${VSCODE_ARCH}" -print0 | xargs -0 touch -c
 
+    . ../build_cli.sh
+
     VSCODE_PLATFORM="darwin"
   elif [[ "${OS_NAME}" == "windows" ]]; then
     # generate Group Policy definitions
@@ -44,6 +46,13 @@ fi
       . ../build/windows/rtf/make.sh
 
       npm run gulp "vscode-win32-${VSCODE_ARCH}-min-ci"
+
+      if [[ "${VSCODE_ARCH}" != "x64" ]]; then
+        SHOULD_BUILD_REH="no"
+        SHOULD_BUILD_REH_WEB="no"
+      fi
+
+      . ../build_cli.sh
     fi
 
     VSCODE_PLATFORM="win32"
@@ -53,9 +62,21 @@ fi
       npm run gulp "vscode-linux-${VSCODE_ARCH}-min-ci"
 
       find "../VSCode-linux-${VSCODE_ARCH}" -print0 | xargs -0 touch -c
+
+      . ../build_cli.sh
     fi
 
     VSCODE_PLATFORM="linux"
+  fi
+
+  if [[ "${SHOULD_BUILD_REH}" != "no" ]]; then
+    npm run gulp minify-vscode-reh
+    npm run gulp "vscode-reh-${VSCODE_PLATFORM}-${VSCODE_ARCH}-min-ci"
+  fi
+
+  if [[ "${SHOULD_BUILD_REH_WEB}" != "no" ]]; then
+    npm run gulp minify-vscode-reh-web
+    npm run gulp "vscode-reh-web-${VSCODE_PLATFORM}-${VSCODE_ARCH}-min-ci"
   fi
 
   cd ..

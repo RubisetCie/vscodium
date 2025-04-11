@@ -11,11 +11,6 @@ on:
         type: boolean
         required: true
         default: true
-      build_command_line:
-        description: Build command-line tools
-        type: boolean
-        required: true
-        default: true
       build_appimage:
         description: Build AppImage
         type: boolean
@@ -71,7 +66,7 @@ jobs:
   compile:
     needs:
       - check
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     env:
       MS_COMMIT: ${{ needs.check.outputs.MS_COMMIT }}
       MS_TAG: ${{ needs.check.outputs.MS_TAG }}
@@ -109,6 +104,8 @@ jobs:
 
       - name: Build
         env:
+          SHOULD_BUILD_REH: 'no'
+          SHOULD_BUILD_REH_WEB: 'no'
           NO_MANGLING: ${{ github.event.inputs.enable_mangling == 'true' && 'no' || 'yes' }}
         run: ./build.sh
 
@@ -138,32 +135,26 @@ jobs:
         - slug: X64
           vscode_arch: x64
           npm_arch: x64
-          cargo_toolchain: x86_64
           image: vscodium/vscodium-linux-build-agent:focal-x64
         - slug: ARM64
           vscode_arch: arm64
           npm_arch: arm64
-          cargo_toolchain: aarch64
           image: vscodium/vscodium-linux-build-agent:focal-arm64
         - slug: ARM32
           vscode_arch: armhf
           npm_arch: arm
-          cargo_toolchain: none
           image: vscodium/vscodium-linux-build-agent:focal-armhf
         - slug: RISCV64
           vscode_arch: riscv64
           npm_arch: riscv64
-          cargo_toolchain: riscv64gc
           image: vscodium/vscodium-linux-build-agent:focal-riscv64
         - slug: LOONG64
           vscode_arch: loong64
           npm_arch: loong64
-          cargo_toolchain: loongarch64
           image: vscodium/vscodium-linux-build-agent:beige-loong64
         - slug: PPC64
           vscode_arch: ppc64le
           npm_arch: ppc64
-          cargo_toolchain: powerpc64le
           image: vscodium/vscodium-linux-build-agent:focal-ppc64le
     container:
       image: ${{ matrix.image }}
@@ -183,21 +174,12 @@ jobs:
           ref: ${{ env.GITHUB_BRANCH }}
         if: env.DISABLED != 'yes'
 
-      - name: Install Kerberos
-        run: sudo apt-get update -y && sudo apt-get install -y libkrb5-dev
+      - name: Install dependencies
+        run: ./build/linux/deps.sh
         if: env.DISABLED != 'yes'
 
-      - name: Install OpenSSL
-        continue-on-error: true
-        run: sudo apt-get install -y libssl-dev
-        if: env.DISABLED != 'yes' && matrix.cargo_toolchain != 'none' && github.event.inputs.build_command_line == 'true'
-
-      - name: Setup Rust
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          target: ${{ matrix.cargo_toolchain }}-unknown-linux-gnu
-        if: env.DISABLED != 'yes' && matrix.cargo_toolchain != 'none' && github.event.inputs.build_command_line == 'true'
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        if: env.DISABLED != 'yes'
 
       - name: Download sources artifact
         uses: actions/download-artifact@v4
@@ -208,13 +190,14 @@ jobs:
       - name: Build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RUST_TOOLCHAIN: ${{ (github.event.inputs.build_command_line == 'true' && matrix.cargo_toolchain != 'none') && matrix.cargo_toolchain || 'none' }}
-          RUST_TARGET: ${{ matrix.cargo_toolchain }}-unknown-linux-gnu
           npm_config_arch: ${{ matrix.npm_arch }}
         run: ./build/linux/package_bin.sh
         if: env.DISABLED != 'yes'
 
       - name: Prepare assets
+        env:
+          SHOULD_BUILD_REH: 'no'
+          SHOULD_BUILD_REH_WEB: 'no'
         run: ./prepare_assets.sh
         if: env.DISABLED != 'yes'
 
@@ -230,7 +213,7 @@ jobs:
     needs:
       - check
       - compile
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
       matrix:
@@ -318,7 +301,7 @@ jobs:
     needs:
       - check
       - compile
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
       matrix:
