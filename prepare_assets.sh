@@ -134,6 +134,11 @@ elif [[ "${OS_NAME}" == "windows" ]]; then
     fi
   fi
 
+  if [[ "${VSCODE_ARCH}" != "x64" ]]; then
+    SHOULD_BUILD_REH="no"
+    SHOULD_BUILD_REH_WEB="no"
+  fi
+
   VSCODE_PLATFORM="win32"
 else
   cd vscode || { echo "'vscode' dir not found"; exit 1; }

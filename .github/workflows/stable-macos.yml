@@ -73,9 +73,6 @@ jobs:
       - name: Clone VSCode repo
         run: . get_repo.sh
 
-#      - name: Set variables
-#        run: . check_cron_or_pr.sh
-
       - name: Build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

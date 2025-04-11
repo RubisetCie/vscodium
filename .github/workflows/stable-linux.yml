@@ -11,6 +11,11 @@ on:
         type: boolean
         required: true
         default: true
+#      disable_reh:
+#        description: Don't build remote extension host
+#        type: boolean
+#        required: true
+#        default: false
       build_appimage:
         description: Build AppImage
         type: boolean
