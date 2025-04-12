@@ -51,8 +51,8 @@ jobs:
         include:
           - runner: macos-13
             vscode_arch: x64
-          - runner: [self-hosted, macOS, ARM64]
-            vscode_arch: arm64
+#          - runner: [self-hosted, macOS, ARM64]
+#            vscode_arch: arm64
 
     steps:
       - uses: actions/checkout@v4

@@ -11,11 +11,11 @@ on:
         type: boolean
         required: true
         default: true
-#      disable_reh:
-#        description: Don't build remote extension host
-#        type: boolean
-#        required: true
-#        default: false
+      disable_reh:
+        description: Don't build remote extension host
+        type: boolean
+        required: true
+        default: false
       build_appimage:
         description: Build AppImage
         type: boolean
@@ -218,6 +218,7 @@ jobs:
     needs:
       - check
       - compile
+    if: ${{ github.event.inputs.disable_reh == 'false' }}
     runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
@@ -306,6 +307,7 @@ jobs:
     needs:
       - check
       - compile
+    if: ${{ github.event.inputs.disable_reh == 'false' }}
     runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
