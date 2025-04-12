@@ -5,14 +5,6 @@
     <h3>Free/Libre Open Source Software Binaries of VS Code</h3>
 </div>
 
-<div id="badges" align="center">
-
-[![Release](https://img.shields.io/github/release/vscodium/vscodium.svg)](https://github.com/RubisetCie/vscodium/releases)
-[![License](https://img.shields.io/github/license/VSCodium/vscodium.svg)](https://github.com/RubisetCie/vscodium/blob/master/LICENSE)
-[![Gitter](https://img.shields.io/gitter/room/vscodium/vscodium.svg)](https://gitter.im/VSCodium/Lobby)
-
-</div>
-
 **This is not a fork. This is a repository of scripts to automatically build [Microsoft's `vscode` repository](https://github.com/microsoft/vscode) into freely-licensed binaries with a community-driven default configuration.**
 
 ## Table of Contents
@@ -41,7 +33,7 @@ This repository contains build files to generate free release binaries of Micros
 
 Microsoft's releases of Visual Studio Code are licensed under [this not-FLOSS license](https://code.visualstudio.com/license) and contain telemetry/tracking. According to [this comment](https://github.com/Microsoft/vscode/issues/60#issuecomment-161792005) from a Visual Studio Code maintainer:
 
-> When we [Microsoft] build Visual Studio Code, we do exactly this. We clone the vscode repository, we lay down a customized product.json that has Microsoft specific functionality (telemetry, gallery, logo, etc.), and then produce a build that we release under our license.
+> When we -Microsoft- build Visual Studio Code, we do exactly this. We clone the vscode repository, we lay down a customized product.json that has Microsoft specific functionality (telemetry, gallery, logo, etc.), and then produce a build that we release under our license.
 >
 > When you clone and build from the vscode repo, none of these endpoints are configured in the default product.json. Therefore, you generate a "clean" build, without the Microsoft customizations, which is by default licensed under the MIT license
 
@@ -49,7 +41,7 @@ This repo exists so that you don't have to download+build from source. The build
 
 If you want to build from source yourself, head over to [Microsoft's vscode repo](https://github.com/Microsoft/vscode) and follow their [instructions](https://github.com/Microsoft/vscode/wiki/How-to-Contribute#build-and-run). This repo exists to make it easier to get the latest version of MIT-licensed VS Code.
 
-Microsoft's build process (which we are running to build the binaries) does download additional files. Those packages downloaded during build are:
+Microsoft's build process (which is running to build the binaries) does download additional files. Those packages downloaded during build are:
 
 - Pre-built extensions from the GitHub:
   - [ms-vscode.js-debug-companion](https://github.com/microsoft/vscode-js-debug-companion)
@@ -71,13 +63,13 @@ If you have any issue, please check [the Troubleshooting page](https://github.co
 
 ### Extensions and the Marketplace
 
-According to the VS Code Marketplace [Terms of Use](https://aka.ms/vsmarketplace-ToU), _you may only install and use Marketplace Offerings with Visual Studio Products and Services._ For this reason, VSCodium uses [open-vsx.org](https://open-vsx.org/), an open source registry for VS Code extensions. See the [Extensions + Marketplace](https://github.com/RubisetCie/vscodium/blob/master/docs/index.md#extensions-marketplace) section on the Docs page for more details.
+According to the VS Code Marketplace [Terms of Use](https://aka.ms/vsmarketplace-ToU), _you may only install and use Marketplace Offerings with Visual Studio Products and Services._ See the [Extensions + Marketplace](https://github.com/RubisetCie/vscodium/blob/master/docs/index.md#extensions-marketplace) section on the Docs page for more details.
 
 Please note that some Visual Studio Code extensions have licenses that restrict their use to the official Visual Studio Code builds and therefore do not work with VSCodium. See [this note](https://github.com/RubisetCie/vscodium/blob/master/docs/index.md#proprietary-debugging-tools) on the Docs page for what's been found so far and possible workarounds.
 
 ### How are the VSCodium binaries built?
 
-If you would like to see the commands we run to build `vscode` into VSCodium binaries, have a look at the workflow files in `.github/workflows` for Windows, GNU/Linux and macOS. These build files call all the other scripts in the repo. If you find something that doesn't make sense, feel free to ask about it [on Gitter](https://gitter.im/VSCodium/Lobby).
+If you would like to see the commands run to build `vscode` into VSCodium binaries, have a look at the workflow files in `.github/workflows` for Windows, GNU/Linux and macOS. These build files call all the other scripts in the repo. If you find something that doesn't make sense, feel free to ask about it [on the official Gitter](https://gitter.im/VSCodium/Lobby).
 
 The builds are run every day, but exit early if there isn't a new release from Microsoft.
 
