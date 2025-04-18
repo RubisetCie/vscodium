@@ -173,6 +173,8 @@ jobs:
       - name: Build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SHOULD_BUILD_REH: ${{ github.event.inputs.disable_reh == 'true' && 'no' || 'yes' }}
+          SHOULD_BUILD_REH_WEB: ${{ github.event.inputs.disable_reh == 'true' && 'no' || 'yes' }}
           npm_config_arch: ${{ matrix.vscode_arch }}
           npm_config_target_arch: ${{ matrix.vscode_arch }}
         run: ./build/windows/package.sh
