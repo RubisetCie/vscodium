@@ -6,17 +6,19 @@
   - [Linux](#dependencies-linux)
   - [MacOS](#dependencies-macos)
   - [Windows](#dependencies-windows)
-- [Build Scripts](#build-scripts)
+- [Build for Development](#build-dev)
+- [Build for CI/Downstream](#build-ci)
 - [Patch Update Process](#patch-update-process)
   - [Semi-Automated](#patch-update-process-semiauto)
   - [Manual](#patch-update-process-manual)
 
 ## <a id="dependencies"></a>Dependencies
 
-- node 20.14
+- node 20.18
 - jq
 - git
 - python3 3.11
+- rustup
 
 ### <a id="dependencies-linux"></a>Linux
 
@@ -46,7 +48,7 @@ see [the common dependencies](#dependencies)
 - [WiX Toolset](http://wixtoolset.org/releases/)
 - 'Tools for Native Modules' from the official Node.js installer
 
-## <a id="build-scripts"></a>Build Scripts
+## <a id="build-dev"></a>Build for Development
 
 A build helper script can be found at `dev/build.sh`.
 
@@ -85,13 +87,12 @@ The script `dev/build.sh` provides several flags:
 ## <a id="patch-update-process-manual"></a>Manual
 
 - run `./dev/build.sh`, if a patch is failing then,
-- open `vscode` directory in **VSCodium**
-- revert all changes
-- run `git apply --reject ../patches/<name>.patch`
+- run `./dev/patch.sh <name>.patch` where `<name>.patch` is the failed patch
+- open `vscode` directory in a new **VSCodium**'s window
 - fix all the `*.rej` files
 - run `npm run watch`
 - run `./script/code.sh` until everything is ok
-- run `git diff > ../patches/<name>.patch`
+- go back to the command line running `./dev/patch.sh`, press `enter` to validate the changes and it will update the patch
 
 ### <a id="icons"></a>icons/build_icons.sh
 
