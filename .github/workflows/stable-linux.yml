@@ -94,7 +94,7 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v4
         with:
-          node-version: '20.18.2'
+          node-version: '20.19.0'
 
       - name: Setup Python 3
         uses: actions/setup-python@v5
@@ -269,7 +269,7 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v4
         with:
-          node-version: '20.18.2'
+          node-version: '20.19.0'
         if: env.DISABLED != 'yes'
 
       - name: Setup Python 3
