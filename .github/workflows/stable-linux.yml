@@ -16,6 +16,11 @@ on:
         type: boolean
         required: true
         default: false
+      build_cli:
+        description: Build separate command-line utility
+        type: boolean
+        required: true
+        default: true
       build_appimage:
         description: Build AppImage
         type: boolean
@@ -203,6 +208,7 @@ jobs:
         env:
           SHOULD_BUILD_REH: 'no'
           SHOULD_BUILD_REH_WEB: 'no'
+          SHOULD_BUILD_CLI: ${{ github.event.inputs.build_cli == 'true' && 'yes' || 'no' }}
         run: ./prepare_assets.sh
         if: env.DISABLED != 'yes'
 

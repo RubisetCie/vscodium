@@ -11,6 +11,11 @@ on:
         type: boolean
         required: true
         default: true
+      build_cli:
+        description: Build separate command-line utility
+        type: boolean
+        required: true
+        default: true
       build_zip:
         description: Build ZIP
         type: boolean
@@ -86,6 +91,7 @@ jobs:
           CERTIFICATE_OSX_P12_DATA: ${{ secrets.CERTIFICATE_OSX_NEW_P12_DATA }}
           CERTIFICATE_OSX_P12_PASSWORD: ${{ secrets.CERTIFICATE_OSX_NEW_P12_PASSWORD }}
           CERTIFICATE_OSX_TEAM_ID: ${{ secrets.CERTIFICATE_OSX_NEW_TEAM_ID }}
+          SHOULD_BUILD_CLI: ${{ github.event.inputs.build_cli == 'true' && 'yes' || 'no' }}
         run: ./prepare_assets.sh
 
       - name: Upload assets
