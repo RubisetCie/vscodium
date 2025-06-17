@@ -18,7 +18,7 @@ cd vscode || { echo "'vscode' dir not found"; exit 1; }
 
 GLIBC_VERSION="2.28"
 GLIBCXX_VERSION="3.4.26"
-NODE_VERSION="20.19.0"
+NODE_VERSION="22.14.0"
 
 export VSCODE_NODEJS_URLROOT='/download/release'
 export VSCODE_NODEJS_URLSUFFIX=''
@@ -91,7 +91,7 @@ VSCODE_HOST_MOUNT="$( pwd )"
 export VSCODE_HOST_MOUNT
 export VSCODE_REMOTE_DEPENDENCIES_CONTAINER_NAME
 
-sed -i "/target/s/\"20.*\"/\"${NODE_VERSION}\"/" remote/.npmrc
+sed -i "/target/s/\"22.*\"/\"${NODE_VERSION}\"/" remote/.npmrc
 
 if [[ -d "../patches/linux/reh/" ]]; then
   for file in "../patches/linux/reh/"*.patch; do
