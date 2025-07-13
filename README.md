@@ -65,7 +65,7 @@ If you have any issue, please check [the Troubleshooting page](https://github.co
 
 According to the Visual Studio Marketplace [Terms of Use](https://aka.ms/vsmarketplace-ToU), _you may only install and use Marketplace Offerings with Visual Studio Products and Services._ See the [Extensions + Marketplace](https://github.com/RubisetCie/vscodium/blob/master/docs/index.md#extensions-marketplace) section on the Docs page for more details.
 
-Please note that some Visual Studio Code extensions have licenses that restrict their use to the official Visual Studio Code builds and therefore do not work with VSCodium. See [this note](https://github.com/RubisetCie/vscodium/blob/master/docs/index.md#proprietary-debugging-tools) on the Docs page for what's been found so far and possible workarounds.
+Please note that some Visual Studio Code extensions have licenses that restrict their use to the official Visual Studio Code builds and therefore do not work with VSCodium. See [this note](https://github.com/RubisetCie/vscodium/blob/master/docs/extensions.md#proprietary-debugging-tools) on the Docs page for what's been found so far and possible workarounds.
 
 ### How are the VSCodium binaries built?
 
