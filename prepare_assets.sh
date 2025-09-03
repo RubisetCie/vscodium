@@ -49,7 +49,7 @@ if [[ "${OS_NAME}" == "osx" ]]; then
     cd "VSCode-darwin-${VSCODE_ARCH}"
     ZIP_FILE="./${APP_NAME}-darwin-${VSCODE_ARCH}-${RELEASE_VERSION}.zip"
 
-    zip -r -X -y "${ZIP_FILE}" ./*.app
+    zip -r -X -y -9 "${ZIP_FILE}" ./*.app
 
     xcrun notarytool store-credentials "${APP_NAME}" --apple-id "${CERTIFICATE_OSX_ID}" --team-id "${CERTIFICATE_OSX_TEAM_ID}" --password "${CERTIFICATE_OSX_APP_PASSWORD}" --keychain "${KEYCHAIN}"
     # xcrun notarytool history --keychain-profile "${APP_NAME}" --keychain "${KEYCHAIN}"
@@ -67,7 +67,7 @@ if [[ "${OS_NAME}" == "osx" ]]; then
   if [[ "${SHOULD_BUILD_ZIP}" != "no" ]]; then
     echo "Building and moving ZIP"
     cd "VSCode-darwin-${VSCODE_ARCH}"
-    zip -r -X -y "../assets/${APP_NAME}-darwin-${VSCODE_ARCH}-${RELEASE_VERSION}.zip" ./*.app
+    zip -r -X -y -9 "../assets/${APP_NAME}-darwin-${VSCODE_ARCH}-${RELEASE_VERSION}.zip" ./*.app
     cd ..
   fi
 
@@ -115,34 +115,30 @@ elif [[ "${OS_NAME}" == "windows" ]]; then
     if [[ "${SHOULD_BUILD_MSI}" != "no" ]]; then
       . ../build/windows/msi/build.sh
     fi
-
-    if [[ "${SHOULD_BUILD_MSI_NOUP}" != "no" ]]; then
-      . ../build/windows/msi/build-updates-disabled.sh
-    fi
   fi
 
   cd ..
 
   if [[ "${SHOULD_BUILD_EXE_SYS}" != "no" ]]; then
     echo "Moving System EXE"
-    mv "vscode\\.build\\win32-${VSCODE_ARCH}\\system-setup\\VSCodeSetup.exe" "assets\\${APP_NAME}Setup-${VSCODE_ARCH}-${RELEASE_VERSION}.exe"
+    mv "vscode\\.build\\win32-${VSCODE_ARCH}\\system-setup\\VSCodeSetup.exe" "assets\\${APP_NAME}-win32-${VSCODE_ARCH}-${RELEASE_VERSION}-system-setup.exe"
   fi
 
   if [[ "${SHOULD_BUILD_EXE_USR}" != "no" ]]; then
     echo "Moving User EXE"
-    mv "vscode\\.build\\win32-${VSCODE_ARCH}\\user-setup\\VSCodeSetup.exe" "assets\\${APP_NAME}UserSetup-${VSCODE_ARCH}-${RELEASE_VERSION}.exe"
+    mv "vscode\\.build\\win32-${VSCODE_ARCH}\\user-setup\\VSCodeSetup.exe" "assets\\${APP_NAME}-win32-${VSCODE_ARCH}-${RELEASE_VERSION}-user-setup.exe"
   fi
 
   if [[ "${VSCODE_ARCH}" == "ia32" || "${VSCODE_ARCH}" == "x64" ]]; then
     if [[ "${SHOULD_BUILD_MSI}" != "no" ]]; then
       echo "Moving MSI"
-      mv "build\\windows\\msi\\releasedir\\${APP_NAME}-${VSCODE_ARCH}-${RELEASE_VERSION}.msi" assets/
+      mv "build\\windows\\msi\\releasedir\\${APP_NAME}-${VSCODE_ARCH}-${RELEASE_VERSION}.msi" "assets/${APP_NAME}-win32-${VSCODE_ARCH}-${RELEASE_VERSION}-setup.msi"
     fi
+  fi
 
-    if [[ "${SHOULD_BUILD_MSI_NOUP}" != "no" ]]; then
-      echo "Moving MSI with disabled updates"
-      mv "build\\windows\\msi\\releasedir\\${APP_NAME}-${VSCODE_ARCH}-updates-disabled-${RELEASE_VERSION}.msi" assets/
-    fi
+  if [[ "${VSCODE_ARCH}" != "x64" ]]; then
+    SHOULD_BUILD_REH="no"
+    SHOULD_BUILD_REH_WEB="no"
   fi
 
   VSCODE_PLATFORM="win32"
@@ -169,14 +165,6 @@ else
 
   cd ..
 
-  if [[ "${CI_BUILD}" == "no" ]]; then
-    . ./stores/snapcraft/build.sh
-
-    if [[ "${SKIP_ASSETS}" == "no" ]]; then
-      mv stores/snapcraft/build/*.snap assets/
-    fi
-  fi
-
   if [[ "${SHOULD_BUILD_TAR}" != "no" ]]; then
     echo "Building and moving TAR"
     cd "VSCode-linux-${VSCODE_ARCH}"
@@ -186,7 +174,10 @@ else
 
   if [[ "${SHOULD_BUILD_DEB}" != "no" ]]; then
     echo "Moving DEB"
-    mv vscode/.build/linux/deb/*/deb/*.deb assets/
+    files=( vscode/.build/linux/deb/*/deb/*.deb )
+    filenew="${files[0]##*/}"
+    filenew="${filenew//_/-}"
+    mv "${files[0]}" "assets/$filenew"
   fi
 
   if [[ "${SHOULD_BUILD_RPM}" != "no" ]]; then
@@ -244,6 +235,3 @@ if [[ "${SHOULD_BUILD_CLI}" != "no" ]]; then
   cd ..
 fi
 
-if [[ "${OS_NAME}" != "windows" ]]; then
-  ./prepare_checksums.sh
-fi

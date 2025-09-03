@@ -11,16 +11,29 @@ export BINARY_NAME="codium"
 export CI_BUILD="no"
 export GH_REPO_PATH="VSCodium/vscodium"
 export ORG_NAME="VSCodium"
-export SHOULD_BUILD="yes"
 export SKIP_ASSETS="yes"
 export SKIP_BUILD="no"
 export SKIP_SOURCE="no"
+export NO_MANGLING="no"
 export VSCODE_LATEST="no"
 export VSCODE_QUALITY="stable"
 export VSCODE_SKIP_NODE_VERSION_CHECK="yes"
 
-while getopts ":ilops" opt; do
+while getopts ":hilcopsm" opt; do
   case "$opt" in
+    h)
+      printf "Usage: $0 (options)
+Options:
+  -h: Display this help message.
+  -i: Build the Insiders version.
+  -l: Build the latest version of Visual Studio Code.
+  -c: Skip building the CLI (as CI).
+  -o: Skip the build step.
+  -p: Generate the packages/assets/installers.
+  -s: Don't retrieve the source code of Visual Studio Code (won't delete the existing build).
+  -m: Disable mangling to speed up the compilation step.\n"
+      exit 1
+      ;;
     i)
       export ASSETS_REPOSITORY="VSCodium/vscodium-insiders"
       export BINARY_NAME="codium-insiders"
@@ -28,6 +41,9 @@ while getopts ":ilops" opt; do
       ;;
     l)
       export VSCODE_LATEST="yes"
+      ;;
+    c)
+      export CI_BUILD="yes"
       ;;
     o)
       export SKIP_BUILD="yes"
@@ -37,6 +53,9 @@ while getopts ":ilops" opt; do
       ;;
     s)
       export SKIP_SOURCE="yes"
+      ;;
+    m)
+      export NO_MANGLING="yes"
       ;;
     *)
       ;;

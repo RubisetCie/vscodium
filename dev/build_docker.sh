@@ -11,8 +11,17 @@ export SKIP_ASSETS="yes"
 export VSCODE_LATEST="no"
 export VSCODE_QUALITY="stable"
 
-while getopts ":ilp" opt; do
+while getopts ":hilp" opt; do
   case "$opt" in
+    h)
+      printf "Usage: $0 (options)
+Options:
+  -h: Display this help message.
+  -i: Build the Insiders version.
+  -l: Build the latest version of Visual Studio Code.
+  -p: Generate the packages/assets/installers.\n"
+      exit 1
+      ;;
     i)
       export VSCODE_QUALITY="insider"
       ;;

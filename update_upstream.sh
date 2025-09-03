@@ -3,11 +3,6 @@
 
 set -e
 
-if [[ "${SHOULD_BUILD}" != "yes" ]]; then
-  echo "Will not update version JSON because we did not build"
-  exit 0
-fi
-
 jsonTmp=$( cat "./upstream/${VSCODE_QUALITY}.json" | jq --arg 'tag' "${MS_TAG/\-insider/}" --arg 'commit' "${MS_COMMIT}" '. | .tag=$tag | .commit=$commit' )
 echo "${jsonTmp}" > "./upstream/${VSCODE_QUALITY}.json" && unset jsonTmp
 

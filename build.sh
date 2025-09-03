@@ -5,7 +5,6 @@ set -ex
 
 . version.sh
 
-if [[ "${SHOULD_BUILD}" == "yes" ]]; then
   echo "MS_COMMIT=\"${MS_COMMIT}\""
 
   . prepare_vscode.sh
@@ -17,7 +16,12 @@ if [[ "${SHOULD_BUILD}" == "yes" ]]; then
   npm run monaco-compile-check
   npm run valid-layers-check
 
+if [[ "${NO_MANGLING}" == "no" ]]; then
+  npm run gulp compile-build-with-mangling
+else
   npm run gulp compile-build-without-mangling
+fi
+
   npm run gulp compile-extension-media
   npm run gulp compile-extensions-build
   npm run gulp minify-vscode
@@ -82,4 +86,3 @@ if [[ "${SHOULD_BUILD}" == "yes" ]]; then
   fi
 
   cd ..
-fi

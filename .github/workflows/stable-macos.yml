@@ -1,28 +1,36 @@
-name: stable-macos
+name: Build MacOS (Stable)
 
 on:
   workflow_dispatch:
     inputs:
-      force_version:
-        type: boolean
-        description: Force update version
-      generate_assets:
-        type: boolean
-        description: Generate assets
-      checkout_pr:
+      version_tag:
         type: string
-        description: Checkout PR
-  repository_dispatch:
-    types: [stable]
-  push:
-    branches: [ master ]
-    paths-ignore:
-    - '**/*.md'
-    - 'upstream/*.json'
-  pull_request:
-    branches: [ master ]
-    paths-ignore:
-    - '**/*.md'
+        description: Override version tag
+      enable_mangling:
+        description: Enable mangling (longer compilation)
+        type: boolean
+        required: true
+        default: true
+      build_cli:
+        description: Build separate command-line utility
+        type: boolean
+        required: true
+        default: true
+      build_zip:
+        description: Build ZIP
+        type: boolean
+        required: true
+        default: true
+      build_dmg:
+        description: Build DMG
+        type: boolean
+        required: true
+        default: true
+      build_src:
+        description: Build source
+        type: boolean
+        required: true
+        default: false
 
 env:
   APP_NAME: VSCodium
@@ -31,8 +39,11 @@ env:
   GH_REPO_PATH: ${{ github.repository }}
   ORG_NAME: ${{ github.repository_owner }}
   OS_NAME: osx
-  VERSIONS_REPOSITORY: ${{ github.repository_owner }}/versions
   VSCODE_QUALITY: stable
+  RELEASE_VERSION: ${{ github.event.inputs.version_tag }}
+  SHOULD_BUILD_ZIP: ${{ github.event.inputs.build_zip == 'true' && 'yes' || 'no' }}
+  SHOULD_BUILD_DMG: ${{ github.event.inputs.build_dmg == 'true' && 'yes' || 'no' }}
+  SHOULD_BUILD_SRC: ${{ github.event.inputs.build_src == 'true' && 'yes' || 'no' }}
 
 jobs:
   build:
@@ -45,18 +56,13 @@ jobs:
         include:
           - runner: macos-13
             vscode_arch: x64
-          - runner: [self-hosted, macOS, ARM64]
-            vscode_arch: arm64
+#          - runner: [self-hosted, macOS, ARM64]
+#            vscode_arch: arm64
 
     steps:
       - uses: actions/checkout@v5
         with:
           ref: ${{ env.GITHUB_BRANCH }}
-
-      - name: Switch to relevant branch
-        env:
-          PULL_REQUEST_ID: ${{ github.event.inputs.checkout_pr }}
-        run: . get_pr.sh
 
       - name: Setup Node.js environment
         uses: actions/setup-node@v4
@@ -72,22 +78,11 @@ jobs:
       - name: Clone VSCode repo
         run: . get_repo.sh
 
-      - name: Check PR or cron
-        env:
-          GENERATE_ASSETS: ${{ github.event.inputs.generate_assets }}
-        run: . check_cron_or_pr.sh
-
-      - name: Check existing VSCodium tags/releases
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: . check_tags.sh
-        if: env.SHOULD_DEPLOY == 'yes'
-
       - name: Build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NO_MANGLING: ${{ github.event.inputs.enable_mangling == 'true' && 'no' || 'yes' }}
         run: ./build.sh
-        if: env.SHOULD_BUILD == 'yes'
 
       - name: Prepare assets
         env:
@@ -96,30 +91,15 @@ jobs:
           CERTIFICATE_OSX_P12_DATA: ${{ secrets.CERTIFICATE_OSX_NEW_P12_DATA }}
           CERTIFICATE_OSX_P12_PASSWORD: ${{ secrets.CERTIFICATE_OSX_NEW_P12_PASSWORD }}
           CERTIFICATE_OSX_TEAM_ID: ${{ secrets.CERTIFICATE_OSX_NEW_TEAM_ID }}
+          SHOULD_BUILD_CLI: ${{ github.event.inputs.build_cli == 'true' && 'yes' || 'no' }}
         run: ./prepare_assets.sh
-        if: env.SHOULD_BUILD == 'yes' && (env.SHOULD_DEPLOY == 'yes' || github.event.inputs.generate_assets == 'true')
-
-      - name: Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./release.sh
-        if: env.SHOULD_BUILD == 'yes' && env.SHOULD_DEPLOY == 'yes'
-
-      - name: Update versions repo
-        env:
-          FORCE_UPDATE: ${{ github.event.inputs.force_version }}
-          GITHUB_TOKEN: ${{ secrets.STRONGER_GITHUB_TOKEN }}
-          GITHUB_USERNAME: ${{ github.repository_owner }}
-        run: ./update_version.sh
-        if: env.SHOULD_DEPLOY == 'yes'
 
       - name: Upload assets
         uses: actions/upload-artifact@v4
         with:
-          name: bin-${{ matrix.vscode_arch }}
+          name: VSCodium-${{ matrix.vscode_arch }}
           path: assets/
           retention-days: 3
-        if: env.SHOULD_BUILD == 'yes' && env.SHOULD_DEPLOY == 'no' && github.event.inputs.generate_assets == 'true'
 
       - name: Clean up keychain
         if: always()

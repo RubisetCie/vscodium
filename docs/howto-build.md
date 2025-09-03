@@ -10,7 +10,6 @@
   - [Windows](#dependencies-windows)
 - [Build for Development](#build-dev)
 - [Build for CI/Downstream](#build-ci)
-- [Build Snap](#build-snap)
 - [Patch Update Process](#patch-update-process)
   - [Semi-Automated](#patch-update-process-semiauto)
   - [Manual](#patch-update-process-manual)
@@ -38,7 +37,6 @@
 - rpmbuild
 - dpkg
 - imagemagick (for AppImage)
-- snapcraft
 
 ### <a id="dependencies-macos"></a>MacOS
 
@@ -72,50 +70,11 @@ The script `dev/build.sh` provides several flags:
 
 - `-i`: build the Insiders version
 - `-l`: build with latest version of Visual Studio Code
+- `-c`: skip building the CLI (to be used with CI)
 - `-o`: skip the build step
 - `-p`: generate the packages/assets/installers
 - `-s`: do not retrieve the source code of Visual Studio Code, it won't delete the existing build
-
-## <a id="build-ci"></a>Build for CI/Downstream
-
-Here is the base script to build VSCodium:
-
-```bash
-# Export necessary environment variables
-export SHOULD_BUILD="yes"
-export SHOULD_BUILD_REH="no"
-export CI_BUILD="no"
-export OS_NAME="linux"
-export VSCODE_ARCH="${vscode_arch}"
-export VSCODE_QUALITY="stable"
-export RELEASE_VERSION="${version}"
-
-. get_repo.sh
-. build.sh
-```
-
-To go further, you should look at how we build it:
-- Linux: https://github.com/VSCodium/vscodium/blob/master/.github/workflows/stable-linux.yml
-- macOS: https://github.com/VSCodium/vscodium/blob/master/.github/workflows/stable-macos.yml
-- Windows: https://github.com/VSCodium/vscodium/blob/master/.github/workflows/stable-windows.yml
-
-The `./dev/build.sh` script is for development purpose and must be avoided for a packaging purpose.
-
-## <a id="build-snap"></a>Build Snap
-
-```
-# for the stable version
-cd ./stores/snapcraft/stable
-
-# for the insider version
-cd ./stores/snapcraft/insider
-
-# create the snap
-snapcraft --use-lxd
-
-# verify the snap
-review-tools.snap-review --allow-classic codium*.snap
-```
+- `-m`: disable mangling to speed up the compilation step
 
 ## <a id="patch-update-process"></a>Patch Update Process
 

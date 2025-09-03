@@ -1,4 +1,4 @@
-name: Build Linux (Stable)
+name: Package Linux
 
 on:
   workflow_dispatch:
@@ -6,11 +6,10 @@ on:
       version_tag:
         type: string
         description: Override version tag
-      enable_mangling:
-        description: 'Enable mangling (longer compilation)'
-        type: boolean
+      sources_url:
+        description: Sources download URL
+        type: string
         required: true
-        default: true
       disable_reh:
         description: Don't build remote extension host
         type: boolean
@@ -73,70 +72,9 @@ jobs:
       - name: Clone VSCode repo
         run: ./get_repo.sh
 
-  compile:
-    needs:
-      - check
-    runs-on: ubuntu-22.04
-    env:
-      MS_COMMIT: ${{ needs.check.outputs.MS_COMMIT }}
-      MS_TAG: ${{ needs.check.outputs.MS_TAG }}
-      RELEASE_VERSION: ${{ needs.check.outputs.RELEASE_VERSION }}
-      VSCODE_ARCH: 'x64'
-    outputs:
-      BUILD_SOURCEVERSION: ${{ env.BUILD_SOURCEVERSION }}
-
-    steps:
-      - uses: actions/checkout@v5
-        with:
-          ref: ${{ env.GITHUB_BRANCH }}
-
-      - name: Setup GCC
-        uses: egor-tensin/setup-gcc@v1
-        with:
-          version: 10
-          platform: x64
-
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-
-      - name: Setup Python 3
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Install Kerberos
-        run: sudo apt-get update -y && sudo apt-get install -y libkrb5-dev
-
-      - name: Clone VSCode repo
-        run: ./get_repo.sh
-
-      - name: Build
-        env:
-          SHOULD_BUILD_REH: 'no'
-          SHOULD_BUILD_REH_WEB: 'no'
-          NO_MANGLING: ${{ github.event.inputs.enable_mangling == 'true' && 'no' || 'yes' }}
-        run: ./build.sh
-
-      - name: Compress sources artifact
-        run: |
-          find vscode -type f -not -path "*/node_modules/*" -not -path "vscode/.build/node/*" -not -path "vscode/.git/*" > vscode.txt
-          echo "vscode/.build/extensions/node_modules" >> vscode.txt
-          echo "vscode/.git" >> vscode.txt
-          tar -czf vscode.tar.gz -T vscode.txt
-
-      - name: Upload sources artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: Sources
-          path: ./vscode.tar.gz
-          retention-days: 1
-
   build:
     needs:
       - check
-      - compile
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -169,7 +107,7 @@ jobs:
     container:
       image: ${{ matrix.image }}
     env:
-      BUILD_SOURCEVERSION: ${{ needs.compile.outputs.BUILD_SOURCEVERSION }}
+      SOURCES_URL: ${{ github.event.inputs.sources_url }}
       DISABLED: ${{ vars[format('DISABLE_STABLE_LINUX_APP_{0}', matrix.slug)] }}
       MS_COMMIT: ${{ needs.check.outputs.MS_COMMIT }}
       MS_TAG: ${{ needs.check.outputs.MS_TAG }}
@@ -191,10 +129,8 @@ jobs:
       - uses: actions-rust-lang/setup-rust-toolchain@v1
         if: env.DISABLED != 'yes'
 
-      - name: Download sources artifact
-        uses: actions/download-artifact@v5
-        with:
-          name: Sources
+      - name: Download sources
+        run: curl -Lko vscode.tar.gz "${SOURCES_URL}"
         if: env.DISABLED != 'yes'
 
       - name: Build
@@ -223,7 +159,6 @@ jobs:
   reh_linux:
     needs:
       - check
-      - compile
     if: ${{ github.event.inputs.disable_reh == 'false' }}
     runs-on: ubuntu-22.04
     strategy:
@@ -252,7 +187,7 @@ jobs:
           vscode_arch: s390x
           npm_arch: s390x
     env:
-      BUILD_SOURCEVERSION: ${{ needs.compile.outputs.BUILD_SOURCEVERSION }}
+      SOURCES_URL: ${{ github.event.inputs.sources_url }}
       DISABLED: ${{ vars[format('DISABLE_STABLE_LINUX_REH_{0}', matrix.slug)] }}
       MS_COMMIT: ${{ needs.check.outputs.MS_COMMIT }}
       MS_TAG: ${{ needs.check.outputs.MS_TAG }}
@@ -288,10 +223,8 @@ jobs:
         run: sudo apt-get update -y && sudo apt-get install -y libkrb5-dev
         if: env.DISABLED != 'yes'
 
-      - name: Download sources artifact
-        uses: actions/download-artifact@v5
-        with:
-          name: Sources
+      - name: Download sources
+        run: curl -Lko vscode.tar.gz "${SOURCES_URL}"
         if: env.DISABLED != 'yes'
 
       - name: Build
@@ -312,7 +245,6 @@ jobs:
   reh_alpine:
     needs:
       - check
-      - compile
     if: ${{ github.event.inputs.disable_reh == 'false' }}
     runs-on: ubuntu-22.04
     strategy:
@@ -326,7 +258,7 @@ jobs:
           vscode_arch: arm64
           npm_arch: arm64
     env:
-      BUILD_SOURCEVERSION: ${{ needs.compile.outputs.BUILD_SOURCEVERSION }}
+      SOURCES_URL: ${{ github.event.inputs.sources_url }}
       DISABLED: ${{ vars[format('DISABLE_STABLE_ALPINE_REH_{0}', matrix.slug)] }}
       MS_COMMIT: ${{ needs.check.outputs.MS_COMMIT }}
       MS_TAG: ${{ needs.check.outputs.MS_TAG }}
@@ -351,10 +283,8 @@ jobs:
         run: sudo apt-get update -y && sudo apt-get install -y libkrb5-dev
         if: env.DISABLED != 'yes'
 
-      - name: Download sources artifact
-        uses: actions/download-artifact@v5
-        with:
-          name: Sources
+      - name: Download sources
+        run: curl -Lko vscode.tar.gz "${SOURCES_URL}"
         if: env.DISABLED != 'yes'
 
       - name: Build
