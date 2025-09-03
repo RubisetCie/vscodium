@@ -95,9 +95,11 @@ fi
 export NODE_OPTIONS="--max-old-space-size=8192"
 
 echo "OS_NAME=\"${OS_NAME}\""
+echo "CI_BUILD=\"${CI_BUILD}\""
 echo "SKIP_SOURCE=\"${SKIP_SOURCE}\""
 echo "SKIP_BUILD=\"${SKIP_BUILD}\""
 echo "SKIP_ASSETS=\"${SKIP_ASSETS}\""
+echo "NO_MANGLING=\"${NO_MANGLING}\""
 echo "VSCODE_ARCH=\"${VSCODE_ARCH}\""
 echo "VSCODE_LATEST=\"${VSCODE_LATEST}\""
 echo "VSCODE_QUALITY=\"${VSCODE_QUALITY}\""
