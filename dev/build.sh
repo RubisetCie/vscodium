@@ -62,17 +62,19 @@ Options:
   esac
 done
 
-case "${OSTYPE}" in
-  darwin*)
-    export OS_NAME="osx"
-    ;;
-  msys* | cygwin*)
-    export OS_NAME="windows"
-    ;;
-  *)
-    export OS_NAME="linux"
-    ;;
-esac
+if [ -z "${OS_NAME}" ]; then
+  case "${OSTYPE}" in
+    darwin*)
+      export OS_NAME="osx"
+      ;;
+    msys* | cygwin*)
+      export OS_NAME="windows"
+      ;;
+    *)
+      export OS_NAME="linux"
+      ;;
+  esac
+fi
 
 UNAME_ARCH=$( uname -m )
 
