@@ -3,9 +3,6 @@
 
 set -e
 
-# include common functions
-. ./utils.sh
-
 if [[ "${VSCODE_QUALITY}" == "insider" ]]; then
   cp -rp src/insider/* vscode/
 else
@@ -16,88 +13,10 @@ cp -f LICENSE vscode/LICENSE.txt
 
 cd vscode || { echo "'vscode' dir not found"; exit 1; }
 
-# apply patches
 { set +x; } 2>/dev/null
 
-echo "APP_NAME=\"${APP_NAME}\""
-echo "APP_NAME_LC=\"${APP_NAME_LC}\""
-echo "BINARY_NAME=\"${BINARY_NAME}\""
-echo "GH_REPO_PATH=\"${GH_REPO_PATH}\""
-echo "ORG_NAME=\"${ORG_NAME}\""
-
-if [[ "${DISABLE_UPDATE}" == "yes" ]]; then
-  mv ../patches/disable-update.patch.yet ../patches/disable-update.patch
-fi
-
-for file in ../patches/*.patch; do
-  if [[ -f "${file}" ]]; then
-    apply_patch "${file}"
-  fi
-done
-
-if [[ "${VSCODE_QUALITY}" == "insider" ]]; then
-  for file in ../patches/insider/*.patch; do
-    if [[ -f "${file}" ]]; then
-      apply_patch "${file}"
-    fi
-  done
-fi
-
-if [[ -d "../patches/${OS_NAME}/" ]]; then
-  for file in "../patches/${OS_NAME}/"*.patch; do
-    if [[ -f "${file}" ]]; then
-      apply_patch "${file}"
-    fi
-  done
-fi
-
-for file in ../patches/user/*.patch; do
-  if [[ -f "${file}" ]]; then
-    apply_patch "${file}"
-  fi
-done
-
-set -x
-
-export ELECTRON_SKIP_BINARY_DOWNLOAD=1
-export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
-
-if [[ "${OS_NAME}" == "linux" ]]; then
-  export VSCODE_SKIP_NODE_VERSION_CHECK=1
-
-   if [[ "${npm_config_arch}" == "arm" ]]; then
-    export npm_config_arm_version=7
-  fi
-elif [[ "${OS_NAME}" == "windows" ]]; then
-  if [[ "${npm_config_arch}" == "arm" ]]; then
-    export npm_config_arm_version=7
-  fi
-else
-  if [[ "${CI_BUILD}" != "no" ]]; then
-    clang++ --version
-  fi
-fi
-
-mv .npmrc .npmrc.bak
-cp ../npmrc .npmrc
-
-for i in {1..5}; do # try 5 times
-  if [[ "${CI_BUILD}" != "no" && "${OS_NAME}" == "osx" ]]; then
-    CXX=clang++ npm ci && break
-  else
-    npm ci && break
-  fi
-
-  if [[ $i == 5 ]]; then
-    echo "Npm install failed too many times" >&2
-    exit 1
-  fi
-  echo "Npm install failed $i, trying again..."
-
-  sleep $(( 15 * (i + 1)))
-done
-
-mv .npmrc.bak .npmrc
+# {{{ product.json
+cp product.json{,.bak}
 
 setpath() {
   local jsonTmp
@@ -114,9 +33,6 @@ setpath_json() {
   echo "${jsonTmp}" > "${1}.json"
   set -x
 }
-
-# product.json
-cp product.json{,.bak}
 
 setpath "product" "checksumFailMoreInfoUrl" "https://go.microsoft.com/fwlink/?LinkId=828886"
 setpath "product" "documentationUrl" "https://go.microsoft.com/fwlink/?LinkID=533484#vscode"
@@ -161,7 +77,7 @@ if [[ "${VSCODE_QUALITY}" == "insider" ]]; then
   setpath "product" "win32UserAppId" "{{ED2E5618-3E7E-4888-BF3C-A6CCC84F586F}"
   setpath "product" "win32x64UserAppId" "{{20F79D0D-A9AC-4220-9A81-CE675FFB6B41}"
   setpath "product" "win32arm64UserAppId" "{{2E362F92-14EA-455A-9ABD-3E656BBBFE71}"
-  setpath "product" "tunnelApplicationName" "codium-tunnel-insiders"
+  setpath "product" "tunnelApplicationName" "codium-insiders-tunnel"
   setpath "product" "win32TunnelServiceMutex" "vscodiuminsiders-tunnelservice"
   setpath "product" "win32TunnelMutex" "vscodiuminsiders-tunnel"
   setpath "product" "win32ContextMenu.x64.clsid" "90AAD229-85FD-43A3-B82D-8598A88829CF"
@@ -196,10 +112,102 @@ else
   setpath "product" "win32ContextMenu.arm64.clsid" "4852FC55-4A84-4EA1-9C86-D53BE3DF83C0"
 fi
 
+setpath_json "product" "tunnelApplicationConfig" '{}'
+
 jsonTmp=$( jq -s '.[0] * .[1]' product.json ../product.json )
 echo "${jsonTmp}" > product.json && unset jsonTmp
 
 cat product.json
+# }}}
+
+# include common functions
+. ../utils.sh
+
+# {{{ apply patches
+
+echo "APP_NAME=\"${APP_NAME}\""
+echo "APP_NAME_LC=\"${APP_NAME_LC}\""
+echo "BINARY_NAME=\"${BINARY_NAME}\""
+echo "GH_REPO_PATH=\"${GH_REPO_PATH}\""
+echo "ORG_NAME=\"${ORG_NAME}\""
+echo "TUNNEL_APP_NAME=\"${TUNNEL_APP_NAME}\""
+
+if [[ "${DISABLE_UPDATE}" == "yes" ]]; then
+  mv ../patches/disable-update.patch.yet ../patches/disable-update.patch
+fi
+
+for file in ../patches/*.patch; do
+  if [[ -f "${file}" ]]; then
+    apply_patch "${file}"
+  fi
+done
+
+if [[ "${VSCODE_QUALITY}" == "insider" ]]; then
+  for file in ../patches/insider/*.patch; do
+    if [[ -f "${file}" ]]; then
+      apply_patch "${file}"
+    fi
+  done
+fi
+
+if [[ -d "../patches/${OS_NAME}/" ]]; then
+  for file in "../patches/${OS_NAME}/"*.patch; do
+    if [[ -f "${file}" ]]; then
+      apply_patch "${file}"
+    fi
+  done
+fi
+
+for file in ../patches/user/*.patch; do
+  if [[ -f "${file}" ]]; then
+    apply_patch "${file}"
+  fi
+done
+# }}}
+
+set -x
+
+# {{{ install dependencies
+export ELECTRON_SKIP_BINARY_DOWNLOAD=1
+export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
+
+if [[ "${OS_NAME}" == "linux" ]]; then
+  export VSCODE_SKIP_NODE_VERSION_CHECK=1
+
+   if [[ "${npm_config_arch}" == "arm" ]]; then
+    export npm_config_arm_version=7
+  fi
+elif [[ "${OS_NAME}" == "windows" ]]; then
+  if [[ "${npm_config_arch}" == "arm" ]]; then
+    export npm_config_arm_version=7
+  fi
+else
+  if [[ "${CI_BUILD}" != "no" ]]; then
+    clang++ --version
+  fi
+fi
+
+mv .npmrc .npmrc.bak
+cp ../npmrc .npmrc
+
+for i in {1..5}; do # try 5 times
+  if [[ "${CI_BUILD}" != "no" && "${OS_NAME}" == "osx" ]]; then
+    CXX=clang++ npm ci && break
+  else
+    npm ci && break
+  fi
+
+  if [[ $i == 5 ]]; then
+    echo "Npm install failed too many times" >&2
+    exit 1
+  fi
+  echo "Npm install failed $i, trying again..."
+
+  sleep $(( 15 * (i + 1)))
+done
+
+mv .npmrc.bak .npmrc
+# }}}
 
 # package.json
 cp package.json{,.bak}

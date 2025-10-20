@@ -6,6 +6,7 @@ ASSETS_REPOSITORY="${ASSETS_REPOSITORY:-VSCodium/vscodium}"
 BINARY_NAME="${BINARY_NAME:-codium}"
 GH_REPO_PATH="${GH_REPO_PATH:-RubisetCie/vscodium}"
 ORG_NAME="${ORG_NAME:-VSCodium}"
+TUNNEL_APP_NAME="${TUNNEL_APP_NAME:-"${BINARY_NAME}-tunnel"}"
 
 # All common functions can be added to this file
 
@@ -24,6 +25,7 @@ apply_patch() {
   replace "s|!!GH_REPO_PATH!!|${GH_REPO_PATH}|g" "$1"
   replace "s|!!ORG_NAME!!|${ORG_NAME}|g" "$1"
   replace "s|!!RELEASE_VERSION!!|${RELEASE_VERSION}|g" "$1"
+  replace "s|!!TUNNEL_APP_NAME!!|${TUNNEL_APP_NAME}|g" "$1"
 
   if ! git apply --ignore-whitespace "$1"; then
     echo failed to apply patch "$1" >&2
