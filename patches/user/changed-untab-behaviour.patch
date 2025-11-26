@@ -1,4 +1,4 @@
-From 414d6a2540f686b05c7fc78b16decaf6fc6e041d Mon Sep 17 00:00:00 2001
+From 1a9e6b5e108dbadd9ae5833359e51c5ee4584cb0 Mon Sep 17 00:00:00 2001
 From: Matthieu Carteron <rubisetcie@gmail.com>
 Date: Wed, 9 Apr 2025 22:42:26 +0200
 Subject: [PATCH] Changed 'Shift+TAB' (untab) behaviour to outdent from the cursor's position when no selection.
@@ -13,10 +13,10 @@ Subject: [PATCH] Changed 'Shift+TAB' (untab) behaviour to outdent from the curso
  6 files changed, 68 insertions(+), 32 deletions(-)
 
 diff --git a/src/vs/editor/browser/coreCommands.ts b/src/vs/editor/browser/coreCommands.ts
-index 0fcd8dd6997..07bbef2e952 100644
+index 5669797012b..8ea53e020e8 100644
 --- a/src/vs/editor/browser/coreCommands.ts
 +++ b/src/vs/editor/browser/coreCommands.ts
-@@ -1993,10 +1993,10 @@ export namespace CoreEditingCommands {
+@@ -1997,10 +1997,10 @@ export namespace CoreEditingCommands {
  		}
  	});
  
@@ -29,7 +29,7 @@ index 0fcd8dd6997..07bbef2e952 100644
  				precondition: EditorContextKeys.writable,
  				kbOpts: {
  					weight: CORE_WEIGHT,
-@@ -2011,7 +2011,7 @@ export namespace CoreEditingCommands {
+@@ -2015,7 +2015,7 @@ export namespace CoreEditingCommands {
  
  		public runCoreEditingCommand(editor: ICodeEditor, viewModel: IViewModel, args: unknown): void {
  			editor.pushUndoStop();
@@ -193,18 +193,18 @@ index b6d1a559cd0..4b70e7c48f6 100644
  		return CompositionOperation.getEdits(prevEditOperationType, config, model, selections, text, replacePrevCharCnt, replaceNextCharCnt, positionDelta);
  	}
 diff --git a/src/vs/editor/contrib/linesOperations/browser/linesOperations.ts b/src/vs/editor/contrib/linesOperations/browser/linesOperations.ts
-index 6c39de9ccdc..8fae5f6998d 100644
+index e67488579e1..18d6cd3fef9 100644
 --- a/src/vs/editor/contrib/linesOperations/browser/linesOperations.ts
 +++ b/src/vs/editor/contrib/linesOperations/browser/linesOperations.ts
-@@ -4,7 +4,6 @@
-  *--------------------------------------------------------------------------------------------*/
- 
- import { KeyChord, KeyCode, KeyMod } from '../../../../base/common/keyCodes.js';
+@@ -8,7 +8,6 @@ import * as nls from '../../../../nls.js';
+ import { MenuId } from '../../../../platform/actions/common/actions.js';
+ import { IConfigurationService } from '../../../../platform/configuration/common/configuration.js';
+ import { KeybindingWeight } from '../../../../platform/keybinding/common/keybindingsRegistry.js';
 -import { CoreEditingCommands } from '../../../browser/coreCommands.js';
  import { IActiveCodeEditor, ICodeEditor } from '../../../browser/editorBrowser.js';
  import { EditorAction, IActionOptions, registerEditorAction, ServicesAccessor } from '../../../browser/editorExtensions.js';
  import { ReplaceCommand, ReplaceCommandThatPreservesSelection, ReplaceCommandThatSelectsText } from '../../../common/commands/replaceCommand.js';
-@@ -633,7 +632,13 @@ class OutdentLinesAction extends EditorAction {
+@@ -649,7 +648,13 @@ class OutdentLinesAction extends EditorAction {
  	}
  
  	public run(_accessor: ServicesAccessor, editor: ICodeEditor): void {
@@ -220,7 +220,7 @@ index 6c39de9ccdc..8fae5f6998d 100644
  }
  
 diff --git a/src/vs/editor/test/browser/controller/cursor.test.ts b/src/vs/editor/test/browser/controller/cursor.test.ts
-index bae8989b263..f137c8d1266 100644
+index 1322aae8fba..bbf5e697bc9 100644
 --- a/src/vs/editor/test/browser/controller/cursor.test.ts
 +++ b/src/vs/editor/test/browser/controller/cursor.test.ts
 @@ -1860,7 +1860,7 @@ suite('Editor Controller', () => {
