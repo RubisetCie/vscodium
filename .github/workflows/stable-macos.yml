@@ -15,7 +15,7 @@ on:
         description: Build separate command-line utility
         type: boolean
         required: true
-        default: true
+        default: false
       build_zip:
         description: Build ZIP
         type: boolean
@@ -28,6 +28,16 @@ on:
         default: true
       build_src:
         description: Build source
+        type: boolean
+        required: true
+        default: false
+      upload_assets:
+        description: Upload assets (artifacts)
+        type: boolean
+        required: true
+        default: true
+      release_assets:
+        description: Release assets (draft)
         type: boolean
         required: true
         default: false
@@ -54,15 +64,14 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - runner: macos-13
+          - runner: macos-15-intel
             vscode_arch: x64
 #          - runner: [self-hosted, macOS, ARM64]
 #            vscode_arch: arm64
 
     steps:
-      - uses: actions/checkout@v6
-        with:
-          ref: ${{ env.GITHUB_BRANCH }}
+      - name: Checkout
+        uses: actions/checkout@v6
 
       - name: Setup Node.js environment
         uses: actions/setup-node@v6
@@ -100,6 +109,18 @@ jobs:
           name: VSCodium-${{ matrix.vscode_arch }}
           path: assets/
           retention-days: 3
+        if: ${{ github.event.inputs.upload_assets == 'true' }}
+
+      - name: Publish assets
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ env.RELEASE_VERSION }}
+          tag_name: ${{ env.RELEASE_VERSION }}
+          body: "Stable release of **VSCodium**, aligned with the version **${{ env.RELEASE_VERSION }}** of the codebase of **VSCode**."
+          prerelease: false
+          draft: true
+          files: assets/*
+        if: ${{ github.event.inputs.release_assets == 'true' }}
 
       - name: Clean up keychain
         if: always()

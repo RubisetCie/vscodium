@@ -31,7 +31,8 @@ fi
     rm -f .build/extensions/ms-vscode.js-debug/src/win32-app-container-tokens.*.node
 
     # generate Group Policy definitions
-    node build/lib/policies/policyGenerator build/lib/policies/policyData.jsonc darwin
+    npm run copy-policy-dto --prefix build
+    node build/lib/policies/policyGenerator.ts build/lib/policies/policyData.jsonc darwin
 
     npm run gulp "vscode-darwin-${VSCODE_ARCH}-min-ci"
 
@@ -41,12 +42,13 @@ fi
 
     VSCODE_PLATFORM="darwin"
   elif [[ "${OS_NAME}" == "windows" ]]; then
-    # generate Group Policy definitions
-    node build/lib/policies/policyGenerator build/lib/policies/policyData.jsonc win32
-
     # in CI, packaging will be done by a different job
     if [[ "${CI_BUILD}" == "no" ]]; then
       . ../build/windows/rtf/make.sh
+
+      # generate Group Policy definitions
+      npm run copy-policy-dto --prefix build
+      node build/lib/policies/policyGenerator.ts build/lib/policies/policyData.jsonc win32
 
       npm run gulp "vscode-win32-${VSCODE_ARCH}-min-ci"
 
@@ -65,6 +67,10 @@ fi
 
     # in CI, packaging will be done by a different job
     if [[ "${CI_BUILD}" == "no" ]]; then
+      # generate Group Policy definitions
+      npm run copy-policy-dto --prefix build
+      node build/lib/policies/policyGenerator.ts build/lib/policies/policyData.jsonc linux
+
       npm run gulp "vscode-linux-${VSCODE_ARCH}-min-ci"
 
       find "../VSCode-linux-${VSCODE_ARCH}" -print0 | xargs -0 touch -c

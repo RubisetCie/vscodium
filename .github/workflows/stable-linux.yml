@@ -20,7 +20,7 @@ on:
         description: Build separate command-line utility
         type: boolean
         required: true
-        default: true
+        default: false
       build_appimage:
         description: Build AppImage
         type: boolean
@@ -41,6 +41,16 @@ on:
         type: boolean
         required: true
         default: true
+      upload_assets:
+        description: Upload assets (artifacts)
+        type: boolean
+        required: true
+        default: true
+      release_assets:
+        description: Release assets (draft)
+        type: boolean
+        required: true
+        default: false
 
 env:
   ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
@@ -66,9 +76,8 @@ jobs:
       RELEASE_VERSION: ${{ env.RELEASE_VERSION }}
 
     steps:
-      - uses: actions/checkout@v6
-        with:
-          ref: ${{ env.GITHUB_BRANCH }}
+      - name: Checkout
+        uses: actions/checkout@v6
 
       - name: Clone VSCode repo
         run: ./get_repo.sh
@@ -86,9 +95,8 @@ jobs:
       BUILD_SOURCEVERSION: ${{ env.BUILD_SOURCEVERSION }}
 
     steps:
-      - uses: actions/checkout@v6
-        with:
-          ref: ${{ env.GITHUB_BRANCH }}
+      - name: Checkout
+        uses: actions/checkout@v6
 
       - name: Setup GCC
         uses: egor-tensin/setup-gcc@v1
@@ -161,7 +169,7 @@ jobs:
         - slug: LOONG64
           vscode_arch: loong64
           npm_arch: loong64
-          image: vscodium/vscodium-linux-build-agent:beige-loong64
+          image: vscodium/vscodium-linux-build-agent:crimson-loong64
         - slug: PPC64
           vscode_arch: ppc64le
           npm_arch: ppc64
@@ -179,16 +187,16 @@ jobs:
       RELEASE_VERSION: ${{ env.RELEASE_VERSION }}
 
     steps:
-      - uses: actions/checkout@v6
-        with:
-          ref: ${{ env.GITHUB_BRANCH }}
+      - name: Checkout
+        uses: actions/checkout@v6
         if: env.DISABLED != 'yes'
 
       - name: Install dependencies
         run: ./build/linux/deps.sh
         if: env.DISABLED != 'yes'
 
-      - uses: actions-rust-lang/setup-rust-toolchain@v1
+      - name: Install Rust
+        uses: actions-rust-lang/setup-rust-toolchain@v1
         if: env.DISABLED != 'yes'
 
       - name: Download sources artifact
@@ -218,7 +226,18 @@ jobs:
           name: VSCodium-${{ matrix.vscode_arch }}
           path: assets/
           retention-days: 3
-        if: env.DISABLED != 'yes'
+        if: ${{ env.DISABLED != 'yes' && github.event.inputs.upload_assets == 'true' }}
+
+      - name: Publish assets
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ env.RELEASE_VERSION }}
+          tag_name: ${{ env.RELEASE_VERSION }}
+          body: "Stable release of **VSCodium**, aligned with the version **${{ env.RELEASE_VERSION }}** of the codebase of **VSCode**."
+          prerelease: false
+          draft: true
+          files: assets/*
+        if: ${{ env.DISABLED != 'yes' && github.event.inputs.release_assets == 'true' }}
 
   reh_linux:
     needs:
@@ -260,9 +279,8 @@ jobs:
       VSCODE_ARCH: ${{ matrix.vscode_arch }}
 
     steps:
-      - uses: actions/checkout@v6
-        with:
-          ref: ${{ env.GITHUB_BRANCH }}
+      - name: Checkout
+        uses: actions/checkout@v6
         if: env.DISABLED != 'yes'
 
       - name: Setup GCC
@@ -307,7 +325,18 @@ jobs:
           name: Remote-Extension-Host-Linux-${{ matrix.vscode_arch }}
           path: assets/
           retention-days: 3
-        if: env.DISABLED != 'yes'
+        if: ${{ env.DISABLED != 'yes' && github.event.inputs.upload_assets == 'true' }}
+
+      - name: Publish assets
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ env.RELEASE_VERSION }}
+          tag_name: ${{ env.RELEASE_VERSION }}
+          body: "Stable release of **VSCodium**, aligned with the version **${{ env.RELEASE_VERSION }}** of the codebase of **VSCode**."
+          prerelease: false
+          draft: true
+          files: assets/*
+        if: ${{ env.DISABLED != 'yes' && github.event.inputs.release_assets == 'true' }}
 
   reh_alpine:
     needs:
@@ -335,9 +364,8 @@ jobs:
       VSCODE_ARCH: ${{ matrix.vscode_arch }}
 
     steps:
-      - uses: actions/checkout@v6
-        with:
-          ref: ${{ env.GITHUB_BRANCH }}
+      - name: Checkout
+        uses: actions/checkout@v6
         if: env.DISABLED != 'yes'
 
       - name: Setup GCC
@@ -345,6 +373,12 @@ jobs:
         with:
           version: 10
           platform: x64
+        if: env.DISABLED != 'yes'
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: '.nvmrc'
         if: env.DISABLED != 'yes'
 
       - name: Install Kerberos
@@ -370,4 +404,15 @@ jobs:
           name: Remote-Extension-Host-Alpine-${{ matrix.vscode_arch }}
           path: assets/
           retention-days: 3
-        if: env.DISABLED != 'yes'
+        if: ${{ env.DISABLED != 'yes' && github.event.inputs.upload_assets == 'true' }}
+
+      - name: Publish assets
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ env.RELEASE_VERSION }}
+          tag_name: ${{ env.RELEASE_VERSION }}
+          body: "Stable release of **VSCodium**, aligned with the version **${{ env.RELEASE_VERSION }}** of the codebase of **VSCode**."
+          prerelease: false
+          draft: true
+          files: assets/*
+        if: ${{ env.DISABLED != 'yes' && github.event.inputs.release_assets == 'true' }}
