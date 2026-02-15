@@ -54,6 +54,18 @@ setpath "product" "requestFeatureUrl" "https://go.microsoft.com/fwlink/?LinkID=5
 setpath "product" "tipsAndTricksUrl" "https://go.microsoft.com/fwlink/?linkid=852118"
 setpath "product" "twitterUrl" "https://go.microsoft.com/fwlink/?LinkID=533687"
 
+if [[ "${DISABLE_UPDATE}" != "yes" ]]; then
+  setpath "product" "updateUrl" "https://raw.githubusercontent.com/RubisetCie/vscodium/versions/refs/heads/master"
+
+  if [[ "${VSCODE_QUALITY}" != "insider" ]]; then
+    setpath "product" "downloadUrl" "https://github.com/RubisetCie/vscodium/releases"
+  fi
+
+  # if [[ "${OS_NAME}" == "windows" ]]; then
+  #   setpath_json "product" "win32VersionedUpdate" "true"
+  # fi
+fi
+
 if [[ "${VSCODE_QUALITY}" == "insider" ]]; then
   setpath "product" "nameShort" "VSCodium - Insiders"
   setpath "product" "nameLong" "VSCodium - Insiders"
@@ -270,17 +282,11 @@ if [[ "${OS_NAME}" == "linux" ]]; then
   sed -i 's|https://code.visualstudio.com|https://vscodium.com|' resources/linux/rpm/code.spec.template
 
   # snapcraft.yaml
-  sed -i 's|Visual Studio Code|VSCodium|'  resources/linux/rpm/code.spec.template
+  sed -i 's|Visual Studio Code|VSCodium|' resources/linux/rpm/code.spec.template
 elif [[ "${OS_NAME}" == "windows" ]]; then
-  if [[ "${VSCODE_QUALITY}" == "insider" ]]; then
-    ISS_PATH="build/win32/code-insider.iss"
-  else
-    ISS_PATH="build/win32/code.iss"
-  fi
-
   # code.iss
-  sed -i 's|https://code.visualstudio.com|https://vscodium.com|' "${ISS_PATH}"
-  sed -i 's|Microsoft Corporation|VSCodium|' "${ISS_PATH}"
+  sed -i 's|https://code.visualstudio.com|https://vscodium.com|' build/win32/code.iss
+  sed -i 's|Microsoft Corporation|VSCodium|' build/win32/code.iss
 fi
 
 cd ..
