@@ -121,7 +121,8 @@
     ],
     "ms-python.vscode-python-envs": [
       "terminalShellEnv",
-      "terminalDataWriteEvent"
+      "terminalDataWriteEvent",
+      "taskExecutionTerminal"
     ],
     "ms-dotnettools.dotnet-interactive-vscode": [
       "notebookMessaging"
@@ -251,6 +252,7 @@
       "devDeviceId"
     ],
     "GitHub.copilot-chat": [
+      "agentSessionsWorkspace",
       "interactive",
       "terminalDataWriteEvent",
       "terminalExecuteCommandEvent",
@@ -306,7 +308,11 @@
       "chatPromptFiles",
       "mcpServerDefinitions",
       "tabInputMultiDiff",
-      "workspaceTrust"
+      "workspaceTrust",
+      "chatHooks",
+      "chatDebug",
+      "environmentPower",
+      "terminalTitle"
     ],
     "GitHub.remotehub": [
       "contribRemoteHelp",
@@ -379,6 +385,10 @@
     "ms-dotnettools.vscodeintellicode-csharp": [
       "inlineCompletionsAdditions"
     ],
+    "ms-dotnettools.vscode-dotnet-modernize": [
+      "chatParticipantAdditions",
+      "chatPromptFiles"
+    ],
     "microsoft-IsvExpTools.powerplatform-vscode": [
       "fileSearchProvider",
       "textSearchProvider"
@@ -417,6 +427,13 @@
     "openai.chatgpt": [
       "languageModelProxy",
       "chatSessionsProvider"
+    ],
+    "TypeScriptTeam.native-preview": [
+      "editorHoverVerbosityLevel",
+      "multiDocumentHighlightProvider"
+    ],
+    "ms-vscode.vscode-eng-codereview": [
+      "chatContextProvider"
     ],
     "jeanp413.open-remote-ssh": [
       "resolvers",

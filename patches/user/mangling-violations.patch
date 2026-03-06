@@ -1,0 +1,75 @@
+From 65ff73f4344fb95931830666c7e5745d2d48b478 Mon Sep 17 00:00:00 2001
+From: Matthieu Carteron <rubisetcie@gmail.com>
+Date: Sat, 7 Mar 2026 14:06:35 +0100
+Subject: [PATCH] Disable mangling violations checking.
+
+---
+ build/lib/compilation.ts  |  2 +-
+ build/lib/mangle/index.ts | 14 ++------------
+ 2 files changed, 3 insertions(+), 13 deletions(-)
+
+diff --git a/build/lib/compilation.ts b/build/lib/compilation.ts
+index 047e83e..ab207d1 100644
+--- a/build/lib/compilation.ts
++++ b/build/lib/compilation.ts
+@@ -140,7 +140,7 @@ export function compileTask(src: string, out: string, build: boolean, options: {
+ 		let mangleStream = es.through();
+ 		if (build && !options.disableMangle) {
+ 			let ts2tsMangler: Mangler | undefined = new Mangler(compile.projectPath, (...data) => fancyLog(ansiColors.blue('[mangler]'), ...data), { mangleExports: true, manglePrivateFields: true });
+-			const newContentsByFileName = ts2tsMangler.computeNewFileContents(new Set(['saveState']));
++			const newContentsByFileName = ts2tsMangler.computeNewFileContents();
+ 			mangleStream = es.through(async function write(data: File & { sourceMap?: RawSourceMap }) {
+ 				type TypeScriptExt = typeof ts & { normalizePath(path: string): string };
+ 				const tsNormalPath = (ts as TypeScriptExt).normalizePath(data.path);
+diff --git a/build/lib/mangle/index.ts b/build/lib/mangle/index.ts
+index e53c58d..4d7f2ba 100644
+--- a/build/lib/mangle/index.ts
++++ b/build/lib/mangle/index.ts
+@@ -435,7 +435,7 @@ export class Mangler {
+ 		});
+ 	}
+ 
+-	async computeNewFileContents(strictImplicitPublicHandling?: Set<string>): Promise<Map<string, MangleOutput>> {
++	async computeNewFileContents(): Promise<Map<string, MangleOutput>> {
+ 
+ 		const service = ts.createLanguageService(new StaticLanguageServiceHost(this.projectPath));
+ 
+@@ -543,7 +543,6 @@ export class Mangler {
+ 
+ 		//  STEP: make implicit public (actually protected) field really public
+ 		const violations = new Map<string, string[]>();
+-		let violationsCauseFailure = false;
+ 		for (const data of this.allClassDataByKey.values()) {
+ 			ClassData.makeImplicitPublicActuallyPublic(data, (name: string, what, why) => {
+ 				const arr = violations.get(what);
+@@ -552,20 +551,11 @@ export class Mangler {
+ 				} else {
+ 					violations.set(what, [why]);
+ 				}
+-
+-				if (strictImplicitPublicHandling && !strictImplicitPublicHandling.has(name)) {
+-					violationsCauseFailure = true;
+-				}
+ 			});
+ 		}
+ 		for (const [why, whys] of violations) {
+ 			this.log(`WARN: ${why} became PUBLIC because of: ${whys.join(' , ')}`);
+ 		}
+-		if (violationsCauseFailure) {
+-			const message = 'Protected fields have been made PUBLIC. This hurts minification and is therefore not allowed. Review the WARN messages further above';
+-			this.log(`ERROR: ${message}`);
+-			throw new Error(message);
+-		}
+ 
+ 		// STEP: compute replacement names for each class
+ 		for (const data of this.allClassDataByKey.values()) {
+@@ -783,7 +773,7 @@ async function _run() {
+ 		mangleExports: true,
+ 		manglePrivateFields: true,
+ 	});
+-	for (const [fileName, contents] of await mangler.computeNewFileContents(new Set(['saveState']))) {
++	for (const [fileName, contents] of await mangler.computeNewFileContents()) {
+ 		const newFilePath = path.join(newProjectBase, path.relative(projectBase, fileName));
+ 		await fs.promises.mkdir(path.dirname(newFilePath), { recursive: true });
+ 		await fs.promises.writeFile(newFilePath, contents.out);
+-- 
