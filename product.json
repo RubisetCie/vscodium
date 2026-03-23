@@ -100,7 +100,8 @@
       "portsAttributes",
       "findTextInFiles",
       "workspaceTrust",
-      "tunnels"
+      "tunnels",
+      "browser"
     ],
     "ms-toolsai.vscode-ai-remote": [
       "resolvers",
@@ -202,7 +203,8 @@
       "portsAttributes",
       "findTextInFiles",
       "workspaceTrust",
-      "tunnels"
+      "tunnels",
+      "browser"
     ],
     "ms-vscode.lsif-browser": [
       "documentFiltersExclusive"
@@ -399,7 +401,8 @@
     ],
     "TeamsDevApp.ms-teams-vscode-extension": [
       "chatParticipantAdditions",
-      "languageModelSystem"
+      "languageModelSystem",
+      "mcpServerDefinitions"
     ],
     "ms-toolsai.datawrangler": [],
     "ms-vscode.vscode-commander": [],

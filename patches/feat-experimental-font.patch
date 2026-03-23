@@ -1,14 +1,50 @@
 diff --git a/src/vs/base/browser/ui/actionbar/actionbar.css b/src/vs/base/browser/ui/actionbar/actionbar.css
-index 467b1ff..16e6d69 100644
+index e9e55ad..0ce9147 100644
 --- a/src/vs/base/browser/ui/actionbar/actionbar.css
 +++ b/src/vs/base/browser/ui/actionbar/actionbar.css
-@@ -127 +127,35 @@
+@@ -127 +127,72 @@
  }
 +
 +
 +
 +/*** Generated for Custom Font Size ***/
 +
++.monaco-workbench .part.panel .monaco-action-bar .actions-container {
++    padding: 0
++}
++.monaco-workbench .part.panel .monaco-action-bar .action-item .codicon {
++    width: calc(var(--vscode-workbench-bottompane-font-size) * 1.230769);
++    height: calc(var(--vscode-workbench-bottompane-font-size) * 1.230769)
++}
++.monaco-workbench .part.panel .monaco-action-bar .action-label, .monaco-workbench .part.panel .monaco-action-bar .action-item .keybinding {
++    font-size: calc(var(--vscode-workbench-bottompane-font-size) * 0.846154);
++    padding: calc(var(--vscode-workbench-bottompane-font-size) * 0.230769)
++}
++.monaco-workbench .part.panel .monaco-action-bar.vertical .action-item .action-label.separator {
++    padding-top: 1px;
++    margin: calc(var(--vscode-workbench-bottompane-font-size) * 0.307692) .8em
++}
++.monaco-workbench .part.panel .monaco-action-bar .action-item .action-label.separator {
++    width: 1px;
++    height: calc(var(--vscode-workbench-bottompane-font-size) * 1.230769);
++    margin: calc(var(--vscode-workbench-bottompane-font-size) * 0.384615) calc(var(--vscode-workbench-bottompane-font-size) * 0.307692);
++    min-width: 1px;
++    padding: 0
++}
++.monaco-workbench .part.panel .secondary-actions .monaco-action-bar .action-label {
++    margin-left: calc(var(--vscode-workbench-bottompane-font-size) * 0.461538)
++}
++.monaco-workbench .part.panel .monaco-action-bar .action-item.select-container {
++    max-width: calc(var(--vscode-workbench-bottompane-font-size) * 13.076923);
++    min-width: calc(var(--vscode-workbench-bottompane-font-size) * 4.615385);
++    margin-right: calc(var(--vscode-workbench-bottompane-font-size) * 0.769231)
++}
++.monaco-workbench .part.panel .monaco-action-bar .action-item.action-dropdown-item > .action-dropdown-item-separator > div {
++    width: 1px
++}
++.monaco-workbench .part.sidebar .monaco-action-bar .actions-container, .monaco-workbench .part.auxiliarybar .monaco-action-bar .actions-container {
++    padding: 0
++}
 +.monaco-workbench .part.sidebar .monaco-action-bar .action-item .codicon, .monaco-workbench .part.auxiliarybar .monaco-action-bar .action-item .codicon {
 +    width: calc(var(--vscode-workbench-sidebar-font-size) * 1.230769);
 +    height: calc(var(--vscode-workbench-sidebar-font-size) * 1.230769)
@@ -25,7 +61,8 @@ index 467b1ff..16e6d69 100644
 +    width: 1px;
 +    height: calc(var(--vscode-workbench-sidebar-font-size) * 1.230769);
 +    margin: calc(var(--vscode-workbench-sidebar-font-size) * 0.384615) calc(var(--vscode-workbench-sidebar-font-size) * 0.307692);
-+    min-width: 1px
++    min-width: 1px;
++    padding: 0
 +}
 +.monaco-workbench .part.sidebar .secondary-actions .monaco-action-bar .action-label, .monaco-workbench .part.auxiliarybar .secondary-actions .monaco-action-bar .action-label {
 +    margin-left: calc(var(--vscode-workbench-sidebar-font-size) * 0.461538)
@@ -129,17 +166,19 @@ index d3dfd9a..cf59627 100644
 +}
 \ No newline at end of file
 diff --git a/src/vs/base/browser/ui/inputbox/inputBox.css b/src/vs/base/browser/ui/inputbox/inputBox.css
-index 827a19f..43a1996 100644
+index dc5e637..b580762 100644
 --- a/src/vs/base/browser/ui/inputbox/inputBox.css
 +++ b/src/vs/base/browser/ui/inputbox/inputBox.css
-@@ -106 +106,26 @@
+@@ -107 +107,28 @@
  }
 +
-+.monaco-workbench .part.sidebar .monaco-inputbox > .ibwrapper {
-+	line-height: var(--vscode-workbench-sidebar-font-size);
-+	font-size: var(--vscode-workbench-sidebar-font-size);
-+}
 +
++
++/*** Generated for Custom Font Size ***/
++
++.monaco-workbench .part.sidebar .monaco-inputbox, .monaco-workbench .part.auxiliarybar .monaco-inputbox {
++    padding: 0
++}
 +.monaco-workbench .part.sidebar .monaco-inputbox > .ibwrapper > .input, .monaco-workbench .part.sidebar .monaco-inputbox > .ibwrapper > .mirror, .monaco-workbench .part.auxiliarybar .monaco-inputbox > .ibwrapper > .input, .monaco-workbench .part.auxiliarybar .monaco-inputbox > .ibwrapper > .mirror {
 +    padding: calc(var(--vscode-workbench-sidebar-font-size) * 0.307692) calc(var(--vscode-workbench-sidebar-font-size) * 0.461538)
 +}
@@ -183,14 +222,14 @@ index fd4d00e..92ddc99 100644
 +}
 \ No newline at end of file
 diff --git a/src/vs/base/browser/ui/selectBox/selectBoxCustom.ts b/src/vs/base/browser/ui/selectBox/selectBoxCustom.ts
-index f6c2ff1..a7da491 100644
+index b7cbca1..16f531c 100644
 --- a/src/vs/base/browser/ui/selectBox/selectBoxCustom.ts
 +++ b/src/vs/base/browser/ui/selectBox/selectBoxCustom.ts
 @@ -8,2 +8,3 @@ import * as arrays from '../../../common/arrays.js';
  import { Emitter, Event } from '../../../common/event.js';
 +import { FONT } from '../../../common/font.js';
  import { KeyCode, KeyCodeUtils } from '../../../common/keyCodes.js';
-@@ -164,3 +165,3 @@ export class SelectBoxList extends Disposable implements ISelectBoxDelegate, ILi
+@@ -172,3 +173,3 @@ export class SelectBoxList extends Disposable implements ISelectBoxDelegate, ILi
  	getHeight(): number {
 -		return 22;
 +		return FONT.sidebarSize22;
@@ -311,10 +350,10 @@ index 0b2fcbb..6370e6f 100644
  	}
 diff --git a/src/vs/base/common/font.ts b/src/vs/base/common/font.ts
 new file mode 100644
-index 0000000..9b2b46c
+index 0000000..8b9689c
 --- /dev/null
 +++ b/src/vs/base/common/font.ts
-@@ -0,0 +1,184 @@
+@@ -0,0 +1,187 @@
 +import { IConfigurationService } from '../../platform/configuration/common/configuration.js';
 +
 +export const FONT = {
@@ -350,6 +389,7 @@ index 0000000..9b2b46c
 +	sidebarSize34: 34,
 +	sidebarSize39: 39,
 +	sidebarSize44: 44,
++	sidebarSize54: 54,
 +	sidebarSize62: 62,
 +	sidebarSize72: 72,
 +
@@ -392,6 +432,7 @@ index 0000000..9b2b46c
 +const SIDE_BAR_COEFF_34 = 34/13;
 +const SIDE_BAR_COEFF_39 = 39/13;
 +const SIDE_BAR_COEFF_44 = 44/13;
++const SIDE_BAR_COEFF_54 = 54/13;
 +const SIDE_BAR_COEFF_62 = 62/13;
 +const SIDE_BAR_COEFF_72 = 72/13;
 +
@@ -482,6 +523,7 @@ index 0000000..9b2b46c
 +	FONT.sidebarSize34 = size * SIDE_BAR_COEFF_34;
 +	FONT.sidebarSize39 = size * SIDE_BAR_COEFF_39;
 +	FONT.sidebarSize44 = size * SIDE_BAR_COEFF_44;
++	FONT.sidebarSize54 = size * SIDE_BAR_COEFF_54;
 +	FONT.sidebarSize62 = size * SIDE_BAR_COEFF_62;
 +	FONT.sidebarSize72 = size * SIDE_BAR_COEFF_72;
 +}
@@ -1002,7 +1044,7 @@ index 328285f..0735dfa 100644
 +		return FONT.sidebarSize22;
  	}
 diff --git a/src/vs/workbench/browser/media/style.css b/src/vs/workbench/browser/media/style.css
-index 7537f93..5a7a277 100644
+index 0d6a2da..6127a14 100644
 --- a/src/vs/workbench/browser/media/style.css
 +++ b/src/vs/workbench/browser/media/style.css
 @@ -11,20 +11,20 @@
@@ -1046,8 +1088,8 @@ index 7537f93..5a7a277 100644
  	color: var(--vscode-foreground);
 +	font-family: var(--vscode-workbench-font-family, var(--monaco-font));
 +	font-size: var(--vscode-workbench-font-size, 13px);
- }
-@@ -323 +325,41 @@ body {
+ 
+@@ -335 +337,41 @@ body {
  }
 +
 +
@@ -1179,10 +1221,10 @@ index 0307cab..5e5f6f3 100644
 +
  	getPinnedPaneCompositeIds(): string[] {
 diff --git a/src/vs/workbench/browser/parts/activitybar/media/activityaction.css b/src/vs/workbench/browser/parts/activitybar/media/activityaction.css
-index a40a351..aeae132 100644
+index a40a351..51eb067 100644
 --- a/src/vs/workbench/browser/parts/activitybar/media/activityaction.css
 +++ b/src/vs/workbench/browser/parts/activitybar/media/activityaction.css
-@@ -230 +230,59 @@
+@@ -230 +230,60 @@
  }
 +
 +
@@ -1240,11 +1282,12 @@ index a40a351..aeae132 100644
 +    padding: calc(var(--vscode-workbench-activitybar-font-size) * 0.125) calc(var(--vscode-workbench-activitybar-font-size) * 0.125)
 +}
 +.monaco-workbench .activitybar > .content :not(.monaco-menu) > .monaco-action-bar .badge .codicon.badge-content {
-+    font-size: calc(var(--vscode-workbench-activitybar-font-size) * 0.8125)
++    font-size: calc(var(--vscode-workbench-activitybar-font-size) * 0.8125);
++    padding: 0
 +}
 \ No newline at end of file
 diff --git a/src/vs/workbench/browser/parts/activitybar/media/activitybarpart.css b/src/vs/workbench/browser/parts/activitybar/media/activitybarpart.css
-index d903883..1bf9716 100644
+index 568a721..b3d7e50 100644
 --- a/src/vs/workbench/browser/parts/activitybar/media/activitybarpart.css
 +++ b/src/vs/workbench/browser/parts/activitybar/media/activitybarpart.css
 @@ -8,2 +8,4 @@
@@ -1252,12 +1295,12 @@ index d903883..1bf9716 100644
 +	font-family: var(--vscode-workbench-activitybar-font-family, inherit);
 +	font-size: var(--vscode-workbench-activitybar-font-size);
  }
-@@ -58,3 +60,3 @@
+@@ -67,3 +69,3 @@
  	width: 100%;
 -	height: 35px;
 +	height: calc(var(--vscode-workbench-activitybar-font-size) * 2.1875);
  }
-@@ -63,3 +65,3 @@
+@@ -72,3 +74,3 @@
  	width: 100%;
 -	height: 35px;
 +	height: calc(var(--vscode-workbench-activitybar-font-size) * 2.1875);
@@ -1408,39 +1451,40 @@ index b0a44e2..e711a80 100644
 +
  	private get editorActionsEnabled(): boolean {
 diff --git a/src/vs/workbench/browser/parts/editor/media/editortabscontrol.css b/src/vs/workbench/browser/parts/editor/media/editortabscontrol.css
-index 57ab8ca..56f5996 100644
+index 57ab8ca..72a328f 100644
 --- a/src/vs/workbench/browser/parts/editor/media/editortabscontrol.css
 +++ b/src/vs/workbench/browser/parts/editor/media/editortabscontrol.css
 @@ -9,2 +9,3 @@
  	cursor: pointer;
 +	font-family: var(--vscode-workbench-tabs-font-family, inherit);
  }
-@@ -47 +48,36 @@
+@@ -47 +48,37 @@
  }
 +
 +
 +
 +/*** Handcrafted for Custom Font Size ***/
 +
-+.monaco-workbench .part.editor > .content .editor-group-container > .title {
++.monaco-workbench .part.editor > .content .editor-group-container > .title.tabs {
 +	font-size: var(--vscode-workbench-tabs-font-size);
 +}
 +
-+.monaco-workbench .part.editor > .content .editor-group-container .monaco-icon-label::before {
++.monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .monaco-icon-label::before {
 +    background-size: calc(var(--vscode-workbench-tabs-font-size) * 1.2307692308);
-+    padding-right: calc(var(--vscode-workbench-tabs-font-size) * 1.2307692308);
 +    width: calc(var(--vscode-workbench-tabs-font-size) * 1.2307692308);
-+    height: calc(var(--vscode-workbench-tabs-font-size) * 1.6923076923);
++    padding-right: calc(var(--vscode-workbench-tabs-font-size) * 0.4615384615);
 +}
 +
-+.monaco-workbench .part.editor > .content .editor-group-container .show-file-icons .file-icon::before {
++.monaco-workbench .part.editor > .content .editor-group-container > .title.tabs.show-file-icons .file-icon::before,
++.monaco-workbench .part.editor > .content .editor-group-container > .title.tabs.show-file-icons .folder-icon::before,
++.monaco-workbench .part.editor > .content .editor-group-container > .title.tabs.show-file-icons .rootfolder-icon::before {
 +	font-size: calc(var(--vscode-workbench-tabs-font-size) * 1.5);
 +}
 +
-+.monaco-workbench .part.editor > .content .editor-group-container .codicon[class*='codicon-'] {
++.monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .codicon[class*='codicon-'] {
 +    font-size: calc(var(--vscode-workbench-tabs-font-size) * 1.2307692308);
 +}
-+.monaco-workbench .part.editor > .content .editor-group-container .monaco-action-bar .action-item .codicon {
++.monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .monaco-action-bar .action-item .codicon {
 +    width: calc(var(--vscode-workbench-tabs-font-size) * 1.2307692308);
 +    height: calc(var(--vscode-workbench-tabs-font-size) * 1.2307692308);
 +}
@@ -1449,12 +1493,12 @@ index 57ab8ca..56f5996 100644
 +
 +/*** Generated for Custom Font Size ***/
 +
-+.monaco-workbench .part.editor > .content .editor-group-container > .title .title-label a, .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab .tab-label a {
++.monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .title-label a, .monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .tabs-container > .tab .tab-label a {
 +    font-size: calc(var(--vscode-workbench-tabs-font-size) * 1)
 +}
 \ No newline at end of file
 diff --git a/src/vs/workbench/browser/parts/editor/media/editortitlecontrol.css b/src/vs/workbench/browser/parts/editor/media/editortitlecontrol.css
-index a24f761..4f3bc89 100644
+index a24f761..6b15b9c 100644
 --- a/src/vs/workbench/browser/parts/editor/media/editortitlecontrol.css
 +++ b/src/vs/workbench/browser/parts/editor/media/editortitlecontrol.css
 @@ -47 +47,28 @@
@@ -1464,156 +1508,157 @@ index a24f761..4f3bc89 100644
 +
 +/*** Generated for Custom Font Size ***/
 +
-+.monaco-workbench .part.editor > .content .editor-group-container > .title .breadcrumbs-below-tabs .breadcrumbs-control {
++.monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .breadcrumbs-below-tabs .breadcrumbs-control {
 +    height: calc(var(--vscode-workbench-tabs-font-size) * 1.692308)
 +}
-+.monaco-workbench .part.editor > .content .editor-group-container > .title .breadcrumbs-below-tabs .breadcrumbs-control .monaco-icon-label {
++.monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .breadcrumbs-below-tabs .breadcrumbs-control .monaco-icon-label {
 +    height: calc(var(--vscode-workbench-tabs-font-size) * 1.692308);
 +    line-height: calc(var(--vscode-workbench-tabs-font-size) * 1.692308)
 +}
-+.monaco-workbench .part.editor > .content .editor-group-container > .title .breadcrumbs-below-tabs .breadcrumbs-control .monaco-icon-label::before {
++.monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .breadcrumbs-below-tabs .breadcrumbs-control .monaco-icon-label::before {
 +    height: calc(var(--vscode-workbench-tabs-font-size) * 1.692308)
 +}
-+.monaco-workbench .part.editor > .content .editor-group-container > .title .breadcrumbs-below-tabs .breadcrumbs-control .outline-element-icon {
++.monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .breadcrumbs-below-tabs .breadcrumbs-control .outline-element-icon {
 +    padding-right: calc(var(--vscode-workbench-tabs-font-size) * 0.230769);
 +    height: calc(var(--vscode-workbench-tabs-font-size) * 1.692308);
 +    line-height: calc(var(--vscode-workbench-tabs-font-size) * 1.692308)
 +}
-+.monaco-workbench .part.editor > .content .editor-group-container > .title .breadcrumbs-below-tabs .breadcrumbs-control .monaco-breadcrumb-item::before {
++.monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .breadcrumbs-below-tabs .breadcrumbs-control .monaco-breadcrumb-item::before {
 +    width: calc(var(--vscode-workbench-tabs-font-size) * 1.230769);
 +    height: calc(var(--vscode-workbench-tabs-font-size) * 1.692308)
 +}
-+.monaco-workbench .part.editor > .content .editor-group-container > .title .breadcrumbs-below-tabs .breadcrumbs-control .monaco-breadcrumb-item:last-child {
++.monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .breadcrumbs-below-tabs .breadcrumbs-control .monaco-breadcrumb-item:last-child {
 +    padding-right: calc(var(--vscode-workbench-tabs-font-size) * 0.615385)
 +}
 \ No newline at end of file
 diff --git a/src/vs/workbench/browser/parts/editor/media/multieditortabscontrol.css b/src/vs/workbench/browser/parts/editor/media/multieditortabscontrol.css
-index 924d9b3..07b29cc 100644
+index 4f9477d..b47fd85 100644
 --- a/src/vs/workbench/browser/parts/editor/media/multieditortabscontrol.css
 +++ b/src/vs/workbench/browser/parts/editor/media/multieditortabscontrol.css
-@@ -168,4 +168,4 @@
+@@ -176,4 +176,4 @@
  .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.sizing-fixed {
 -	min-width: var(--tab-sizing-current-width, var(--tab-sizing-fixed-min-width, 50px));
 -	max-width: var(--tab-sizing-current-width, var(--tab-sizing-fixed-max-width, 160px));
 +	min-width: 50px;
 +	max-width: 160px;
  	flex: 1 0 0; /* all tabs are evenly sized and grow */
-@@ -177,3 +177,3 @@
+@@ -185,3 +185,3 @@
  	 * of the tabs container */
 -	min-width: calc(var(--tab-sizing-current-width, var(--tab-sizing-fixed-min-width, 50px)) - 1px);
 +	min-width: 50px - 1px;
  }
-@@ -560 +560,112 @@
+@@ -568 +568,113 @@
  }
 +
 +
 +
 +/*** Generated for Custom Font Size ***/
 +
-+.monaco-workbench .part.editor > .content .editor-group-container > .title > .tabs-and-actions-container.tabs-border-bottom::after {
++.monaco-workbench .part.editor > .content .editor-group-container > .title.tabs > .tabs-and-actions-container.tabs-border-bottom::after {
 +    height: 1px
 +}
-+.monaco-workbench .part.editor > .content .editor-group-container > .title > .tabs-and-actions-container.wrapping .tabs-container {
++.monaco-workbench .part.editor > .content .editor-group-container > .title.tabs > .tabs-and-actions-container.wrapping .tabs-container {
 +    height: auto
 +}
-+.monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab {
++.monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .tabs-container > .tab {
 +    padding-left: calc(var(--vscode-workbench-tabs-font-size) * 0.769231);
 +    outline-offset: calc(var(--vscode-workbench-tabs-font-size) * -0.153846)
 +}
-+.monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.sizing-shrink.has-icon.tab-actions-right, .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.sizing-shrink.has-icon.close-action-off:not(.sticky-compact), .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.sizing-fixed.has-icon.tab-actions-right, .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.sizing-fixed.has-icon.close-action-off:not(.sticky-compact) {
++.monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .tabs-container > .tab.sizing-shrink.has-icon.tab-actions-right, .monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .tabs-container > .tab.sizing-shrink.has-icon.close-action-off:not(.sticky-compact), .monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .tabs-container > .tab.sizing-fixed.has-icon.tab-actions-right, .monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .tabs-container > .tab.sizing-fixed.has-icon.close-action-off:not(.sticky-compact) {
 +    padding-left: calc(var(--vscode-workbench-tabs-font-size) * 0.384615)
 +}
-+.monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.sizing-fit {
++.monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .tabs-container > .tab.sizing-fit {
 +    width: calc(var(--vscode-workbench-tabs-font-size) * 9.230769)
 +}
-+.monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.sizing-fixed {
++.monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .tabs-container > .tab.sizing-fixed {
 +    min-width: calc(var(--vscode-workbench-tabs-font-size) * 3.846154);
 +    max-width: calc(var(--vscode-workbench-tabs-font-size) * 12.307692)
 +}
-+.monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.sizing-fixed.last-in-row {
++.monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .tabs-container > .tab.sizing-fixed.last-in-row {
 +    min-width: calc(var(--vscode-workbench-tabs-font-size) * 3.846154) - 1px
 +}
-+.monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.sizing-shrink {
++.monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .tabs-container > .tab.sizing-shrink {
 +    min-width: calc(var(--vscode-workbench-tabs-font-size) * 6.153846)
 +}
-+.monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.sizing-fit.sticky-compact, .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.sizing-shrink.sticky-compact, .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.sizing-fixed.sticky-compact {
++.monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .tabs-container > .tab.sizing-fit.sticky-compact, .monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .tabs-container > .tab.sizing-shrink.sticky-compact, .monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .tabs-container > .tab.sizing-fixed.sticky-compact {
 +    width: calc(var(--vscode-workbench-tabs-font-size) * 2.923077);
 +    min-width: calc(var(--vscode-workbench-tabs-font-size) * 2.923077);
 +    max-width: calc(var(--vscode-workbench-tabs-font-size) * 2.923077)
 +}
-+.monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.sizing-fit.sticky-shrink, .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.sizing-shrink.sticky-shrink, .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.sizing-fixed.sticky-shrink {
++.monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .tabs-container > .tab.sizing-fit.sticky-shrink, .monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .tabs-container > .tab.sizing-shrink.sticky-shrink, .monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .tabs-container > .tab.sizing-fixed.sticky-shrink {
 +    width: calc(var(--vscode-workbench-tabs-font-size) * 6.153846);
 +    min-width: calc(var(--vscode-workbench-tabs-font-size) * 6.153846);
 +    max-width: calc(var(--vscode-workbench-tabs-font-size) * 6.153846)
 +}
-+.monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.sizing-shrink.tab-actions-left .tab-fade-hider, .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.sizing-shrink.close-action-off .tab-fade-hider, .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.sizing-fixed.tab-actions-left .tab-fade-hider, .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.sizing-fixed.close-action-off .tab-fade-hider {
++.monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .tabs-container > .tab.sizing-shrink.tab-actions-left .tab-fade-hider, .monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .tabs-container > .tab.sizing-shrink.close-action-off .tab-fade-hider, .monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .tabs-container > .tab.sizing-fixed.tab-actions-left .tab-fade-hider, .monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .tabs-container > .tab.sizing-fixed.close-action-off .tab-fade-hider {
 +    width: calc(var(--vscode-workbench-tabs-font-size) * 0.384615)
 +}
-+.monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.sizing-shrink.tab-actions-left, .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.sizing-fixed.tab-actions-left {
++.monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .tabs-container > .tab.sizing-shrink.tab-actions-left, .monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .tabs-container > .tab.sizing-fixed.tab-actions-left {
 +    min-width: calc(var(--vscode-workbench-tabs-font-size) * 6.153846);
 +    padding-right: calc(var(--vscode-workbench-tabs-font-size) * 0.384615)
 +}
-+.monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.tab-actions-left:not(.sticky-compact) {
++.monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .tabs-container > .tab.tab-actions-left:not(.sticky-compact) {
 +    padding-right: calc(var(--vscode-workbench-tabs-font-size) * 0.769231)
 +}
-+.monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.active.tab-border-top:not(:focus) > .tab-border-top-container, .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.selected.tab-border-top:not(:focus) > .tab-border-top-container {
++.monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .tabs-container > .tab.active.tab-border-top:not(:focus) > .tab-border-top-container, .monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .tabs-container > .tab.selected.tab-border-top:not(:focus) > .tab-border-top-container {
 +    height: 1px
 +}
-+.monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.active.tab-border-bottom > .tab-border-bottom-container {
++.monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .tabs-container > .tab.active.tab-border-bottom > .tab-border-bottom-container {
 +    height: 1px
 +}
-+.monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.dirty-border-top:not(:focus) > .tab-border-top-container {
++.monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .tabs-container > .tab.dirty-border-top:not(:focus) > .tab-border-top-container {
 +    height: calc(var(--vscode-workbench-tabs-font-size) * 0.153846)
 +}
-+.monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container >  .tab.sizing-shrink > .tab-label > .monaco-icon-label-container::after, .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container >  .tab.sizing-fixed > .tab-label > .monaco-icon-label-container::after {
++.monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .tabs-container >  .tab.sizing-shrink > .tab-label > .monaco-icon-label-container::after, .monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .tabs-container >  .tab.sizing-fixed > .tab-label > .monaco-icon-label-container::after {
 +    width: calc(var(--vscode-workbench-tabs-font-size) * 0.384615);
++    padding: 0;
 +    top: 1px;
 +    bottom: 1px;
 +    height: calc(100% - calc(var(--vscode-workbench-tabs-font-size) * 0.153846))
 +}
-+.monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container >  .tab.sizing-shrink > .tab-label.tab-label-has-badge::after, .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container >  .tab.sizing-fixed > .tab-label.tab-label-has-badge::after {
++.monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .tabs-container >  .tab.sizing-shrink > .tab-label.tab-label-has-badge::after, .monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .tabs-container >  .tab.sizing-fixed > .tab-label.tab-label-has-badge::after {
 +    margin-right: calc(var(--vscode-workbench-tabs-font-size) * 0.384615)
 +}
-+.monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.sizing-shrink:not(.tab-actions-left):not(.close-action-off) .tab-label {
++.monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .tabs-container > .tab.sizing-shrink:not(.tab-actions-left):not(.close-action-off) .tab-label {
 +    padding-right: calc(var(--vscode-workbench-tabs-font-size) * 0.384615)
 +}
-+.monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab > .monaco-icon-label.italic > .monaco-icon-label-container {
++.monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .tabs-container > .tab > .monaco-icon-label.italic > .monaco-icon-label-container {
 +    padding-right: 1px
 +}
-+.monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab > .tab-actions {
++.monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .tabs-container > .tab > .tab-actions {
 +    width: calc(var(--vscode-workbench-tabs-font-size) * 2.153846)
 +}
-+.monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab > .tab-actions > .monaco-action-bar {
++.monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .tabs-container > .tab > .tab-actions > .monaco-action-bar {
 +    width: calc(var(--vscode-workbench-tabs-font-size) * 2.153846)
 +}
-+.monaco-workbench .part.editor > .content .editor-group-container.active > .title .tabs-container > .tab > .tab-actions .action-label.codicon {
++.monaco-workbench .part.editor > .content .editor-group-container.active > .title.tabs .tabs-container > .tab > .tab-actions .action-label.codicon {
 +    font-size: calc(var(--vscode-workbench-tabs-font-size) * 1.230769);
 +    padding: calc(var(--vscode-workbench-tabs-font-size) * 0.153846);
 +    width: calc(var(--vscode-workbench-tabs-font-size) * 1.230769);
 +    height: calc(var(--vscode-workbench-tabs-font-size) * 1.230769)
 +}
-+.monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.close-action-off {
++.monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .tabs-container > .tab.close-action-off {
 +    padding-right: calc(var(--vscode-workbench-tabs-font-size) * 0.769231)
 +}
-+.monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.sizing-shrink.close-action-off:not(.sticky-compact), .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.sizing-fixed.close-action-off:not(.sticky-compact) {
++.monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .tabs-container > .tab.sizing-shrink.close-action-off:not(.sticky-compact), .monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .tabs-container > .tab.sizing-fixed.close-action-off:not(.sticky-compact) {
 +    padding-right: calc(var(--vscode-workbench-tabs-font-size) * 0.384615)
 +}
-+.monaco-workbench .part.editor > .content .editor-group-container > .title .editor-actions {
++.monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .editor-actions {
 +    padding: 0 calc(var(--vscode-workbench-tabs-font-size) * 0.615385) 0 calc(var(--vscode-workbench-tabs-font-size) * 0.307692)
 +}
-+.monaco-workbench .part.editor > .content .editor-group-container > .title .editor-actions .action-item {
++.monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .editor-actions .action-item {
 +    margin-right: calc(var(--vscode-workbench-tabs-font-size) * 0.307692)
 +}
-+.monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.drop-target-left::after, .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.drop-target-right::before {
++.monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .tabs-container > .tab.drop-target-left::after, .monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .tabs-container > .tab.drop-target-right::before {
 +    width: 1px
 +}
-+.monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.drop-target-left::after {
++.monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .tabs-container > .tab.drop-target-left::after {
 +    right: calc(var(--vscode-workbench-tabs-font-size) * -0.076923)
 +}
-+.monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.last-in-row.drop-target-left:not(:last-child)::after {
++.monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .tabs-container > .tab.last-in-row.drop-target-left:not(:last-child)::after {
 +    right: calc(var(--vscode-workbench-tabs-font-size) * 0)
 +}
-+.monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.last-in-row.drop-target-left::after, .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.last-in-row + .tab.drop-target-right::before, .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab:last-child.drop-target-left::after, .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab:first-child.drop-target-right::before {
++.monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .tabs-container > .tab.last-in-row.drop-target-left::after, .monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .tabs-container > .tab.last-in-row + .tab.drop-target-right::before, .monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .tabs-container > .tab:last-child.drop-target-left::after, .monaco-workbench .part.editor > .content .editor-group-container > .title.tabs .tabs-container > .tab:first-child.drop-target-right::before {
 +    width: calc(var(--vscode-workbench-tabs-font-size) * 0.153846)
 +}
 \ No newline at end of file
@@ -1652,73 +1697,128 @@ index b0befd9..7c25771 100644
 +		super(parent, editorPartsView, groupsView, groupView, tabsModel, contextMenuService, instantiationService, contextKeyService, keybindingService, notificationService, quickInputService, themeService, editorResolverService, hostService, configurationService);
  
 diff --git a/src/vs/workbench/browser/parts/media/paneCompositePart.css b/src/vs/workbench/browser/parts/media/paneCompositePart.css
-index fe0f2ad..3c8087b 100644
+index fe0f2ad..195267c 100644
 --- a/src/vs/workbench/browser/parts/media/paneCompositePart.css
 +++ b/src/vs/workbench/browser/parts/media/paneCompositePart.css
-@@ -369 +369,64 @@
+@@ -369 +369,119 @@
  }
 +
 +
 +
-+/*** Custom Font Size for SideBars ***/
++/*** Generated for Custom Font Size ***/
 +
-+.monaco-workbench .part.sidebar > .title.has-composite-bar > .title-actions .monaco-action-bar .action-item, .monaco-workbench .part.sidebar > .title.has-composite-bar > .global-actions .monaco-action-bar .action-item, .monaco-workbench .part.sidebar > .title.has-composite-bar > .global-actions-left .monaco-action-bar .action-item, .monaco-workbench .part.auxiliarybar > .title.has-composite-bar > .title-actions .monaco-action-bar .action-item, .monaco-workbench .part.auxiliarybar > .title.has-composite-bar > .global-actions .monaco-action-bar .action-item, .monaco-workbench .part.auxiliarybar > .title.has-composite-bar > .global-actions-left .monaco-action-bar .action-item {
-+    margin-right: calc(var(--vscode-workbench-sidebar-font-size) * 0.307692)
++.monaco-workbench .pane-composite-part .part.panel > .title.has-composite-bar > .title-actions .monaco-action-bar .action-item, .monaco-workbench .pane-composite-part .part.panel > .title.has-composite-bar > .global-actions .monaco-action-bar .action-item, .monaco-workbench .pane-composite-part .part.panel > .title.has-composite-bar > .global-actions-left .monaco-action-bar .action-item {
++    margin-right: calc(var(--vscode-workbench-bottompane-font-size) * 0.307692)
 +}
-+.monaco-workbench .part.sidebar > .title > .composite-bar-container > .composite-bar > .monaco-action-bar, .monaco-workbench .part.sidebar > .header-or-footer > .composite-bar-container > .composite-bar > .monaco-action-bar, .monaco-workbench .part.auxiliarybar > .title > .composite-bar-container > .composite-bar > .monaco-action-bar, .monaco-workbench .part.auxiliarybar > .header-or-footer > .composite-bar-container > .composite-bar > .monaco-action-bar {
-+    line-height: calc(var(--vscode-workbench-sidebar-font-size) * 2.076923)
++.monaco-workbench .pane-composite-part .part.panel > .title.has-composite-bar > .title-actions .monaco-action-bar .action-item .action-label {
++    outline-offset: calc(var(--vscode-workbench-bottompane-font-size) * -0.153846)
 +}
-+.monaco-workbench .part.sidebar > .title > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item, .monaco-workbench .part.sidebar > .header-or-footer > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item, .monaco-workbench .part.auxiliarybar > .title > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item, .monaco-workbench .part.auxiliarybar > .header-or-footer > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item {
-+    padding-left: calc(var(--vscode-workbench-sidebar-font-size) * 0.769231);
-+    padding-right: calc(var(--vscode-workbench-sidebar-font-size) * 0.769231);
-+    font-size: calc(var(--vscode-workbench-sidebar-font-size) * 0.846154);
-+    padding-bottom: calc(var(--vscode-workbench-sidebar-font-size) * 0.153846);
-+    padding-top: calc(var(--vscode-workbench-sidebar-font-size) * 0.153846)
++.monaco-workbench .pane-composite-part .part.panel > .header-or-footer {
++    padding-left: calc(var(--vscode-workbench-bottompane-font-size) * 0.307692);
++    padding-right: calc(var(--vscode-workbench-bottompane-font-size) * 0.307692)
 +}
-+.monaco-workbench .part.sidebar > .title > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item.icon, .monaco-workbench .part.sidebar > .header-or-footer > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item.icon, .monaco-workbench .part.auxiliarybar > .title > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item.icon, .monaco-workbench .part.auxiliarybar > .header-or-footer > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item.icon {
-+    height: calc(var(--vscode-workbench-sidebar-font-size) * 2.692308);
-+    padding: 0 calc(var(--vscode-workbench-sidebar-font-size) * 0.230769)
++.monaco-workbench .pane-composite-part .part.panel > .title > .composite-bar-container > .composite-bar > .monaco-action-bar .action-label.codicon-more, .monaco-workbench .pane-composite-part .part.panel > .header-or-footer > .composite-bar-container > .composite-bar > .monaco-action-bar .action-label.codicon-more {
++    margin-left: calc(var(--vscode-workbench-bottompane-font-size) * 0);
++    margin-right: calc(var(--vscode-workbench-bottompane-font-size) * 0)
 +}
-+.monaco-workbench .part.sidebar > .title > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item.icon .action-label:not(.codicon), .monaco-workbench .part.sidebar > .header-or-footer > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item.icon .action-label:not(.codicon), .monaco-workbench .part.auxiliarybar > .title > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item.icon .action-label:not(.codicon), .monaco-workbench .part.auxiliarybar > .header-or-footer > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item.icon .action-label:not(.codicon) {
-+    width: calc(var(--vscode-workbench-sidebar-font-size) * 1.230769);
-+    height: calc(var(--vscode-workbench-sidebar-font-size) * 1.230769)
++.monaco-workbench .pane-composite-part .part.panel > .title > .composite-bar-container > .composite-bar > .monaco-action-bar, .monaco-workbench .pane-composite-part .part.panel > .header-or-footer > .composite-bar-container > .composite-bar > .monaco-action-bar {
++    line-height: calc(var(--vscode-workbench-bottompane-font-size) * 2.076923)
 +}
-+.monaco-workbench .part.sidebar > .title > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item .action-label, .monaco-workbench .part.sidebar > .header-or-footer > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item .action-label, .monaco-workbench .part.auxiliarybar > .title > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item .action-label, .monaco-workbench .part.auxiliarybar > .header-or-footer > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item .action-label {
-+    padding: calc(var(--vscode-workbench-sidebar-font-size) * 0.153846)
++.monaco-workbench .pane-composite-part .part.panel > .title > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item, .monaco-workbench .pane-composite-part .part.panel > .header-or-footer > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item {
++    padding-left: calc(var(--vscode-workbench-bottompane-font-size) * 0.769231);
++    padding-right: calc(var(--vscode-workbench-bottompane-font-size) * 0.769231);
++    font-size: calc(var(--vscode-workbench-bottompane-font-size) * 0.846154);
++    padding-bottom: calc(var(--vscode-workbench-bottompane-font-size) * 0.153846);
++    padding-top: calc(var(--vscode-workbench-bottompane-font-size) * 0.153846)
 +}
-+.monaco-workbench .part.sidebar > .title > .composite-bar-container > .composite-bar > .monaco-action-bar .badge .badge-content, .monaco-workbench .part.sidebar > .header-or-footer > .composite-bar-container > .composite-bar > .monaco-action-bar .badge .badge-content, .monaco-workbench .part.auxiliarybar > .title > .composite-bar-container > .composite-bar > .monaco-action-bar .badge .badge-content, .monaco-workbench .part.auxiliarybar > .header-or-footer > .composite-bar-container > .composite-bar > .monaco-action-bar .badge .badge-content {
-+    padding: calc(var(--vscode-workbench-sidebar-font-size) * 0.230769) calc(var(--vscode-workbench-sidebar-font-size) * 0.384615);
-+    font-size: calc(var(--vscode-workbench-sidebar-font-size) * 0.769231);
-+    min-width: calc(var(--vscode-workbench-sidebar-font-size) * 1.230769);
-+    height: calc(var(--vscode-workbench-sidebar-font-size) * 1.230769);
-+    line-height: calc(var(--vscode-workbench-sidebar-font-size) * 0.769231)
++.monaco-workbench .pane-composite-part .part.panel > .title > .composite-bar-container >.composite-bar > .monaco-action-bar .action-item.icon, .monaco-workbench .pane-composite-part .part.panel > .header-or-footer > .composite-bar-container >.composite-bar > .monaco-action-bar .action-item.icon {
++    height: calc(var(--vscode-workbench-bottompane-font-size) * 2.692308);
++    padding: 0 calc(var(--vscode-workbench-bottompane-font-size) * 0.230769)
 +}
-+.monaco-workbench .part.sidebar > .header-or-footer, .monaco-workbench .part.auxiliarybar > .header-or-footer {
-+    padding-left: calc(var(--vscode-workbench-sidebar-font-size) * 0.307692);
-+    padding-right: calc(var(--vscode-workbench-sidebar-font-size) * 0.307692)
++.monaco-workbench .pane-composite-part .part.panel > .title > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item.icon .action-label:not(.codicon), .monaco-workbench .pane-composite-part .part.panel > .header-or-footer > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item.icon .action-label:not(.codicon) {
++    width: calc(var(--vscode-workbench-bottompane-font-size) * 1.230769);
++    height: calc(var(--vscode-workbench-bottompane-font-size) * 1.230769)
 +}
-+.monaco-workbench .part.sidebar .empty-pane-message-area .empty-pane-message, .monaco-workbench .part.auxiliarybar .empty-pane-message-area .empty-pane-message {
-+    margin: calc(var(--vscode-workbench-sidebar-font-size) * 0.923077)
++.monaco-workbench .pane-composite-part .part.panel > .title > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item::before, .monaco-workbench .pane-composite-part .part.panel > .title > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item::after, .monaco-workbench .pane-composite-part .part.panel > .header-or-footer > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item::before, .monaco-workbench .pane-composite-part .part.panel > .header-or-footer > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item::after {
++    width: calc(var(--vscode-workbench-bottompane-font-size) * 0.153846);
++    height: calc(var(--vscode-workbench-bottompane-font-size) * 1.846154)
 +}
-+
-+
-+
-+/*** Custom Font Size for Bottom Pane ***/
-+
-+.monaco-workbench .pane-composite-part.bottom .monaco-action-bar .action-label,
-+.monaco-workbench .pane-composite-part.bottom .monaco-action-bar .action-item .keybinding {
-+    font-size: calc(var(--vscode-workbench-bottompane-font-size) * 0.8461538462);
-+    padding: calc(var(--vscode-workbench-bottompane-font-size) * 0.2307692308);
++.monaco-workbench .pane-composite-part .part.panel > .title > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item::before, .monaco-workbench .pane-composite-part .part.panel > .header-or-footer > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item::before {
++    left: 1px;
++    margin-left: calc(var(--vscode-workbench-bottompane-font-size) * -0.153846)
 +}
-+
-+.monaco-workbench .pane-composite-part.bottom > .title > .composite-bar-container > .composite-bar > .monaco-action-bar .badge .badge-content,
-+.monaco-workbench .pane-composite-part.bottom > .header-or-footer > .composite-bar-container > .composite-bar > .monaco-action-bar .badge .badge-content {
-+	padding: calc(var(--vscode-workbench-bottompane-font-size) * 0.2307692308) calc(var(--vscode-workbench-bottompane-font-size) * 0.3846153846);
-+	font-size: calc(var(--vscode-workbench-bottompane-font-size) * 0.7692307692);
-+	min-width: calc(var(--vscode-workbench-bottompane-font-size) * 1.2307692308);
-+	height: calc(var(--vscode-workbench-bottompane-font-size) * 1.2307692308);
-+	line-height: calc(var(--vscode-workbench-bottompane-font-size) * 0.7692307692);
-+	border-radius: calc(var(--vscode-workbench-bottompane-font-size) * 0.7692307692);
++.monaco-workbench .pane-composite-part .part.panel > .title > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item::after, .monaco-workbench .pane-composite-part .part.panel > .header-or-footer > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item::after {
++    right: 1px;
++    margin-right: calc(var(--vscode-workbench-bottompane-font-size) * -0.153846)
++}
++.monaco-workbench .pane-composite-part .part.panel > .title > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item:first-of-type::before, .monaco-workbench .pane-composite-part .part.panel > .header-or-footer > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item:first-of-type::before {
++    left: calc(var(--vscode-workbench-bottompane-font-size) * 0.153846);
++    margin-left: calc(var(--vscode-workbench-bottompane-font-size) * -0.153846)
++}
++.monaco-workbench .pane-composite-part .part.panel > .title > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item:last-of-type::after, .monaco-workbench .pane-composite-part .part.panel > .header-or-footer > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item:last-of-type::after {
++    right: calc(var(--vscode-workbench-bottompane-font-size) * 0.153846);
++    margin-right: calc(var(--vscode-workbench-bottompane-font-size) * -0.153846)
++}
++.monaco-workbench .pane-composite-part .part.panel > .title > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item .action-label, .monaco-workbench .pane-composite-part .part.panel > .header-or-footer > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item .action-label {
++    padding: calc(var(--vscode-workbench-bottompane-font-size) * 0.153846)
++}
++.monaco-workbench .pane-composite-part .part.panel > .title > .composite-bar-container > .composite-bar > .monaco-action-bar .badge, .monaco-workbench .pane-composite-part .part.panel > .header-or-footer > .composite-bar-container > .composite-bar > .monaco-action-bar .badge {
++    margin-left: calc(var(--vscode-workbench-bottompane-font-size) * 0.153846)
++}
++.monaco-workbench .pane-composite-part .part.panel > .title > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item.icon .badge, .monaco-workbench .pane-composite-part .part.panel > .header-or-footer > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item.icon .badge {
++    margin-left: calc(var(--vscode-workbench-bottompane-font-size) * 0)
++}
++.monaco-workbench .pane-composite-part .part.panel > .title > .composite-bar-container > .composite-bar > .monaco-action-bar .badge .badge-content, .monaco-workbench .pane-composite-part .part.panel > .header-or-footer > .composite-bar-container > .composite-bar > .monaco-action-bar .badge .badge-content {
++    padding: calc(var(--vscode-workbench-bottompane-font-size) * 0.230769) calc(var(--vscode-workbench-bottompane-font-size) * 0.384615);
++    font-size: calc(var(--vscode-workbench-bottompane-font-size) * 0.769231);
++    min-width: calc(var(--vscode-workbench-bottompane-font-size) * 1.230769);
++    height: calc(var(--vscode-workbench-bottompane-font-size) * 1.230769);
++    line-height: calc(var(--vscode-workbench-bottompane-font-size) * 0.769231)
++}
++.monaco-workbench .pane-composite-part .part.panel > .title > .composite-bar-container > .composite-bar > .monaco-action-bar .icon-badge .badge-content {
++    padding: calc(var(--vscode-workbench-bottompane-font-size) * 0.230769)
++}
++.monaco-workbench .pane-composite-part .part.panel > .title > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item.icon .badge.compact .badge-content, .monaco-workbench .pane-composite-part .part.panel > .header-or-footer > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item.icon .badge.compact .badge-content {
++    top: calc(var(--vscode-workbench-bottompane-font-size) * 1.307692);
++    right: calc(var(--vscode-workbench-bottompane-font-size) * 0);
++    font-size: calc(var(--vscode-workbench-bottompane-font-size) * 0.692308);
++    min-width: calc(var(--vscode-workbench-bottompane-font-size) * 1);
++    height: calc(var(--vscode-workbench-bottompane-font-size) * 1);
++    line-height: calc(var(--vscode-workbench-bottompane-font-size) * 1);
++    padding: 0 calc(var(--vscode-workbench-bottompane-font-size) * 0.153846)
++}
++.monaco-workbench .pane-composite-part .part.panel > .title > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item.icon .badge.compact.compact-content .badge-content, .monaco-workbench .pane-composite-part .part.panel > .header-or-footer > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item.icon .badge.compact.compact-content .badge-content {
++    font-size: calc(var(--vscode-workbench-bottompane-font-size) * 0.615385);
++    padding: 0 calc(var(--vscode-workbench-bottompane-font-size) * 0.230769)
++}
++.monaco-workbench .pane-composite-part .part.panel > .title > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item.icon .badge.compact.progress-badge .badge-content::before, .monaco-workbench .pane-composite-part .part.panel > .header-or-footer > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item.icon .badge.compact.progress-badge .badge-content::before {
++    mask-size: calc(var(--vscode-workbench-bottompane-font-size) * 1);
++    -webkit-mask-size: calc(var(--vscode-workbench-bottompane-font-size) * 1)
++}
++.monaco-workbench .pane-composite-part .part.panel > .title > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item .active-item-indicator, .monaco-workbench .pane-composite-part .part.panel > .header-or-footer > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item .active-item-indicator {
++    top: calc(var(--vscode-workbench-bottompane-font-size) * -0.307692);
++    left: calc(var(--vscode-workbench-bottompane-font-size) * 0.769231);
++    width: calc(100% - calc(var(--vscode-workbench-bottompane-font-size) * 1.538462))
++}
++.monaco-workbench .pane-composite-part .part.panel > .title > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item.icon .active-item-indicator, .monaco-workbench .pane-composite-part .part.panel > .header-or-footer > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item.icon .active-item-indicator {
++    top: 1px;
++    left: calc(var(--vscode-workbench-bottompane-font-size) * 0.153846);
++    width: calc(100% - calc(var(--vscode-workbench-bottompane-font-size) * 0.307692))
++}
++.monaco-workbench .pane-composite-part .part.panel > .title > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item.checked .active-item-indicator:before, .monaco-workbench .pane-composite-part .part.panel > .title > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item:focus .active-item-indicator:before, .monaco-workbench .pane-composite-part .part.panel > .header-or-footer.header > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item.checked .active-item-indicator:before, .monaco-workbench .pane-composite-part .part.panel > .header-or-footer.header > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item:focus .active-item-indicator:before {
++    bottom: calc(var(--vscode-workbench-bottompane-font-size) * 0.153846)
++}
++.monaco-workbench .pane-composite-part .part.panel > .header-or-footer.footer > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item.checked .active-item-indicator:before, .monaco-workbench .pane-composite-part .part.panel > .header-or-footer.footer > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item:focus .active-item-indicator:before {
++    top: calc(var(--vscode-workbench-bottompane-font-size) * 0.153846)
++}
++.monaco-workbench .pane-composite-part .part.panel > .title > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item.checked .action-label, .monaco-workbench .pane-composite-part .part.panel > .title > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item:hover .action-label, .monaco-workbench .pane-composite-part .part.panel > .header-or-footer > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item.checked .action-label, .monaco-workbench .pane-composite-part .part.panel > .header-or-footer > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item:hover .action-label {
++    outline: var(--vscode-contrastActiveBorder, unset) solid 1px
++}
++.monaco-workbench .pane-composite-part .part.panel > .title > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item:not(.checked):hover .action-label, .monaco-workbench .pane-composite-part .part.panel > .header-or-footer > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item:not(.checked):hover .action-label {
++    outline: var(--vscode-contrastActiveBorder, unset) dashed 1px
++}
++.monaco-workbench .pane-composite-part .part.panel .empty-pane-message-area .empty-pane-message {
++    margin: calc(var(--vscode-workbench-bottompane-font-size) * 0.923077)
 +}
 \ No newline at end of file
 diff --git a/src/vs/workbench/browser/parts/panel/media/panelpart.css b/src/vs/workbench/browser/parts/panel/media/panelpart.css
@@ -1961,14 +2061,14 @@ index 101b9c6..970cdaa 100644
 +
  	private registerActions(): void {
 diff --git a/src/vs/workbench/browser/parts/statusbar/media/statusbarpart.css b/src/vs/workbench/browser/parts/statusbar/media/statusbarpart.css
-index 7faaf9e..6cd8fbd 100644
+index 1f3b102..42ad22c 100644
 --- a/src/vs/workbench/browser/parts/statusbar/media/statusbarpart.css
 +++ b/src/vs/workbench/browser/parts/statusbar/media/statusbarpart.css
 @@ -11,2 +11,3 @@
  	font-size: 12px;
 +	font-family: var(--vscode-workbench-statusbar-font-family, inherit);
  	display: flex;
-@@ -236 +237,64 @@
+@@ -239 +240,70 @@
  }
 +
 +
@@ -1998,6 +2098,12 @@ index 7faaf9e..6cd8fbd 100644
 +    top: calc(var(--vscode-workbench-statusbar-font-size) * -0.416667);
 +    width: calc(var(--vscode-workbench-statusbar-font-size) * 0.833333);
 +    height: calc(var(--vscode-workbench-statusbar-font-size) * 0.416667)
++}
++.monaco-workbench .part.statusbar > .items-container > .statusbar-item.left.first-visible-item {
++    padding-left: calc(var(--vscode-workbench-statusbar-font-size) * 0.166667)
++}
++.monaco-workbench .part.statusbar > .items-container > .statusbar-item.right.last-visible-item {
++    padding-right: calc(var(--vscode-workbench-statusbar-font-size) * 0.166667)
 +}
 +.monaco-workbench .part.statusbar > .items-container > .statusbar-item > .statusbar-item-label {
 +    margin-right: calc(var(--vscode-workbench-statusbar-font-size) * 0.25);
@@ -2367,27 +2473,28 @@ index 6f58865..3ab0ee4 100644
 +		return FONT.sidebarSize22;
  	}
 diff --git a/src/vs/workbench/contrib/chat/browser/agentSessions/agentSessionsViewer.ts b/src/vs/workbench/contrib/chat/browser/agentSessions/agentSessionsViewer.ts
-index eb17488..1a005a7 100644
+index bcb46c6..0aef82b 100644
 --- a/src/vs/workbench/contrib/chat/browser/agentSessions/agentSessionsViewer.ts
 +++ b/src/vs/workbench/contrib/chat/browser/agentSessions/agentSessionsViewer.ts
-@@ -45,2 +45,3 @@ import { AgentSessionProviders, getAgentSessionTime } from './agentSessions.js';
- import { AgentSessionsGrouping } from './agentSessionsFilter.js';
+@@ -52,2 +52,3 @@ import { BugIndicatingError } from '../../../../../base/common/errors.js';
+ import { ILogService } from '../../../../../platform/log/common/log.js';
 +import { FONT } from '../../../../../base/common/font.js';
  
-@@ -508,11 +509,8 @@ export class AgentSessionsListDelegate implements IListVirtualDelegate<AgentSess
+@@ -638,5 +639,2 @@ export class AgentSessionsListDelegate implements IListVirtualDelegate<AgentSess
  
 -	static readonly ITEM_HEIGHT = 54;
 -	static readonly SECTION_HEIGHT = 26;
 -
- 	getHeight(element: AgentSessionListItem): number {
+ 	constructor(private readonly _approvalModel?: AgentSessionApprovalModel) { }
+@@ -645,6 +643,6 @@ export class AgentSessionsListDelegate implements IListVirtualDelegate<AgentSess
  		if (isAgentSessionSection(element)) {
 -			return AgentSessionsListDelegate.SECTION_HEIGHT;
 +			return FONT.sidebarSize26;
  		}
  
--		return AgentSessionsListDelegate.ITEM_HEIGHT;
-+		return FONT.sidebarSize44;
- 	}
+-		let height = AgentSessionsListDelegate.ITEM_HEIGHT;
++		let height = FONT.sidebarSize54;
+ 		const approval = this._approvalModel?.getApproval(element.resource).get();
 diff --git a/src/vs/workbench/contrib/chat/browser/chatManagement/chatManagementEditor.ts b/src/vs/workbench/contrib/chat/browser/chatManagement/chatManagementEditor.ts
 index ad2c82a..6cb6bce 100644
 --- a/src/vs/workbench/contrib/chat/browser/chatManagement/chatManagementEditor.ts
@@ -2428,14 +2535,14 @@ index 15ae799..06a95d5 100644
 +		return FONT.sidebarSize22;
  	}
 diff --git a/src/vs/workbench/contrib/chat/browser/widget/chatContentParts/chatReferencesContentPart.ts b/src/vs/workbench/contrib/chat/browser/widget/chatContentParts/chatReferencesContentPart.ts
-index 6ff8637..7694134 100644
+index 8493938..50a19e4 100644
 --- a/src/vs/workbench/contrib/chat/browser/widget/chatContentParts/chatReferencesContentPart.ts
 +++ b/src/vs/workbench/contrib/chat/browser/widget/chatContentParts/chatReferencesContentPart.ts
 @@ -50,2 +50,3 @@ import { IHoverService } from '../../../../../../platform/hover/browser/hover.js
  import { IConfigurationService } from '../../../../../../platform/configuration/common/configuration.js';
 +import { FONT } from '../../../../../../base/common/font.js';
  
-@@ -297,3 +298,3 @@ class CollapsibleListDelegate implements IListVirtualDelegate<IChatCollapsibleLi
+@@ -298,3 +299,3 @@ class CollapsibleListDelegate implements IListVirtualDelegate<IChatCollapsibleLi
  	getHeight(element: IChatCollapsibleListItem): number {
 -		return 22;
 +		return FONT.sidebarSize22;
@@ -2470,10 +2577,10 @@ index 703940e..e0fa9eb 100644
 +		return FONT.sidebarSize22;
  	}
 diff --git a/src/vs/workbench/contrib/chat/browser/widgetHosts/viewPane/media/chatViewPane.css b/src/vs/workbench/contrib/chat/browser/widgetHosts/viewPane/media/chatViewPane.css
-index f57aca1..2c34fb8 100644
+index 83799c1..b2d3db2 100644
 --- a/src/vs/workbench/contrib/chat/browser/widgetHosts/viewPane/media/chatViewPane.css
 +++ b/src/vs/workbench/contrib/chat/browser/widgetHosts/viewPane/media/chatViewPane.css
-@@ -161 +161,68 @@
+@@ -169 +169,68 @@
  }
 +
 +
@@ -2676,44 +2783,55 @@ index 531c114..909a66d 100644
 +		return FONT.sidebarSize22;
  	}
 diff --git a/src/vs/workbench/contrib/debug/browser/media/debugToolBar.css b/src/vs/workbench/contrib/debug/browser/media/debugToolBar.css
-index 090c53e..d5c4b9f 100644
+index ca34e6f..611b495 100644
 --- a/src/vs/workbench/contrib/debug/browser/media/debugToolBar.css
 +++ b/src/vs/workbench/contrib/debug/browser/media/debugToolBar.css
-@@ -54 +54,23 @@
+@@ -55 +55,25 @@
  }
 +
 +
 +
-+.monaco-workbench .part.sidebar .debug-toolbar, .monaco-workbench .part.auxiliarybar .debug-toolbar {
++/*** Generated for Custom Font Size ***/
++
++.monaco-workbench .debug-toolbar .part.sidebar, .monaco-workbench .debug-toolbar .part.auxiliarybar {
 +    height: calc(var(--vscode-workbench-sidebar-font-size) * 2.153846);
 +    padding-left: calc(var(--vscode-workbench-sidebar-font-size) * 0.153846)
 +}
-+.monaco-workbench .part.sidebar .debug-toolbar .monaco-action-bar .action-item, .monaco-workbench .part.auxiliarybar .debug-toolbar .monaco-action-bar .action-item {
++.monaco-workbench .debug-toolbar .part.sidebar .monaco-action-bar .action-item, .monaco-workbench .debug-toolbar .part.auxiliarybar .monaco-action-bar .action-item {
 +    margin-right: calc(var(--vscode-workbench-sidebar-font-size) * 0.307692)
 +}
-+.monaco-workbench .part.sidebar .debug-toolbar .monaco-action-bar .action-item.select-container, .monaco-workbench .part.auxiliarybar .debug-toolbar .monaco-action-bar .action-item.select-container {
++.monaco-workbench .debug-toolbar .part.sidebar .monaco-action-bar .action-item.select-container, .monaco-workbench .debug-toolbar .part.auxiliarybar .monaco-action-bar .action-item.select-container {
 +    margin-right: calc(var(--vscode-workbench-sidebar-font-size) * 0.153846)
 +}
-+.monaco-workbench .part.sidebar .debug-toolbar .monaco-action-bar .action-item.select-container .monaco-select-box, .monaco-workbench .part.sidebar .start-debug-action-item .select-container .monaco-select-box, .monaco-workbench .part.auxiliarybar .debug-toolbar .monaco-action-bar .action-item.select-container .monaco-select-box, .monaco-workbench .part.auxiliarybar .start-debug-action-item .select-container .monaco-select-box {
++.monaco-workbench .debug-toolbar .part.sidebar .monaco-action-bar .action-item.select-container .monaco-select-box, .monaco-workbench .start-debug-action-item .part.sidebar .select-container .monaco-select-box, .monaco-workbench .debug-toolbar .part.auxiliarybar .monaco-action-bar .action-item.select-container .monaco-select-box, .monaco-workbench .start-debug-action-item .part.auxiliarybar .select-container .monaco-select-box {
 +    padding: 0 calc(var(--vscode-workbench-sidebar-font-size) * 1.846154) 0 calc(var(--vscode-workbench-sidebar-font-size) * 0.615385)
 +}
-+.monaco-workbench .part.sidebar .debug-toolbar .drag-area, .monaco-workbench .part.auxiliarybar .debug-toolbar .drag-area {
++.monaco-workbench .debug-toolbar .part.sidebar .drag-area, .monaco-workbench .debug-toolbar .part.auxiliarybar .drag-area {
 +    width: calc(var(--vscode-workbench-sidebar-font-size) * 1.538462)
 +}
-+.monaco-workbench .part.sidebar  .debug-toolbar .monaco-action-bar .action-item .action-label, .monaco-workbench .part.auxiliarybar  .debug-toolbar .monaco-action-bar .action-item .action-label {
++.monaco-workbench  .part.sidebar .debug-toolbar .monaco-action-bar .action-item .action-label, .monaco-workbench  .part.auxiliarybar .debug-toolbar .monaco-action-bar .action-item .action-label {
 +    background-size: calc(var(--vscode-workbench-sidebar-font-size) * 1.230769)
 +}
 \ No newline at end of file
 diff --git a/src/vs/workbench/contrib/debug/browser/media/debugViewlet.css b/src/vs/workbench/contrib/debug/browser/media/debugViewlet.css
-index 4a627af..a07c974 100644
+index 4a627af..86f37c5 100644
 --- a/src/vs/workbench/contrib/debug/browser/media/debugViewlet.css
 +++ b/src/vs/workbench/contrib/debug/browser/media/debugViewlet.css
-@@ -371 +371,90 @@
+@@ -371 +371,103 @@
  }
 +
++/*** Handcrafted for Custom Font Size ***/
++
++.monaco-workbench .part.sidebar .debug-pane .debug-breakpoints .breakpoint-folder,
++.monaco-workbench .part.sidebar .debug-pane .debug-breakpoints .exception  {
++	margin-left: 0 !important;
++}
 +
 +
-+.monaco-workbench .part.sidebar .debug-action.notification:after, .monaco-workbench .part.auxiliarybar .debug-action.notification:after {
++
++/*** Generated for Custom Font Size ***/
++
++.monaco-workbench .debug-action.notification:after .part.sidebar, .monaco-workbench .debug-action.notification:after .part.auxiliarybar {
 +    width: calc(var(--vscode-workbench-sidebar-font-size) * 0.461538);
 +    height: calc(var(--vscode-workbench-sidebar-font-size) * 0.461538);
 +    top: calc(var(--vscode-workbench-sidebar-font-size) * 0.769231);
@@ -2726,14 +2844,14 @@ index 4a627af..a07c974 100644
 +    width: calc(var(--vscode-workbench-sidebar-font-size) * 1.384615);
 +    height: calc(var(--vscode-workbench-sidebar-font-size) * 1.692308);
 +    padding-left: calc(var(--vscode-workbench-sidebar-font-size) * 0.153846);
-+    padding-right: calc(var(--vscode-workbench-sidebar-font-size) * 0.076923);
-+    margin-left: calc(var(--vscode-workbench-sidebar-font-size) * 0.076923)
++    padding-right: 1px;
++    margin-left: 1px
 +}
-+.monaco-workbench .part.sidebar .monaco-action-bar .start-debug-action-item .configuration .monaco-select-box, .monaco-workbench .part.auxiliarybar .monaco-action-bar .start-debug-action-item .configuration .monaco-select-box {
++.monaco-workbench .monaco-action-bar .part.sidebar .start-debug-action-item .configuration .monaco-select-box, .monaco-workbench .monaco-action-bar .part.auxiliarybar .start-debug-action-item .configuration .monaco-select-box {
 +    margin-top: calc(var(--vscode-workbench-sidebar-font-size) * 0);
 +    min-width: calc(var(--vscode-workbench-sidebar-font-size) * 6.923077)
 +}
-+.monaco-workbench .part.sidebar .monaco-action-bar .start-debug-action-item .configuration .monaco-select-box, .monaco-workbench .part.auxiliarybar .monaco-action-bar .start-debug-action-item .configuration .monaco-select-box {
++.monaco-workbench.safari .monaco-action-bar .part.sidebar .start-debug-action-item .configuration .monaco-select-box, .monaco-workbench.safari .monaco-action-bar .part.auxiliarybar .start-debug-action-item .configuration .monaco-select-box {
 +    margin-bottom: calc(var(--vscode-workbench-sidebar-font-size) * 0)
 +}
 +.monaco-workbench .part.sidebar .debug-pane .line-number, .monaco-workbench .part.auxiliarybar .debug-pane .line-number {
@@ -2744,7 +2862,7 @@ index 4a627af..a07c974 100644
 +    margin: calc(var(--vscode-workbench-sidebar-font-size) * 0) calc(var(--vscode-workbench-sidebar-font-size) * 0.769231)
 +}
 +.monaco-workbench .part.sidebar .debug-pane .call-stack-state-message > .label, .monaco-workbench .part.auxiliarybar .debug-pane .call-stack-state-message > .label {
-+    padding: calc(var(--vscode-workbench-sidebar-font-size) * 0.076923) calc(var(--vscode-workbench-sidebar-font-size) * 0.153846);
++    padding: 1px calc(var(--vscode-workbench-sidebar-font-size) * 0.153846);
 +    font-size: calc(var(--vscode-workbench-sidebar-font-size) * 0.692308)
 +}
 +.monaco-workbench .part.sidebar .debug-pane .debug-call-stack .thread, .monaco-workbench .part.sidebar .debug-pane .debug-call-stack .session, .monaco-workbench .part.sidebar .debug-pane .debug-call-stack .stack-frame, .monaco-workbench .part.auxiliarybar .debug-pane .debug-call-stack .thread, .monaco-workbench .part.auxiliarybar .debug-pane .debug-call-stack .session, .monaco-workbench .part.auxiliarybar .debug-pane .debug-call-stack .stack-frame {
@@ -2773,7 +2891,7 @@ index 4a627af..a07c974 100644
 +    padding: calc(var(--vscode-workbench-sidebar-font-size) * 0)
 +}
 +.monaco-workbench .part.sidebar .debug-view-content .monaco-tl-contents .highlight, .monaco-workbench .part.auxiliarybar .debug-view-content .monaco-tl-contents .highlight {
-+    outline: calc(var(--vscode-workbench-sidebar-font-size) * 0.076923) dotted var(--vscode-list-filterMatchBorder);
++    outline: 1px dotted var(--vscode-list-filterMatchBorder);
 +    outline-offset: calc(var(--vscode-workbench-sidebar-font-size) * -0.076923)
 +}
 +.monaco-workbench .part.sidebar .debug-pane .monaco-list-row, .monaco-workbench .part.auxiliarybar .debug-pane .monaco-list-row {
@@ -2789,7 +2907,11 @@ index 4a627af..a07c974 100644
 +    width: calc(var(--vscode-workbench-sidebar-font-size) * 1.384615);
 +    min-width: calc(var(--vscode-workbench-sidebar-font-size) * 1.384615);
 +    max-width: calc(var(--vscode-workbench-sidebar-font-size) * 1.384615);
-+    height: calc(var(--vscode-workbench-sidebar-font-size) * 1.384615)
++    height: calc(var(--vscode-workbench-sidebar-font-size) * 1.384615);
++    padding: 0
++}
++.monaco-workbench .part.sidebar .debug-pane .debug-breakpoints .breakpoint .monaco-custom-toggle.monaco-checkbox::before, .monaco-workbench .part.auxiliarybar .debug-pane .debug-breakpoints .breakpoint .monaco-custom-toggle.monaco-checkbox::before {
++    margin: 0
 +}
 +.monaco-workbench .part.sidebar .debug-pane .debug-breakpoints .breakpoint > .codicon, .monaco-workbench .part.auxiliarybar .debug-pane .debug-breakpoints .breakpoint > .codicon {
 +    width: calc(var(--vscode-workbench-sidebar-font-size) * 1.461538);
@@ -2982,10 +3104,10 @@ index 8454447..733b9a6 100644
 +}
 \ No newline at end of file
 diff --git a/src/vs/workbench/contrib/extensions/browser/media/extensionActions.css b/src/vs/workbench/contrib/extensions/browser/media/extensionActions.css
-index 6326d45..8e9a0f1 100644
+index 6326d45..cc5242a 100644
 --- a/src/vs/workbench/contrib/extensions/browser/media/extensionActions.css
 +++ b/src/vs/workbench/contrib/extensions/browser/media/extensionActions.css
-@@ -166 +166,23 @@
+@@ -166 +166,26 @@
  }
 +
 +
@@ -2994,6 +3116,9 @@ index 6326d45..8e9a0f1 100644
 +
 +.monaco-workbench .part.sidebar .monaco-action-bar .action-item > .action-label.extension-action.label, .monaco-workbench .part.sidebar .monaco-action-bar .action-dropdown-item > .action-label.extension-action.label, .monaco-workbench .part.auxiliarybar .monaco-action-bar .action-item > .action-label.extension-action.label, .monaco-workbench .part.auxiliarybar .monaco-action-bar .action-dropdown-item > .action-label.extension-action.label {
 +    padding: 0 calc(var(--vscode-workbench-sidebar-font-size) * 0.384615)
++}
++.monaco-workbench .part.sidebar .monaco-action-bar .action-dropdown-item > .monaco-dropdown .action-label, .monaco-workbench .part.auxiliarybar .monaco-action-bar .action-dropdown-item > .monaco-dropdown .action-label {
++    padding: 0
 +}
 +.monaco-workbench .part.sidebar .monaco-action-bar .action-item .action-label.extension-action.label, .monaco-workbench .part.auxiliarybar .monaco-action-bar .action-item .action-label.extension-action.label {
 +    outline-offset: 1px
@@ -3238,10 +3363,10 @@ index 530b0c4..b3c979d 100644
 +		return FONT.sidebarSize22;
  	}
 diff --git a/src/vs/workbench/contrib/scm/browser/media/scm.css b/src/vs/workbench/contrib/scm/browser/media/scm.css
-index 20c78c3..54b982d 100644
+index 408b771..7ccc6b9 100644
 --- a/src/vs/workbench/contrib/scm/browser/media/scm.css
 +++ b/src/vs/workbench/contrib/scm/browser/media/scm.css
-@@ -799 +799,211 @@
+@@ -800 +800,215 @@
  }
 +
 +
@@ -3375,6 +3500,10 @@ index 20c78c3..54b982d 100644
 +}
 +.monaco-workbench .part.sidebar .scm-editor-validation, .monaco-workbench .part.auxiliarybar .scm-editor-validation {
 +    padding: 1px calc(var(--vscode-workbench-sidebar-font-size) * 0.230769)
++}
++.monaco-workbench .part.sidebar .scm-editor-validation p, .monaco-workbench .part.auxiliarybar .scm-editor-validation p {
++    margin: 0;
++    padding: 0
 +}
 +.monaco-workbench .part.sidebar .scm-editor-validation-actions, .monaco-workbench .part.auxiliarybar .scm-editor-validation-actions {
 +    margin-top: 1px
@@ -3527,13 +3656,15 @@ index a2887d4..5e81511 100644
 +			return FONT.sidebarSize22;
  		}
 diff --git a/src/vs/workbench/contrib/search/browser/media/searchview.css b/src/vs/workbench/contrib/search/browser/media/searchview.css
-index 47e85d6..466cf3d 100644
+index 47e85d6..977a4dc 100644
 --- a/src/vs/workbench/contrib/search/browser/media/searchview.css
 +++ b/src/vs/workbench/contrib/search/browser/media/searchview.css
-@@ -443 +443,110 @@
+@@ -443 +443,121 @@
  }
 +
 +
++
++/*** Generated for Custom Font Size ***/
 +
 +.monaco-workbench .part.sidebar .search-view .search-widgets-container, .monaco-workbench .part.auxiliarybar .search-view .search-widgets-container {
 +    margin: calc(var(--vscode-workbench-sidebar-font-size) * 0) calc(var(--vscode-workbench-sidebar-font-size) * 0.923077) 0 calc(var(--vscode-workbench-sidebar-font-size) * 0.153846);
@@ -3550,10 +3681,13 @@ index 47e85d6..466cf3d 100644
 +    padding: calc(var(--vscode-workbench-sidebar-font-size) * 0.230769) calc(var(--vscode-workbench-sidebar-font-size) * 0) calc(var(--vscode-workbench-sidebar-font-size) * 0.230769) calc(var(--vscode-workbench-sidebar-font-size) * 0.461538)
 +}
 +.monaco-workbench .part.sidebar .search-view .search-widget .monaco-inputbox > .ibwrapper > textarea.input, .monaco-workbench .part.auxiliarybar .search-view .search-widget .monaco-inputbox > .ibwrapper > textarea.input {
-+    height: calc(var(--vscode-workbench-sidebar-font-size) * 1.846153)
++    height: calc(var(--vscode-workbench-sidebar-font-size) * 2)
 +}
 +.monaco-workbench .part.sidebar .search-view .search-widget .replace-container, .monaco-workbench .part.auxiliarybar .search-view .search-widget .replace-container {
 +    margin-top: calc(var(--vscode-workbench-sidebar-font-size) * 0.461538)
++}
++.monaco-workbench .part.sidebar .search-view .search-widget .replace-input, .monaco-workbench .part.auxiliarybar .search-view .search-widget .replace-input {
++    width: auto
 +}
 +.monaco-workbench .part.sidebar .search-view .search-widget .replace-input > .controls, .monaco-workbench .part.auxiliarybar .search-view .search-widget .replace-input > .controls {
 +    top: calc(var(--vscode-workbench-sidebar-font-size) * 0.230769);
@@ -3579,6 +3713,7 @@ index 47e85d6..466cf3d 100644
 +}
 +.monaco-workbench .part.sidebar .search-view .query-details.more h4, .monaco-workbench .part.auxiliarybar .search-view .query-details.more h4 {
 +    padding: calc(var(--vscode-workbench-sidebar-font-size) * 0.307692) 0 0;
++    margin: 0;
 +    font-size: calc(var(--vscode-workbench-sidebar-font-size) * 0.846154)
 +}
 +.monaco-workbench .part.sidebar .search-view .messages, .monaco-workbench .part.auxiliarybar .search-view .messages {
@@ -3600,10 +3735,12 @@ index 47e85d6..466cf3d 100644
 +    margin-right: calc(var(--vscode-workbench-sidebar-font-size) * 0.307692)
 +}
 +.monaco-workbench .part.sidebar .search-view .foldermatch, .monaco-workbench .part.sidebar .search-view .filematch, .monaco-workbench .part.auxiliarybar .search-view .foldermatch, .monaco-workbench .part.auxiliarybar .search-view .filematch {
-+    line-height: calc(var(--vscode-workbench-sidebar-font-size) * 1.692308)
++    line-height: calc(var(--vscode-workbench-sidebar-font-size) * 1.692308);
++    padding: 0
 +}
 +.monaco-workbench .part.sidebar .search-view .textsearchresult, .monaco-workbench .part.auxiliarybar .search-view .textsearchresult {
-+    line-height: calc(var(--vscode-workbench-sidebar-font-size) * 1.692308)
++    line-height: calc(var(--vscode-workbench-sidebar-font-size) * 1.692308);
++    padding: 0
 +}
 +.monaco-workbench .part.sidebar .search-view .textsearchresult .monaco-icon-label .codicon, .monaco-workbench .part.auxiliarybar .search-view .textsearchresult .monaco-icon-label .codicon {
 +    top: calc(var(--vscode-workbench-sidebar-font-size) * 0.230769);
@@ -3619,16 +3756,19 @@ index 47e85d6..466cf3d 100644
 +    margin-left: calc(var(--vscode-workbench-sidebar-font-size) * 0.538462);
 +    margin-right: calc(var(--vscode-workbench-sidebar-font-size) * 0.307692)
 +}
++.monaco-workbench .part.sidebar .search-view .monaco-list .monaco-list-row .monaco-action-bar .action-item, .monaco-workbench .part.auxiliarybar .search-view .monaco-list .monaco-list-row .monaco-action-bar .action-item {
++    margin: 0
++}
 +.monaco-workbench .part.sidebar .search-view .monaco-list .monaco-list-row .monaco-action-bar .action-label, .monaco-workbench .part.auxiliarybar .search-view .monaco-list .monaco-list-row .monaco-action-bar .action-label {
 +    padding: calc(var(--vscode-workbench-sidebar-font-size) * 0.153846)
 +}
-+.monaco-workbench.hc-black .part.sidebar .search-view .monaco-list .monaco-list-row .monaco-action-bar .action-label, .monaco-workbench.hc-light .part.sidebar .search-view .monaco-list .monaco-list-row .monaco-action-bar .action-label, .monaco-workbench.hc-black .part.auxiliarybar .search-view .monaco-list .monaco-list-row .monaco-action-bar .action-label, .monaco-workbench.hc-light .part.auxiliarybar .search-view .monaco-list .monaco-list-row .monaco-action-bar .action-label {
++.monaco-workbench.hc-black .search-view .part.sidebar .monaco-list .monaco-list-row .monaco-action-bar .action-label, .monaco-workbench.hc-light .search-view .part.sidebar .monaco-list .monaco-list-row .monaco-action-bar .action-label, .monaco-workbench.hc-black .search-view .part.auxiliarybar .monaco-list .monaco-list-row .monaco-action-bar .action-label, .monaco-workbench.hc-light .search-view .part.auxiliarybar .monaco-list .monaco-list-row .monaco-action-bar .action-label {
 +    margin-top: calc(var(--vscode-workbench-sidebar-font-size) * 0.153846)
 +}
 +.monaco-workbench .part.sidebar .search-view .monaco-count-badge, .monaco-workbench .part.auxiliarybar .search-view .monaco-count-badge {
 +    margin-right: calc(var(--vscode-workbench-sidebar-font-size) * 0.923077)
 +}
-+.monaco-workbench.hc-black .part.sidebar .search-view .foldermatch, .monaco-workbench.hc-black .part.sidebar .search-view .filematch, .monaco-workbench.hc-black .part.sidebar .search-view .linematch, .monaco-workbench.hc-light .part.sidebar .search-view .foldermatch, .monaco-workbench.hc-light .part.sidebar .search-view .filematch, .monaco-workbench.hc-light .part.sidebar .search-view .linematch, .monaco-workbench.hc-black .part.auxiliarybar .search-view .foldermatch, .monaco-workbench.hc-black .part.auxiliarybar .search-view .filematch, .monaco-workbench.hc-black .part.auxiliarybar .search-view .linematch, .monaco-workbench.hc-light .part.auxiliarybar .search-view .foldermatch, .monaco-workbench.hc-light .part.auxiliarybar .search-view .filematch, .monaco-workbench.hc-light .part.auxiliarybar .search-view .linematch {
++.monaco-workbench.hc-black .search-view .part.sidebar .foldermatch, .monaco-workbench.hc-black .search-view .part.sidebar .filematch, .monaco-workbench.hc-black .search-view .part.sidebar .linematch, .monaco-workbench.hc-light .search-view .part.sidebar .foldermatch, .monaco-workbench.hc-light .search-view .part.sidebar .filematch, .monaco-workbench.hc-light .search-view .part.sidebar .linematch, .monaco-workbench.hc-black .search-view .part.auxiliarybar .foldermatch, .monaco-workbench.hc-black .search-view .part.auxiliarybar .filematch, .monaco-workbench.hc-black .search-view .part.auxiliarybar .linematch, .monaco-workbench.hc-light .search-view .part.auxiliarybar .foldermatch, .monaco-workbench.hc-light .search-view .part.auxiliarybar .filematch, .monaco-workbench.hc-light .search-view .part.auxiliarybar .linematch {
 +    line-height: calc(var(--vscode-workbench-sidebar-font-size) * 1.538462)
 +}
 +.monaco-workbench .part.sidebar .text-search-provider-messages .providerMessage, .monaco-workbench .part.auxiliarybar .text-search-provider-messages .providerMessage {
@@ -3638,7 +3778,7 @@ index 47e85d6..466cf3d 100644
 +    top: calc(var(--vscode-workbench-sidebar-font-size) * 0.230769);
 +    padding-right: calc(var(--vscode-workbench-sidebar-font-size) * 0.230769)
 +}
-+.monaco-workbench .part.sidebar .search-container .find-filter-button, .monaco-workbench .part.auxiliarybar .search-container .find-filter-button {
++.monaco-workbench .search-container .part.sidebar .find-filter-button, .monaco-workbench .search-container .part.auxiliarybar .find-filter-button {
 +    margin-left: calc(var(--vscode-workbench-sidebar-font-size) * 0.153846)
 +}
 \ No newline at end of file
@@ -3694,24 +3834,37 @@ index fb52bbb..09ca311 100644
 +		this.tree.layout(this.size.height - widgetHeight - messagesHeight, this.size.width - FONT.sidebarSize28);
  	}
 diff --git a/src/vs/workbench/contrib/search/browser/searchWidget.ts b/src/vs/workbench/contrib/search/browser/searchWidget.ts
-index e9c0fcd..7ee6d39 100644
+index e9c0fcd..f3e23de 100644
 --- a/src/vs/workbench/contrib/search/browser/searchWidget.ts
 +++ b/src/vs/workbench/contrib/search/browser/searchWidget.ts
-@@ -47,2 +47,3 @@ import { IDisposable, MutableDisposable } from '../../../../base/common/lifecycl
+@@ -47,5 +47,3 @@ import { IDisposable, MutableDisposable } from '../../../../base/common/lifecycl
  import { NotebookFindScopeType } from '../../notebook/common/notebookCommon.js';
+-
+-/** Specified in searchview.css */
+-const SingleLineInputHeight = 26;
 +import { FONT } from '../../../../base/common/font.js';
  
-@@ -113,3 +114,2 @@ function stopPropagationForMultiLineDownwards(event: IKeyboardEvent, value: stri
+@@ -99,3 +97,3 @@ function stopPropagationForMultiLineUpwards(event: IKeyboardEvent, value: string
+ 	const isMultiline = !!value.match(/\n/);
+-	if (textarea && (isMultiline || textarea.clientHeight > SingleLineInputHeight) && textarea.selectionStart > 0) {
++	if (textarea && (isMultiline || textarea.clientHeight > FONT.sidebarSize26) && textarea.selectionStart > 0) {
+ 		event.stopPropagation();
+@@ -107,3 +105,3 @@ function stopPropagationForMultiLineDownwards(event: IKeyboardEvent, value: stri
+ 	const isMultiline = !!value.match(/\n/);
+-	if (textarea && (isMultiline || textarea.clientHeight > SingleLineInputHeight) && textarea.selectionEnd < textarea.value.length) {
++	if (textarea && (isMultiline || textarea.clientHeight > FONT.sidebarSize26) && textarea.selectionEnd < textarea.value.length) {
+ 		event.stopPropagation();
+@@ -113,3 +111,2 @@ function stopPropagationForMultiLineDownwards(event: IKeyboardEvent, value: stri
  
 -
  export class SearchWidget extends Widget {
-@@ -316,3 +316,3 @@ export class SearchWidget extends Widget {
+@@ -316,3 +313,3 @@ export class SearchWidget extends Widget {
  		if (this.replaceInput) {
 -			this.replaceInput.width = width - 28;
 +			this.replaceInput.width = width - FONT.sidebarSize28;
  			this.replaceInput.inputBox.layout();
 diff --git a/src/vs/workbench/contrib/terminal/browser/terminalTabsList.ts b/src/vs/workbench/contrib/terminal/browser/terminalTabsList.ts
-index 21118dd..9c788d8 100644
+index 21118dd..b5e53a1 100644
 --- a/src/vs/workbench/contrib/terminal/browser/terminalTabsList.ts
 +++ b/src/vs/workbench/contrib/terminal/browser/terminalTabsList.ts
 @@ -58,2 +58,3 @@ import { TerminalStorageKeys } from '../common/terminalStorageKeys.js';
@@ -3732,6 +3885,11 @@ index 21118dd..9c788d8 100644
 -				paddingBottom: TerminalTabsListSizes.TabHeight,
 +				paddingBottom: FONT.bottomPaneSize22,
  				dnd: instantiationService.createInstance(TerminalTabsDragAndDrop),
+@@ -458,3 +458,3 @@ class TerminalTabsRenderer implements IListRenderer<ITerminalInstance, ITerminal
+ 		});
+-		inputBox.element.style.height = '22px';
++		inputBox.element.style.height = `${FONT.bottomPaneSize22}px`;
+ 		inputBox.value = value;
 diff --git a/src/vs/workbench/contrib/testing/browser/testCoverageView.ts b/src/vs/workbench/contrib/testing/browser/testCoverageView.ts
 index e19fc27..56e4bbc 100644
 --- a/src/vs/workbench/contrib/testing/browser/testCoverageView.ts
@@ -3809,7 +3967,7 @@ index 27c6580..0feb646 100644
 +		return FONT.sidebarSize22;
  	}
 diff --git a/src/vs/workbench/contrib/welcomeAgentSessions/browser/agentSessionsWelcome.ts b/src/vs/workbench/contrib/welcomeAgentSessions/browser/agentSessionsWelcome.ts
-index 70191ee..42cf995 100644
+index 9e6ca13..478e4e7 100644
 --- a/src/vs/workbench/contrib/welcomeAgentSessions/browser/agentSessionsWelcome.ts
 +++ b/src/vs/workbench/contrib/welcomeAgentSessions/browser/agentSessionsWelcome.ts
 @@ -49,3 +49,2 @@ import { AgentSessionsControl, IAgentSessionsControlOptions } from '../../chat/b
