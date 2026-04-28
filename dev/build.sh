@@ -8,18 +8,18 @@
 export APP_NAME="VSCodium"
 export ASSETS_REPOSITORY="VSCodium/vscodium"
 export BINARY_NAME="codium"
+export DISABLE_UPDATE="yes"
 export CI_BUILD="no"
 export GH_REPO_PATH="VSCodium/vscodium"
 export ORG_NAME="VSCodium"
 export SKIP_ASSETS="yes"
 export SKIP_BUILD="no"
 export SKIP_SOURCE="no"
-export NO_MANGLING="no"
 export VSCODE_LATEST="no"
 export VSCODE_QUALITY="stable"
 export VSCODE_SKIP_NODE_VERSION_CHECK="yes"
 
-while getopts ":hilcopsm" opt; do
+while getopts ":hilcopsu" opt; do
   case "$opt" in
     h)
       printf "Usage: $0 (options)
@@ -30,8 +30,8 @@ Options:
   -c: Skip building the CLI (as CI).
   -o: Skip the build step.
   -p: Generate the packages/assets/installers.
-  -s: Don't retrieve the source code of Visual Studio Code (won't delete the existing build).
-  -m: Disable mangling to speed up the compilation step.\n"
+  -u: Include the automatic updater in the build.
+  -s: Don't retrieve the source code of Visual Studio Code (won't delete the existing build).\n"
       exit 1
       ;;
     i)
@@ -54,8 +54,8 @@ Options:
     s)
       export SKIP_SOURCE="yes"
       ;;
-    m)
-      export NO_MANGLING="yes"
+    u)
+      export DISABLE_UPDATE="no"
       ;;
     *)
       ;;
@@ -99,7 +99,6 @@ echo "CI_BUILD=\"${CI_BUILD}\""
 echo "SKIP_SOURCE=\"${SKIP_SOURCE}\""
 echo "SKIP_BUILD=\"${SKIP_BUILD}\""
 echo "SKIP_ASSETS=\"${SKIP_ASSETS}\""
-echo "NO_MANGLING=\"${NO_MANGLING}\""
 echo "VSCODE_ARCH=\"${VSCODE_ARCH}\""
 echo "VSCODE_LATEST=\"${VSCODE_LATEST}\""
 echo "VSCODE_QUALITY=\"${VSCODE_QUALITY}\""

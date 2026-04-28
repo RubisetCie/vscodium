@@ -22,32 +22,28 @@ if [[ "${VSCODE_ARCH}" == "ia32" || "${VSCODE_ARCH}" == "x64" ]]; then
   if [[ "${SHOULD_BUILD_MSI}" != "no" ]]; then
     . ../build/windows/msi/build.sh
   fi
-
-  if [[ "${SHOULD_BUILD_MSI_NOUP}" != "no" ]]; then
-    . ../build/windows/msi/build-updates-disabled.sh
-  fi
 fi
 
 cd ..
 
 if [[ "${SHOULD_BUILD_EXE_SYS}" != "no" ]]; then
   echo "Moving System EXE"
-  mv "vscode\\.build\\win32-${VSCODE_ARCH}\\system-setup\\VSCodeSetup.exe" "assets\\${APP_NAME}Setup-${VSCODE_ARCH}-${RELEASE_VERSION}.exe"
+  mv "vscode\\.build\\win32-${VSCODE_ARCH}\\system-setup\\VSCodeSetup.exe" "assets\\${APP_NAME}-win32-${VSCODE_ARCH}-${RELEASE_VERSION}-system-setup.exe"
 fi
 
 if [[ "${SHOULD_BUILD_EXE_USR}" != "no" ]]; then
   echo "Moving User EXE"
-  mv "vscode\\.build\\win32-${VSCODE_ARCH}\\user-setup\\VSCodeSetup.exe" "assets\\${APP_NAME}UserSetup-${VSCODE_ARCH}-${RELEASE_VERSION}.exe"
+  mv "vscode\\.build\\win32-${VSCODE_ARCH}\\user-setup\\VSCodeSetup.exe" "assets\\${APP_NAME}-win32-${VSCODE_ARCH}-${RELEASE_VERSION}-user-setup.exe"
 fi
 
 if [[ "${VSCODE_ARCH}" == "ia32" || "${VSCODE_ARCH}" == "x64" ]]; then
   if [[ "${SHOULD_BUILD_MSI}" != "no" ]]; then
     echo "Moving MSI"
-    mv "build\\windows\\msi\\releasedir\\${APP_NAME}-${VSCODE_ARCH}-${RELEASE_VERSION}.msi" assets/
+    mv "build\\windows\\msi\\releasedir\\${APP_NAME}-${VSCODE_ARCH}-${RELEASE_VERSION}.msi" "assets\\${APP_NAME}-win32-${VSCODE_ARCH}-${RELEASE_VERSION}-setup.msi"
   fi
+fi
 
-  if [[ "${SHOULD_BUILD_MSI_NOUP}" != "no" ]]; then
-    echo "Moving MSI with disabled updates"
-    mv "build\\windows\\msi\\releasedir\\${APP_NAME}-${VSCODE_ARCH}-updates-disabled-${RELEASE_VERSION}.msi" assets/
-  fi
+if [[ "${VSCODE_ARCH}" != "x64" ]]; then
+  SHOULD_BUILD_REH="no"
+  SHOULD_BUILD_REH_WEB="no"
 fi

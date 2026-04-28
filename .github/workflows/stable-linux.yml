@@ -6,21 +6,16 @@ on:
       version_tag:
         type: string
         description: Override version tag
-      enable_mangling:
-        description: 'Enable mangling (longer compilation)'
-        type: boolean
-        required: true
-        default: true
-      disable_update:
-        description: Don't build automatic updating of the program
-        type: boolean
-        required: true
-        default: true
-      disable_reh:
-        description: Don't build remote extension host
+      build_update:
+        description: Build the auto updater
         type: boolean
         required: true
         default: false
+      build_reh:
+        description: Build the remote extension host
+        type: boolean
+        required: true
+        default: true
       build_cli:
         description: Build separate command-line utility
         type: boolean
@@ -62,7 +57,7 @@ env:
   APP_NAME: VSCodium
   ASSETS_REPOSITORY: ${{ github.repository }}
   BINARY_NAME: codium
-  DISABLE_UPDATE: ${{ github.event.inputs.disable_update == 'true' && 'yes' || 'no' }}
+  DISABLE_UPDATE: ${{ github.event.inputs.disable_update == 'true' && 'no' || 'yes' }}
   GH_REPO_PATH: ${{ github.repository }}
   ORG_NAME: ${{ github.repository_owner }}
   OS_NAME: linux
@@ -132,7 +127,6 @@ jobs:
         env:
           SHOULD_BUILD_REH: no
           SHOULD_BUILD_REH_WEB: no
-          NO_MANGLING: ${{ github.event.inputs.enable_mangling == 'true' && 'no' || 'yes' }}
         run: ./build.sh
 
       - name: Compress sources artifact
@@ -257,7 +251,7 @@ jobs:
     needs:
       - check
       - compile
-    if: ${{ github.event.inputs.disable_reh == 'false' }}
+    if: ${{ github.event.inputs.build_reh == 'true' }}
     runs-on: ubuntu-22.04
     permissions:
       contents: write
@@ -358,7 +352,7 @@ jobs:
     needs:
       - check
       - compile
-    if: ${{ github.event.inputs.disable_reh == 'false' }}
+    if: ${{ github.event.inputs.build_reh == 'true' }}
     runs-on: ubuntu-22.04
     permissions:
       contents: write

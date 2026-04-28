@@ -6,21 +6,16 @@ on:
       version_tag:
         type: string
         description: Override version tag
-      enable_mangling:
-        description: Enable mangling (longer compilation)
+      build_update:
+        description: Build the auto updater
         type: boolean
         required: true
-        default: true
-      disable_update:
-        description: Don't build automatic updating of the program
+        default: false
+      build_reh:
+        description: Build the remote extension host
         type: boolean
         required: true
-        default: true
-      disable_reh:
-        description: Don't build remote extension host
-        type: boolean
-        required: true
-        default: true
+        default: false
       build_cli:
         description: Build separate command-line utility
         type: boolean
@@ -61,7 +56,7 @@ env:
   APP_NAME: VSCodium
   ASSETS_REPOSITORY: ${{ github.repository }}
   BINARY_NAME: codium
-  DISABLE_UPDATE: ${{ github.event.inputs.disable_update == 'true' && 'yes' || 'no' }}
+  DISABLE_UPDATE: ${{ github.event.inputs.build_update == 'true' && 'no' || 'yes' }}
   GH_REPO_PATH: ${{ github.repository }}
   ORG_NAME: ${{ github.repository_owner }}
   OS_NAME: windows
@@ -123,9 +118,8 @@ jobs:
 
       - name: Build
         env:
-          SHOULD_BUILD_REH: ${{ github.event.inputs.disable_reh == 'true' && 'no' || 'yes' }}
-          SHOULD_BUILD_REH_WEB: ${{ github.event.inputs.disable_reh == 'true' && 'no' || 'yes' }}
-          NO_MANGLING: ${{ github.event.inputs.enable_mangling == 'true' && 'no' || 'yes' }}
+          SHOULD_BUILD_REH: no
+          SHOULD_BUILD_REH_WEB: no
         run: ./build.sh
 
       - name: Compress sources artifact
@@ -189,16 +183,16 @@ jobs:
       - name: Build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SHOULD_BUILD_REH: ${{ github.event.inputs.disable_reh == 'true' && 'no' || 'yes' }}
-          SHOULD_BUILD_REH_WEB: ${{ github.event.inputs.disable_reh == 'true' && 'no' || 'yes' }}
+          SHOULD_BUILD_REH: ${{ github.event.inputs.build_reh == 'true' && 'yes' || 'no' }}
+          SHOULD_BUILD_REH_WEB: ${{ github.event.inputs.build_reh == 'true' && 'yes' || 'no' }}
           npm_config_arch: ${{ matrix.vscode_arch }}
           npm_config_target_arch: ${{ matrix.vscode_arch }}
         run: ./build/windows/package.sh
 
       - name: Prepare assets
         env:
-          SHOULD_BUILD_REH: ${{ github.event.inputs.disable_reh == 'true' && 'no' || 'yes' }}
-          SHOULD_BUILD_REH_WEB: ${{ github.event.inputs.disable_reh == 'true' && 'no' || 'yes' }}
+          SHOULD_BUILD_REH: ${{ github.event.inputs.build_reh == 'true' && 'yes' || 'no' }}
+          SHOULD_BUILD_REH_WEB: ${{ github.event.inputs.build_reh == 'true' && 'yes' || 'no' }}
           SHOULD_BUILD_CLI: ${{ github.event.inputs.build_cli == 'true' && 'yes' || 'no' }}
         run: ./prepare_assets.sh
 
@@ -206,9 +200,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: VSCodium-${{ matrix.vscode_arch }}
-          path: |
-            assets/*.exe
-            assets/*.msi
+          path: assets/
           retention-days: 3
         if: ${{ github.event.inputs.upload_assets == 'true' }}
 

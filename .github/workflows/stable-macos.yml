@@ -6,11 +6,6 @@ on:
       version_tag:
         type: string
         description: Override version tag
-      enable_mangling:
-        description: Enable mangling (longer compilation)
-        type: boolean
-        required: true
-        default: true
       build_cli:
         description: Build separate command-line utility
         type: boolean
@@ -92,7 +87,6 @@ jobs:
       - name: Build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NO_MANGLING: ${{ github.event.inputs.enable_mangling == 'true' && 'no' || 'yes' }}
         run: ./build.sh
 
       - name: Prepare assets

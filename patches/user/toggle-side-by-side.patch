@@ -1,6 +1,6 @@
-From 81b0473d4e9745deaca5155d10d1ed53d2bc4bc4 Mon Sep 17 00:00:00 2001
+From 8e18abd98c7793b290c1c29ab714f7460db3f6c8 Mon Sep 17 00:00:00 2001
 From: Matthieu Carteron <rubisetcie@gmail.com>
-Date: Fri, 6 Mar 2026 22:35:25 +0100
+Date: Tue, 28 Apr 2026 17:45:04 +0200
 Subject: [PATCH] Added 'showSideBySideButton' setting to toggle 'Split Editor' button.
 
 ---
@@ -12,7 +12,7 @@ Subject: [PATCH] Added 'showSideBySideButton' setting to toggle 'Split Editor' b
  5 files changed, 23 insertions(+), 5 deletions(-)
 
 diff --git a/src/vs/workbench/browser/contextkeys.ts b/src/vs/workbench/browser/contextkeys.ts
-index 678a225..8126a8d 100644
+index 678a225f..4dfce9a9 100644
 --- a/src/vs/workbench/browser/contextkeys.ts
 +++ b/src/vs/workbench/browser/contextkeys.ts
 @@ -6,7 +6,7 @@
@@ -65,19 +65,19 @@ index 678a225..8126a8d 100644
  		switch (this.contextService.getWorkbenchState()) {
  			case WorkbenchState.EMPTY: return 'empty';
 diff --git a/src/vs/workbench/browser/parts/editor/editor.contribution.ts b/src/vs/workbench/browser/parts/editor/editor.contribution.ts
-index 1423548..5cc23cd 100644
+index 7d24435f..038b7811 100644
 --- a/src/vs/workbench/browser/parts/editor/editor.contribution.ts
 +++ b/src/vs/workbench/browser/parts/editor/editor.contribution.ts
 @@ -11,7 +11,7 @@ import {
  	TextCompareEditorActiveContext, ActiveEditorPinnedContext, EditorGroupEditorsCountContext, ActiveEditorStickyContext, ActiveEditorAvailableEditorIdsContext,
  	EditorPartMultipleEditorGroupsContext, ActiveEditorDirtyContext, ActiveEditorGroupLockedContext, ActiveEditorCanSplitInGroupContext, SideBySideEditorActiveContext,
  	EditorTabsVisibleContext, ActiveEditorLastInGroupContext, EditorPartMaximizedEditorGroupContext, MultipleEditorGroupsContext, InEditorZenModeContext,
--	IsAuxiliaryWindowContext, ActiveCompareEditorCanSwapContext, MultipleEditorsSelectedInGroupContext, SplitEditorsVertically
-+	IsAuxiliaryWindowContext, ActiveCompareEditorCanSwapContext, MultipleEditorsSelectedInGroupContext, SplitEditorsVertically, ShowSplitEditorsButton
+-	IsAuxiliaryWindowContext, ActiveCompareEditorCanSwapContext, MultipleEditorsSelectedInGroupContext, SplitEditorsVertically,
++	IsAuxiliaryWindowContext, ActiveCompareEditorCanSwapContext, MultipleEditorsSelectedInGroupContext, SplitEditorsVertically, ShowSplitEditorsButton,
+ 	IsSessionsWindowContext
  } from '../../../common/contextkeys.js';
  import { SideBySideEditorInput, SideBySideEditorInputSerializer } from '../../../common/editor/sideBySideEditorInput.js';
- import { TextResourceEditor } from './textResourceEditor.js';
-@@ -467,7 +467,7 @@ appendEditorToolItem(
+@@ -471,7 +471,7 @@ appendEditorToolItem(
  		title: localize('splitEditorRight', "Split Editor Right"),
  		icon: Codicon.splitHorizontal
  	},
@@ -86,7 +86,7 @@ index 1423548..5cc23cd 100644
  	SPLIT_ORDER,
  	{
  		id: SPLIT_EDITOR_DOWN,
-@@ -482,7 +482,7 @@ appendEditorToolItem(
+@@ -486,7 +486,7 @@ appendEditorToolItem(
  		title: localize('splitEditorDown', "Split Editor Down"),
  		icon: Codicon.splitVertical
  	},
@@ -96,7 +96,7 @@ index 1423548..5cc23cd 100644
  	{
  		id: SPLIT_EDITOR_RIGHT,
 diff --git a/src/vs/workbench/browser/parts/editor/sideBySideEditor.ts b/src/vs/workbench/browser/parts/editor/sideBySideEditor.ts
-index 42d71b8..a6a28c0 100644
+index 42d71b82..a6a28c0e 100644
 --- a/src/vs/workbench/browser/parts/editor/sideBySideEditor.ts
 +++ b/src/vs/workbench/browser/parts/editor/sideBySideEditor.ts
 @@ -64,7 +64,7 @@ export class SideBySideEditor extends AbstractEditorWithViewState<ISideBySideEdi
@@ -109,7 +109,7 @@ index 42d71b8..a6a28c0 100644
  	private static readonly VIEW_STATE_PREFERENCE_KEY = 'sideBySideEditorViewState';
  
 diff --git a/src/vs/workbench/browser/workbench.contribution.ts b/src/vs/workbench/browser/workbench.contribution.ts
-index 058693c..e58e37a 100644
+index bdc603ff..35cd8c92 100644
 --- a/src/vs/workbench/browser/workbench.contribution.ts
 +++ b/src/vs/workbench/browser/workbench.contribution.ts
 @@ -340,6 +340,11 @@ const registry = Registry.as<IConfigurationRegistry>(ConfigurationExtensions.Con
@@ -125,10 +125,10 @@ index 058693c..e58e37a 100644
  				'type': 'boolean',
  				'description': localize('closeEmptyGroups', "Controls the behavior of empty editor groups when the last tab in the group is closed. When enabled, empty groups will automatically close. When disabled, empty groups will remain part of the grid."),
 diff --git a/src/vs/workbench/common/contextkeys.ts b/src/vs/workbench/common/contextkeys.ts
-index c034874..936a7e8 100644
+index 73e207b8..a9718c84 100644
 --- a/src/vs/workbench/common/contextkeys.ts
 +++ b/src/vs/workbench/common/contextkeys.ts
-@@ -103,6 +103,7 @@ export const EditorsVisibleContext = new RawContextKey<boolean>('editorIsOpen',
+@@ -105,6 +105,7 @@ export const EditorsVisibleContext = new RawContextKey<boolean>('editorIsOpen',
  export const InEditorZenModeContext = new RawContextKey<boolean>('inZenMode', false, localize('inZenMode', "Whether Zen mode is enabled"));
  export const IsMainEditorCenteredLayoutContext = new RawContextKey<boolean>('isCenteredLayout', false, localize('isMainEditorCenteredLayout', "Whether centered layout is enabled for the main editor"));
  export const SplitEditorsVertically = new RawContextKey<boolean>('splitEditorsVertically', false, localize('splitEditorsVertically', "Whether editors split vertically"));

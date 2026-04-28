@@ -1,5 +1,5 @@
 diff --git a/build/gulpfile.reh.ts b/build/gulpfile.reh.ts
-index 2c44fc94..d85dadfe 100644
+index a1f3c189..dfc70775 100644
 --- a/build/gulpfile.reh.ts
 +++ b/build/gulpfile.reh.ts
 @@ -30,3 +30,3 @@ import rceditCallback from 'rcedit';
@@ -11,11 +11,11 @@ index 2c44fc94..d85dadfe 100644
  import { fetchUrls, fetchGithub } from './lib/fetch.ts';
 -import { getCopilotExcludeFilter, copyCopilotNativeDeps, prepareBuiltInCopilotExtensionShims } from './lib/copilot.ts';
  import jsonEditor from 'gulp-json-editor';
-@@ -346,3 +345,2 @@ function packageTask(type: string, platform: string, arch: string, sourceFolderN
+@@ -347,3 +346,2 @@ function packageTask(type: string, platform: string, arch: string, sourceFolderN
  			.pipe(util.cleanNodeModules(path.join(import.meta.dirname, `.moduleignore.${process.platform}`)))
 -			.pipe(filter(getCopilotExcludeFilter(platform, arch)))
  			.pipe(jsFilter)
-@@ -465,13 +463,2 @@ function patchWin32DependenciesTask(destinationFolderName: string) {
+@@ -466,13 +464,2 @@ function patchWin32DependenciesTask(destinationFolderName: string) {
  
 -function copyCopilotNativeDepsTaskREH(platform: string, arch: string, destinationFolderName: string) {
 -	return async () => {
@@ -38,7 +38,7 @@ index 2c44fc94..d85dadfe 100644
 -				compileCopilotExtensionBuildTask,
  				compileExtensionMediaBuildTask,
 diff --git a/build/gulpfile.vscode.ts b/build/gulpfile.vscode.ts
-index 93b5f711..d8084ab1 100644
+index 94e4457d..b351bfed 100644
 --- a/build/gulpfile.vscode.ts
 +++ b/build/gulpfile.vscode.ts
 @@ -31,5 +31,4 @@ import minimist from 'minimist';
@@ -48,15 +48,15 @@ index 93b5f711..d8084ab1 100644
  import { copyCodiconsTask } from './lib/compilation.ts';
 -import { getCopilotExcludeFilter, copyCopilotNativeDeps, prepareBuiltInCopilotExtensionShims } from './lib/copilot.ts';
  import type { EmbeddedProductInfo } from './lib/embeddedType.ts';
-@@ -446,3 +445,2 @@ function packageTask(platform: string, arch: string, sourceFolderName: string, d
+@@ -447,3 +446,2 @@ function packageTask(platform: string, arch: string, sourceFolderName: string, d
  			.pipe(util.cleanNodeModules(path.join(import.meta.dirname, `.moduleignore.${process.platform}`)))
 -			.pipe(filter(getCopilotExcludeFilter(platform, arch)))
  			.pipe(jsFilter)
-@@ -453,3 +451,2 @@ function packageTask(platform: string, arch: string, sourceFolderName: string, d
+@@ -454,3 +452,2 @@ function packageTask(platform: string, arch: string, sourceFolderName: string, d
  				'**/@vscode/ripgrep/bin/*',
 -				'**/@github/copilot-*/**',
  				'**/node-pty/build/Release/*',
-@@ -691,20 +688,2 @@ function patchWin32DependenciesTask(destinationFolderName: string) {
+@@ -692,20 +689,2 @@ function patchWin32DependenciesTask(destinationFolderName: string) {
  
 -function copyCopilotNativeDepsTask(platform: string, arch: string, destinationFolderName: string) {
 -	const outputDir = path.join(path.dirname(root), destinationFolderName);
@@ -77,15 +77,15 @@ index 93b5f711..d8084ab1 100644
 -}
 -
  const buildRoot = path.dirname(root);
-@@ -734,3 +713,2 @@ BUILD_TARGETS.forEach(buildTarget => {
+@@ -735,3 +714,2 @@ BUILD_TARGETS.forEach(buildTarget => {
  			packageTask(platform, arch, sourceFolderName, destinationFolderName, opts),
 -			copyCopilotNativeDepsTask(platform, arch, destinationFolderName)
  		];
-@@ -761,3 +739,2 @@ BUILD_TARGETS.forEach(buildTarget => {
+@@ -784,3 +762,2 @@ BUILD_TARGETS.forEach(buildTarget => {
  				compileNonNativeExtensionsBuildTask,
 -				compileCopilotExtensionBuildTask,
  				compileExtensionMediaBuildTask,
-@@ -782,3 +759,2 @@ BUILD_TARGETS.forEach(buildTarget => {
+@@ -809,3 +786,2 @@ BUILD_TARGETS.forEach(buildTarget => {
  				compileNonNativeExtensionsBuildTask,
 -				compileCopilotExtensionBuildTask,
  				compileExtensionMediaBuildTask,
@@ -393,6 +393,194 @@ index b925a690..86fdd1f6 100644
 -    "copilot:get_token": "npm --prefix extensions/copilot run get_token",
      "update-build-ts-version": "npm install -D typescript@next && npm install -D @typescript/native-preview && (cd build && npm run typecheck)",
 @@ -89,5 +84,2 @@
+   "dependencies": {
+-    "@anthropic-ai/sandbox-runtime": "0.0.42",
+-    "@github/copilot": "^1.0.24",
+-    "@github/copilot-sdk": "^0.2.2",
+     "@microsoft/1ds-core-js": "^3.2.13",
+diff --git a/remote/package-lock.json b/remote/package-lock.json
+index d09143e7..8f28611c 100644
+--- a/remote/package-lock.json
++++ b/remote/package-lock.json
+@@ -10,5 +10,2 @@
+       "dependencies": {
+-        "@anthropic-ai/sandbox-runtime": "0.0.42",
+-        "@github/copilot": "^1.0.24",
+-        "@github/copilot-sdk": "^0.2.2",
+         "@microsoft/1ds-core-js": "^3.2.13",
+@@ -55,167 +52,2 @@
+     },
+-    "node_modules/@anthropic-ai/sandbox-runtime": {
+-      "version": "0.0.42",
+-      "resolved": "https://registry.npmjs.org/@anthropic-ai/sandbox-runtime/-/sandbox-runtime-0.0.42.tgz",
+-      "integrity": "sha512-kJpuhU4hHMumeygIkKvNhscEsTtQK1sat1kZwhb6HLYBznwjMGOdnuBI/RM9HeFwxArn71/ciD2WJbxttXBMHw==",
+-      "license": "Apache-2.0",
+-      "dependencies": {
+-        "@pondwader/socks5-server": "^1.0.10",
+-        "@types/lodash-es": "^4.17.12",
+-        "commander": "^12.1.0",
+-        "lodash-es": "^4.17.23",
+-        "shell-quote": "^1.8.3",
+-        "zod": "^3.24.1"
+-      },
+-      "bin": {
+-        "srt": "dist/cli.js"
+-      },
+-      "engines": {
+-        "node": ">=18.0.0"
+-      }
+-    },
+-    "node_modules/@anthropic-ai/sandbox-runtime/node_modules/commander": {
+-      "version": "12.1.0",
+-      "resolved": "https://registry.npmjs.org/commander/-/commander-12.1.0.tgz",
+-      "integrity": "sha512-Vw8qHK3bZM9y/P10u3Vib8o/DdkvA2OtPtZvD871QKjy74Wj1WSKFILMPRPSdUSx5RFK1arlJzEtA4PkFgnbuA==",
+-      "license": "MIT",
+-      "engines": {
+-        "node": ">=18"
+-      }
+-    },
+-    "node_modules/@github/copilot": {
+-      "version": "1.0.24",
+-      "resolved": "https://registry.npmjs.org/@github/copilot/-/copilot-1.0.24.tgz",
+-      "integrity": "sha512-/nZ2GwhaGq0HeI3W+6LE0JGw25/bipC6tYVa+oQ5tIvAafBazuNt10CXkeaor+u9oBWLZtPbdTyAzE2tjy9NpQ==",
+-      "license": "SEE LICENSE IN LICENSE.md",
+-      "bin": {
+-        "copilot": "npm-loader.js"
+-      },
+-      "optionalDependencies": {
+-        "@github/copilot-darwin-arm64": "1.0.24",
+-        "@github/copilot-darwin-x64": "1.0.24",
+-        "@github/copilot-linux-arm64": "1.0.24",
+-        "@github/copilot-linux-x64": "1.0.24",
+-        "@github/copilot-win32-arm64": "1.0.24",
+-        "@github/copilot-win32-x64": "1.0.24"
+-      }
+-    },
+-    "node_modules/@github/copilot-darwin-arm64": {
+-      "version": "1.0.24",
+-      "resolved": "https://registry.npmjs.org/@github/copilot-darwin-arm64/-/copilot-darwin-arm64-1.0.24.tgz",
+-      "integrity": "sha512-lejn6KV+09rZEICX3nRx9a58DQFQ2kK3NJ3EICfVLngUCWIUmwn1BLezjeTQc9YNasHltA1hulvfsWqX+VjlMw==",
+-      "cpu": [
+-        "arm64"
+-      ],
+-      "license": "SEE LICENSE IN LICENSE.md",
+-      "optional": true,
+-      "os": [
+-        "darwin"
+-      ],
+-      "bin": {
+-        "copilot-darwin-arm64": "copilot"
+-      }
+-    },
+-    "node_modules/@github/copilot-darwin-x64": {
+-      "version": "1.0.24",
+-      "resolved": "https://registry.npmjs.org/@github/copilot-darwin-x64/-/copilot-darwin-x64-1.0.24.tgz",
+-      "integrity": "sha512-r2F3keTvr4Bunz3V+waRAvsHgqsVQGyIZFBebsNPWxBX1eh3IXgtBqxCR7vXTFyZonQ8VaiJH3YYEfAhyKsk9g==",
+-      "cpu": [
+-        "x64"
+-      ],
+-      "license": "SEE LICENSE IN LICENSE.md",
+-      "optional": true,
+-      "os": [
+-        "darwin"
+-      ],
+-      "bin": {
+-        "copilot-darwin-x64": "copilot"
+-      }
+-    },
+-    "node_modules/@github/copilot-linux-arm64": {
+-      "version": "1.0.24",
+-      "resolved": "https://registry.npmjs.org/@github/copilot-linux-arm64/-/copilot-linux-arm64-1.0.24.tgz",
+-      "integrity": "sha512-B3oANXKKKLhnKYozXa/W+DxfCQAHJCs0QKR5rBwNrwJbf656twNgALSxWTSJk+1rEP6MrHCswUAcwjwZL7Q+FQ==",
+-      "cpu": [
+-        "arm64"
+-      ],
+-      "license": "SEE LICENSE IN LICENSE.md",
+-      "optional": true,
+-      "os": [
+-        "linux"
+-      ],
+-      "bin": {
+-        "copilot-linux-arm64": "copilot"
+-      }
+-    },
+-    "node_modules/@github/copilot-linux-x64": {
+-      "version": "1.0.24",
+-      "resolved": "https://registry.npmjs.org/@github/copilot-linux-x64/-/copilot-linux-x64-1.0.24.tgz",
+-      "integrity": "sha512-NGTldizY54B+4Sfhu/GWoEQNMwqqUNgMwbSgBshFv+Hqy1EwuvNWKVov1Y0Vzhp4qAHc6ZxBk/OPIW8Ato9FUg==",
+-      "cpu": [
+-        "x64"
+-      ],
+-      "license": "SEE LICENSE IN LICENSE.md",
+-      "optional": true,
+-      "os": [
+-        "linux"
+-      ],
+-      "bin": {
+-        "copilot-linux-x64": "copilot"
+-      }
+-    },
+-    "node_modules/@github/copilot-sdk": {
+-      "version": "0.2.2",
+-      "resolved": "https://registry.npmjs.org/@github/copilot-sdk/-/copilot-sdk-0.2.2.tgz",
+-      "integrity": "sha512-VZCqS08YlUM90bUKJ7VLeIxgTTEHtfXBo84T1IUMNvXRREX2csjPH6Z+CPw3S2468RcCLvzBXcc9LtJJTLIWFw==",
+-      "license": "MIT",
+-      "dependencies": {
+-        "@github/copilot": "^1.0.21",
+-        "vscode-jsonrpc": "^8.2.1",
+-        "zod": "^4.3.6"
+-      },
+-      "engines": {
+-        "node": ">=20.0.0"
+-      }
+-    },
+-    "node_modules/@github/copilot-sdk/node_modules/zod": {
+-      "version": "4.3.6",
+-      "resolved": "https://registry.npmjs.org/zod/-/zod-4.3.6.tgz",
+-      "integrity": "sha512-rftlrkhHZOcjDwkGlnUtZZkvaPHCsDATp4pGpuOOMDaTdDDXF91wuVDJoWoPsKX/3YPQ5fHuF3STjcYyKr+Qhg==",
+-      "license": "MIT",
+-      "funding": {
+-        "url": "https://github.com/sponsors/colinhacks"
+-      }
+-    },
+-    "node_modules/@github/copilot-win32-arm64": {
+-      "version": "1.0.24",
+-      "resolved": "https://registry.npmjs.org/@github/copilot-win32-arm64/-/copilot-win32-arm64-1.0.24.tgz",
+-      "integrity": "sha512-/pd/kgef7/HIIg1SQq4q8fext39pDSC44jHB10KkhfgG1WaDFhQbc/aSSMQfxeldkRbQh6VANp8WtGQdwtMCBA==",
+-      "cpu": [
+-        "arm64"
+-      ],
+-      "license": "SEE LICENSE IN LICENSE.md",
+-      "optional": true,
+-      "os": [
+-        "win32"
+-      ],
+-      "bin": {
+-        "copilot-win32-arm64": "copilot.exe"
+-      }
+-    },
+-    "node_modules/@github/copilot-win32-x64": {
+-      "version": "1.0.24",
+-      "resolved": "https://registry.npmjs.org/@github/copilot-win32-x64/-/copilot-win32-x64-1.0.24.tgz",
+-      "integrity": "sha512-RDvOiSvyEJwELqErwANJTrdRuMIHkwPE4QK7Le7WsmaSKxiuS4H1Pa8Yxnd2FWrMsCHEbase23GJlymbnGYLXQ==",
+-      "cpu": [
+-        "x64"
+-      ],
+-      "license": "SEE LICENSE IN LICENSE.md",
+-      "optional": true,
+-      "os": [
+-        "win32"
+-      ],
+-      "bin": {
+-        "copilot-win32-x64": "copilot.exe"
+-      }
+-    },
+     "node_modules/@isaacs/fs-minipass": {
+diff --git a/remote/package.json b/remote/package.json
+index 5b9d937b..2f438495 100644
+--- a/remote/package.json
++++ b/remote/package.json
+@@ -5,5 +5,2 @@
    "dependencies": {
 -    "@anthropic-ai/sandbox-runtime": "0.0.42",
 -    "@github/copilot": "^1.0.24",
