@@ -58,6 +58,8 @@ env:
 jobs:
   build:
     runs-on: ${{ matrix.runner }}
+    permissions:
+      contents: write
     env:
       VSCODE_ARCH: ${{ matrix.vscode_arch }}
     strategy:
@@ -66,8 +68,8 @@ jobs:
         include:
           - runner: macos-15-intel
             vscode_arch: x64
-#          - runner: [self-hosted, macOS, ARM64]
-#            vscode_arch: arm64
+          - runner: [self-hosted, macOS, ARM64]
+            vscode_arch: arm64
 
     steps:
       - name: Checkout
@@ -76,7 +78,7 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v6
         with:
-          node-version-file: '.nvmrc'
+          node-version-file: .nvmrc
 
       - name: Setup Python 3
         uses: actions/setup-python@v6

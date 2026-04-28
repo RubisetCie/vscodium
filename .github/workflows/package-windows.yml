@@ -14,7 +14,7 @@ on:
         description: Don't build remote extension host
         type: boolean
         required: true
-        default: false
+        default: true
       build_cli:
         description: Build separate command-line utility
         type: boolean
@@ -68,6 +68,7 @@ env:
 jobs:
   check:
     runs-on: ubuntu-latest
+    permissions: {}
     outputs:
       MS_COMMIT: ${{ env.MS_COMMIT }}
       MS_TAG: ${{ env.MS_TAG }}
@@ -84,6 +85,8 @@ jobs:
     needs:
       - check
     runs-on: windows-2022
+    permissions:
+      contents: write
     strategy:
       fail-fast: false
       matrix:
@@ -107,18 +110,17 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version-file: '.nvmrc'
 
       - name: Setup Python 3
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.11'
 
       - name: Download sources
         run: curl -Lko vscode.tar.gz "${SOURCES_URL}"
-        if: env.DISABLED != 'yes'
 
       - name: Build
         env:
@@ -137,10 +139,12 @@ jobs:
         run: ./prepare_assets.sh
 
       - name: Upload assets
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: VSCodium-${{ matrix.vscode_arch }}
-          path: assets/
+          path: |
+            assets/*.exe
+            assets/*.msi
           retention-days: 3
         if: ${{ github.event.inputs.upload_assets == 'true' }}
 

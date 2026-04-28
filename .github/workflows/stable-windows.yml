@@ -11,11 +11,16 @@ on:
         type: boolean
         required: true
         default: true
+      disable_update:
+        description: Don't build automatic updating of the program
+        type: boolean
+        required: true
+        default: true
       disable_reh:
         description: Don't build remote extension host
         type: boolean
         required: true
-        default: false
+        default: true
       build_cli:
         description: Build separate command-line utility
         type: boolean
@@ -56,6 +61,7 @@ env:
   APP_NAME: VSCodium
   ASSETS_REPOSITORY: ${{ github.repository }}
   BINARY_NAME: codium
+  DISABLE_UPDATE: ${{ github.event.inputs.disable_update == 'true' && 'yes' || 'no' }}
   GH_REPO_PATH: ${{ github.repository }}
   ORG_NAME: ${{ github.repository_owner }}
   OS_NAME: windows
@@ -69,6 +75,7 @@ env:
 jobs:
   check:
     runs-on: ubuntu-latest
+    permissions: {}
     outputs:
       MS_COMMIT: ${{ env.MS_COMMIT }}
       MS_TAG: ${{ env.MS_TAG }}
@@ -85,6 +92,7 @@ jobs:
     needs:
       - check
     runs-on: windows-2022
+    permissions: {}
     defaults:
       run:
         shell: bash
@@ -92,7 +100,7 @@ jobs:
       MS_COMMIT: ${{ needs.check.outputs.MS_COMMIT }}
       MS_TAG: ${{ needs.check.outputs.MS_TAG }}
       RELEASE_VERSION: ${{ needs.check.outputs.RELEASE_VERSION }}
-      VSCODE_ARCH: 'x64'
+      VSCODE_ARCH: x64
     outputs:
       BUILD_SOURCEVERSION: ${{ env.BUILD_SOURCEVERSION }}
 
@@ -100,24 +108,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      # - name: Setup GCC
-      #   uses: egor-tensin/setup-gcc@v1
-      #   with:
-      #     version: 10
-      #     platform: x64
-
       - name: Setup Node.js environment
         uses: actions/setup-node@v6
         with:
-          node-version-file: '.nvmrc'
+          node-version-file: .nvmrc
 
       - name: Setup Python 3
         uses: actions/setup-python@v6
         with:
           python-version: '3.11'
-
-      # - name: Install Kerberos
-      #   run: sudo apt-get update -y && sudo apt-get install -y libkrb5-dev
 
       - name: Clone VSCode repo
         run: ./get_repo.sh
@@ -139,7 +138,7 @@ jobs:
       - name: Upload sources artifact
         uses: actions/upload-artifact@v7
         with:
-          name: Sources
+          name: sources
           path: ./vscode.tar.gz
           retention-days: 1
 
@@ -148,6 +147,8 @@ jobs:
       - check
       - compile
     runs-on: windows-2022
+    permissions:
+      contents: write
     strategy:
       fail-fast: false
       matrix:
@@ -183,7 +184,7 @@ jobs:
       - name: Download sources artifact
         uses: actions/download-artifact@v8
         with:
-          name: Sources
+          name: sources
 
       - name: Build
         env:
@@ -205,7 +206,9 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: VSCodium-${{ matrix.vscode_arch }}
-          path: assets/
+          path: |
+            assets/*.exe
+            assets/*.msi
           retention-days: 3
         if: ${{ github.event.inputs.upload_assets == 'true' }}
 
