@@ -45,6 +45,6 @@ Here are some essential keyboard shortcuts to get you started:
 
 Once you're comfortable with the basics, you might want to:
 
-- Explore the [documentation](https://github.com/VSCodium/vscodium/blob/master/docs/index.md) for more details
+- Explore the [documentation](https://github.com/RubisetCie/vscodium/blob/master/docs/index.md) for more details
 - Join the [community](https://github.com/VSCodium/vscodium/discussions) to ask questions and share tips
-- Contribute to the [project](https://github.com/VSCodium/vscodium/blob/master/CONTRIBUTING.md) if you're interested
+- Contribute to the [project](https://github.com/RubisetCie/vscodium/blob/master/CONTRIBUTING.md) if you're interested

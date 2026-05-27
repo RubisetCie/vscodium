@@ -12,11 +12,21 @@
 
 This project and everyone participating in it is governed by the [VSCodium Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code.
 
+## Use of AI
+
+We welcome use of AI tools to help draft discussions, issues, or code, but please follow these rules:
+
+- Use AI tools responsibly and disclose their use.
+- Ensure all content passes a human review for authenticity and quality.
+- Be concise. Do not write verbose discussions, issues or PR.
+
+Discussions, issues or PR that consist solely of unvetted AI outputs may be closed at the maintainer's discretion.
+
 ## Reporting Bugs
 
 ### Before Submitting an Issue
 
-Before creating bug reports, please check existing issues and [the Troubleshooting page](https://github.com/VSCodium/vscodium/blob/master/docs/troubleshooting.md) as you might find out that you don't need to create one.
+Before creating bug reports, please check existing issues and [the Troubleshooting page](https://github.com/RubisetCie/vscodium/blob/master/docs/troubleshooting.md) as you might find out that you don't need to create one.
 When you are creating a bug report, please include as many details as possible. Fill out [the required template](https://github.com/VSCodium/vscodium/issues/new?&labels=bug&&template=bug_report.md), the information it asks for helps us resolve issues faster.
 
 ## Making Changes

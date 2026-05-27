@@ -255,6 +255,7 @@
     ],
     "GitHub.copilot-chat": [
       "agentSessionsWorkspace",
+      "agentsWindowConfiguration",
       "interactive",
       "terminalDataWriteEvent",
       "terminalExecuteCommandEvent",
@@ -316,7 +317,9 @@
       "chatHooks",
       "chatDebug",
       "environmentPower",
-      "terminalTitle"
+      "terminalTitle",
+      "languageModelPricing",
+      "chatInputNotification"
     ],
     "GitHub.remotehub": [
       "contribRemoteHelp",
@@ -443,6 +446,10 @@
     ],
     "ms-vscode.vscode-eng-codereview": [
       "chatContextProvider"
+    ],
+    "ms-vscode.vscode-chat-customizations-evaluations": [
+      "chatSessionCustomizationProvider",
+      "contribEditorContentMenu"
     ],
     "jeanp413.open-remote-ssh": [
       "resolvers",

@@ -6,11 +6,11 @@
 ###
 
 export APP_NAME="VSCodium"
-export ASSETS_REPOSITORY="VSCodium/vscodium"
+export ASSETS_REPOSITORY="RubisetCie/vscodium"
 export BINARY_NAME="codium"
 export DISABLE_UPDATE="yes"
 export CI_BUILD="no"
-export GH_REPO_PATH="VSCodium/vscodium"
+export GH_REPO_PATH="RubisetCie/vscodium"
 export ORG_NAME="VSCodium"
 export SKIP_ASSETS="yes"
 export SKIP_BUILD="no"
@@ -177,7 +177,7 @@ if [[ "${SKIP_ASSETS}" == "no" ]]; then
   if [[ "${OS_NAME}" == "osx" && -f "dev/osx/codesign.env" ]]; then
     . dev/osx/macos-codesign.env
 
-    echo "CERTIFICATE_OSX_ID: ${CERTIFICATE_OSX_ID}"
+    echo "CERTIFICATE_OSX_APPLE_ID: ${CERTIFICATE_OSX_APPLE_ID}"
   fi
 
   . prepare_assets.sh

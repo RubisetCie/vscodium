@@ -1,4 +1,4 @@
-From 8e18abd98c7793b290c1c29ab714f7460db3f6c8 Mon Sep 17 00:00:00 2001
+From d2e87c032360b57efbf753ac1e6ab057d3eb8106 Mon Sep 17 00:00:00 2001
 From: Matthieu Carteron <rubisetcie@gmail.com>
 Date: Tue, 28 Apr 2026 17:45:04 +0200
 Subject: [PATCH] Added 'showSideBySideButton' setting to toggle 'Split Editor' button.
@@ -65,7 +65,7 @@ index 678a225f..4dfce9a9 100644
  		switch (this.contextService.getWorkbenchState()) {
  			case WorkbenchState.EMPTY: return 'empty';
 diff --git a/src/vs/workbench/browser/parts/editor/editor.contribution.ts b/src/vs/workbench/browser/parts/editor/editor.contribution.ts
-index 7d24435f..038b7811 100644
+index 55b2e787..b2c23995 100644
 --- a/src/vs/workbench/browser/parts/editor/editor.contribution.ts
 +++ b/src/vs/workbench/browser/parts/editor/editor.contribution.ts
 @@ -11,7 +11,7 @@ import {
@@ -74,7 +74,7 @@ index 7d24435f..038b7811 100644
  	EditorTabsVisibleContext, ActiveEditorLastInGroupContext, EditorPartMaximizedEditorGroupContext, MultipleEditorGroupsContext, InEditorZenModeContext,
 -	IsAuxiliaryWindowContext, ActiveCompareEditorCanSwapContext, MultipleEditorsSelectedInGroupContext, SplitEditorsVertically,
 +	IsAuxiliaryWindowContext, ActiveCompareEditorCanSwapContext, MultipleEditorsSelectedInGroupContext, SplitEditorsVertically, ShowSplitEditorsButton,
- 	IsSessionsWindowContext
+ 	IsSessionsWindowContext, ActiveCustomEditorDiffCanToggleLayoutContext, ActiveCustomEditorTextDiffContext, EditorPartModalContext
  } from '../../../common/contextkeys.js';
  import { SideBySideEditorInput, SideBySideEditorInputSerializer } from '../../../common/editor/sideBySideEditorInput.js';
 @@ -471,7 +471,7 @@ appendEditorToolItem(
@@ -109,10 +109,10 @@ index 42d71b82..a6a28c0e 100644
  	private static readonly VIEW_STATE_PREFERENCE_KEY = 'sideBySideEditorViewState';
  
 diff --git a/src/vs/workbench/browser/workbench.contribution.ts b/src/vs/workbench/browser/workbench.contribution.ts
-index bdc603ff..35cd8c92 100644
+index eeddba00..6cffa117 100644
 --- a/src/vs/workbench/browser/workbench.contribution.ts
 +++ b/src/vs/workbench/browser/workbench.contribution.ts
-@@ -340,6 +340,11 @@ const registry = Registry.as<IConfigurationRegistry>(ConfigurationExtensions.Con
+@@ -343,6 +343,11 @@ const registry = Registry.as<IConfigurationRegistry>(ConfigurationExtensions.Con
  				'default': 'right',
  				'markdownDescription': localize('sideBySideDirection', "Controls the default direction of editors that are opened side by side (for example, from the Explorer). By default, editors will open on the right hand side of the currently active one. If changed to `down`, the editors will open below the currently active one. This also impacts the split editor action in the editor toolbar.")
  			},
@@ -125,10 +125,10 @@ index bdc603ff..35cd8c92 100644
  				'type': 'boolean',
  				'description': localize('closeEmptyGroups', "Controls the behavior of empty editor groups when the last tab in the group is closed. When enabled, empty groups will automatically close. When disabled, empty groups will remain part of the grid."),
 diff --git a/src/vs/workbench/common/contextkeys.ts b/src/vs/workbench/common/contextkeys.ts
-index 73e207b8..a9718c84 100644
+index c650e128..0fbb1708 100644
 --- a/src/vs/workbench/common/contextkeys.ts
 +++ b/src/vs/workbench/common/contextkeys.ts
-@@ -105,6 +105,7 @@ export const EditorsVisibleContext = new RawContextKey<boolean>('editorIsOpen',
+@@ -107,6 +107,7 @@ export const EditorsVisibleContext = new RawContextKey<boolean>('editorIsOpen',
  export const InEditorZenModeContext = new RawContextKey<boolean>('inZenMode', false, localize('inZenMode', "Whether Zen mode is enabled"));
  export const IsMainEditorCenteredLayoutContext = new RawContextKey<boolean>('isCenteredLayout', false, localize('isMainEditorCenteredLayout', "Whether centered layout is enabled for the main editor"));
  export const SplitEditorsVertically = new RawContextKey<boolean>('splitEditorsVertically', false, localize('splitEditorsVertically', "Whether editors split vertically"));
