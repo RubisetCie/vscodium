@@ -1,13 +1,13 @@
 diff --git a/build/gulpfile.vscode.ts b/build/gulpfile.vscode.ts
-index 080d97f3..94e4457d 100644
+index 53987f88..7c7789b7 100644
 --- a/build/gulpfile.vscode.ts
 +++ b/build/gulpfile.vscode.ts
-@@ -30,3 +30,3 @@ import { createAsar } from './lib/asar.ts';
+@@ -27,3 +27,3 @@ import { createAsar } from './lib/asar.ts';
  import minimist from 'minimist';
 -import { compileBuildWithoutManglingTask, compileBuildWithManglingTask } from './gulpfile.compile.ts';
 +import { compileBuildWithoutManglingTask } from './gulpfile.compile.ts';
  import { compileNonNativeExtensionsBuildTask, compileNativeExtensionsBuildTask, compileAllExtensionsBuildTask, compileExtensionMediaBuildTask, cleanExtensionsBuildTask, compileCopilotExtensionBuildTask } from './gulpfile.extensions.ts';
-@@ -757,3 +757,26 @@ BUILD_TARGETS.forEach(buildTarget => {
+@@ -667,3 +667,26 @@ BUILD_TARGETS.forEach(buildTarget => {
  			);
 -			vscodeTask = task.define(`vscode${dashed(platform)}${dashed(arch)}${dashed(minified)}`, task.series(
 +
@@ -35,23 +35,24 @@ index 080d97f3..94e4457d 100644
 +
 +			const prepackTask = task.define(`vscode${dashed(minified)}-prepack`, task.series(
  				copyCodiconsTask,
-@@ -763,9 +786,23 @@ BUILD_TARGETS.forEach(buildTarget => {
+@@ -673,9 +696,24 @@ BUILD_TARGETS.forEach(buildTarget => {
  				compileExtensionMediaBuildTask,
 -				writeISODate('out-build'),
  				esbuildBundleTask,
 +			));
-+			gulp.task(prepackTask);
++			task.task(prepackTask);
 +
 +			const packingTask = task.define(`vscode${dashed(platform)}${dashed(arch)}${dashed(minified)}-packing`, task.series(
 +				writeISODate('out-build'),
  				vscodeTaskCI
  			));
 -		} else {
-+			gulp.task(packingTask);
++
++			task.task(packingTask);
 +
 +			// Remote Extension Host related
-+			gulp.task(task.define(`vscode-reh${dashed(platform)}${dashed(arch)}${dashed(minified)}-prepare`, task.series(esbuildServerTask)));
-+			gulp.task(task.define(`vscode-reh-web${dashed(platform)}${dashed(arch)}${dashed(minified)}-prepare`, task.series(esbuildServerWebTask)));
++			task.task(task.define(`vscode-reh${dashed(platform)}${dashed(arch)}${dashed(minified)}-prepare`, task.series(esbuildServerTask)));
++			task.task(task.define(`vscode-reh-web${dashed(platform)}${dashed(arch)}${dashed(minified)}-prepare`, task.series(esbuildServerWebTask)));
 +
  			vscodeTask = task.define(`vscode${dashed(platform)}${dashed(arch)}${dashed(minified)}`, task.series(
 -				minified ? compileBuildWithManglingTask : compileBuildWithoutManglingTask,
@@ -62,15 +63,16 @@ index 080d97f3..94e4457d 100644
 +			const prepackTask = task.define(`vscode${dashed(minified)}-prepack`, task.series(
 +				compileBuildWithoutManglingTask,
  				cleanExtensionsBuildTask,
-@@ -775,4 +812,14 @@ BUILD_TARGETS.forEach(buildTarget => {
+@@ -685,4 +723,15 @@ BUILD_TARGETS.forEach(buildTarget => {
  				minified ? minifyVSCodeTask : bundleVSCodeTask,
 +			));
-+			gulp.task(prepackTask);
++			task.task(prepackTask);
 +
 +			const packingTask = task.define(`vscode${dashed(platform)}${dashed(arch)}${dashed(minified)}-packing`, task.series(
  				vscodeTaskCI
  			));
-+			gulp.task(packingTask);
++
++			task.task(packingTask);
 +
 +			vscodeTask = task.define(`vscode${dashed(platform)}${dashed(arch)}${dashed(minified)}`, task.series(
 +				prepackTask,

@@ -1,6 +1,6 @@
-From d2e87c032360b57efbf753ac1e6ab057d3eb8106 Mon Sep 17 00:00:00 2001
+From 2f5286ed09a7e741bd262e1e985284a799c4c7ae Mon Sep 17 00:00:00 2001
 From: Matthieu Carteron <rubisetcie@gmail.com>
-Date: Tue, 28 Apr 2026 17:45:04 +0200
+Date: Thu, 9 Jul 2026 14:20:46 +0200
 Subject: [PATCH] Added 'showSideBySideButton' setting to toggle 'Split Editor' button.
 
 ---
@@ -65,7 +65,7 @@ index 678a225f..4dfce9a9 100644
  		switch (this.contextService.getWorkbenchState()) {
  			case WorkbenchState.EMPTY: return 'empty';
 diff --git a/src/vs/workbench/browser/parts/editor/editor.contribution.ts b/src/vs/workbench/browser/parts/editor/editor.contribution.ts
-index 55b2e787..b2c23995 100644
+index 52e0d7f5..408c5ff7 100644
 --- a/src/vs/workbench/browser/parts/editor/editor.contribution.ts
 +++ b/src/vs/workbench/browser/parts/editor/editor.contribution.ts
 @@ -11,7 +11,7 @@ import {
@@ -77,21 +77,21 @@ index 55b2e787..b2c23995 100644
  	IsSessionsWindowContext, ActiveCustomEditorDiffCanToggleLayoutContext, ActiveCustomEditorTextDiffContext, EditorPartModalContext
  } from '../../../common/contextkeys.js';
  import { SideBySideEditorInput, SideBySideEditorInputSerializer } from '../../../common/editor/sideBySideEditorInput.js';
-@@ -471,7 +471,7 @@ appendEditorToolItem(
+@@ -473,7 +473,7 @@ appendEditorToolItem(
  		title: localize('splitEditorRight', "Split Editor Right"),
  		icon: Codicon.splitHorizontal
  	},
--	SplitEditorsVertically.negate(),
-+	ContextKeyExpr.and(SplitEditorsVertically.negate(), ShowSplitEditorsButton),
+-	ContextKeyExpr.and(SplitEditorsVertically.negate(), IsSessionsWindowContext.toNegated()),
++	ContextKeyExpr.and(SplitEditorsVertically.negate(), ShowSplitEditorsButton, IsSessionsWindowContext.toNegated()),
  	SPLIT_ORDER,
  	{
  		id: SPLIT_EDITOR_DOWN,
-@@ -486,7 +486,7 @@ appendEditorToolItem(
+@@ -488,7 +488,7 @@ appendEditorToolItem(
  		title: localize('splitEditorDown', "Split Editor Down"),
  		icon: Codicon.splitVertical
  	},
--	SplitEditorsVertically,
-+	ContextKeyExpr.and(SplitEditorsVertically, ShowSplitEditorsButton),
+-	ContextKeyExpr.and(SplitEditorsVertically, IsSessionsWindowContext.toNegated()),
++	ContextKeyExpr.and(SplitEditorsVertically, ShowSplitEditorsButton, IsSessionsWindowContext.toNegated()),
  	SPLIT_ORDER,
  	{
  		id: SPLIT_EDITOR_RIGHT,
@@ -109,7 +109,7 @@ index 42d71b82..a6a28c0e 100644
  	private static readonly VIEW_STATE_PREFERENCE_KEY = 'sideBySideEditorViewState';
  
 diff --git a/src/vs/workbench/browser/workbench.contribution.ts b/src/vs/workbench/browser/workbench.contribution.ts
-index eeddba00..6cffa117 100644
+index f2a3b35e..e1cc1ff0 100644
 --- a/src/vs/workbench/browser/workbench.contribution.ts
 +++ b/src/vs/workbench/browser/workbench.contribution.ts
 @@ -343,6 +343,11 @@ const registry = Registry.as<IConfigurationRegistry>(ConfigurationExtensions.Con
@@ -125,10 +125,10 @@ index eeddba00..6cffa117 100644
  				'type': 'boolean',
  				'description': localize('closeEmptyGroups', "Controls the behavior of empty editor groups when the last tab in the group is closed. When enabled, empty groups will automatically close. When disabled, empty groups will remain part of the grid."),
 diff --git a/src/vs/workbench/common/contextkeys.ts b/src/vs/workbench/common/contextkeys.ts
-index c650e128..0fbb1708 100644
+index 51a4a3f2..a36e4d1f 100644
 --- a/src/vs/workbench/common/contextkeys.ts
 +++ b/src/vs/workbench/common/contextkeys.ts
-@@ -107,6 +107,7 @@ export const EditorsVisibleContext = new RawContextKey<boolean>('editorIsOpen',
+@@ -108,6 +108,7 @@ export const EditorAreaFocusContext = new RawContextKey<boolean>('editorAreaFocu
  export const InEditorZenModeContext = new RawContextKey<boolean>('inZenMode', false, localize('inZenMode', "Whether Zen mode is enabled"));
  export const IsMainEditorCenteredLayoutContext = new RawContextKey<boolean>('isCenteredLayout', false, localize('isMainEditorCenteredLayout', "Whether centered layout is enabled for the main editor"));
  export const SplitEditorsVertically = new RawContextKey<boolean>('splitEditorsVertically', false, localize('splitEditorsVertically', "Whether editors split vertically"));
