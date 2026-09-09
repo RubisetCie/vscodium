@@ -147,7 +147,7 @@ echo "ORG_NAME=\"${ORG_NAME}\""
 echo "TUNNEL_APP_NAME=\"${TUNNEL_APP_NAME}\""
 
 if [[ "${DISABLE_UPDATE}" == "yes" ]]; then
-  mv ../patches/00-update-disable.patch.yet ../patches/00-update-disable.patch
+  apply_patch ../patches/00-update-disable.patch.yet
 fi
 
 for file in ../patches/*.json; do
@@ -194,7 +194,7 @@ export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
 if [[ "${OS_NAME}" == "linux" ]]; then
   export VSCODE_SKIP_NODE_VERSION_CHECK=1
 
-   if [[ "${npm_config_arch}" == "arm" ]]; then
+  if [[ "${npm_config_arch}" == "arm" ]]; then
     export npm_config_arm_version=7
   fi
 elif [[ "${OS_NAME}" == "windows" ]]; then
@@ -237,6 +237,7 @@ cp package.json{,.bak}
 setpath "package" "version" "${RELEASE_VERSION%-insider}"
 
 replace 's|Microsoft Corporation|VSCodium|' package.json
+replace "s|--max-old-space-size=8192|--max-old-space-size=${MAX_OLD_SPACE_SIZE}|" package.json
 
 cp resources/server/manifest.json{,.bak}
 

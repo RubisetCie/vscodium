@@ -18,7 +18,9 @@ cd vscode || { echo "'vscode' dir not found"; exit 1; }
 
 GLIBC_VERSION="2.28"
 GLIBCXX_VERSION="3.4.26"
-NODE_VERSION="24.15.0"
+NODE_VERSION=$( grep -Eo '[0-9]+\.[0-9]+\.[0-9]+' remote/.npmrc )
+
+echo "NODE_VERSION=${NODE_VERSION}"
 
 export VSCODE_NODEJS_URLROOT='/download/release'
 export VSCODE_NODEJS_URLSUFFIX=''
@@ -34,15 +36,25 @@ elif [[ "${VSCODE_ARCH}" == "arm64" ]]; then
 
   export VSCODE_SKIP_SYSROOT=1
   export USE_GNUPP2A=1
+elif [[ "${VSCODE_ARCH}" == "armhf" ]]; then
+  VSCODE_REMOTE_DEPENDENCIES_CONTAINER_NAME="vscodium/vscodium-linux-build-agent:focal-devtoolset-armhf"
+  NODE_VERSION="24.20.0"
+
+  export VSCODE_NODEJS_REPOSITORY='4meters/node-for-armv7'
+  export VSCODE_NODEJS_TAG="v${NODE_VERSION}-armv7l"
+  export VSCODE_NODEJS_NAME="node-v${NODE_VERSION}-linux-armv7l.tar.gz"
 elif [[ "${VSCODE_ARCH}" == "ppc64le" ]]; then
   VSCODE_REMOTE_DEPENDENCIES_CONTAINER_NAME="vscodium/vscodium-linux-build-agent:focal-devtoolset-ppc64le"
   export VSCODE_SYSROOT_REPOSITORY='VSCodium/vscode-linux-build-agent'
   export VSCODE_SYSROOT_VERSION='20260706'
 elif [[ "${VSCODE_ARCH}" == "riscv64" ]]; then
-  VSCODE_REMOTE_DEPENDENCIES_CONTAINER_NAME="vscodium/vscodium-linux-build-agent:focal-devtoolset-riscv64"
+  VSCODE_REMOTE_DEPENDENCIES_CONTAINER_NAME="vscodium/vscodium-linux-build-agent:jammy-devtoolset-riscv64"
+  NODE_VERSION="24.18.0"
 
   export VSCODE_SKIP_SETUPENV=1
-  export VSCODE_NODEJS_SITE='https://unofficial-builds.nodejs.org'
+  export VSCODE_NODEJS_REPOSITORY='riscv-forks/node-riscv'
+  export VSCODE_NODEJS_TAG="v${NODE_VERSION}-riscv64.1"
+  export VSCODE_NODEJS_NAME="node-v${NODE_VERSION}-linux-${VSCODE_ARCH}-local1.tar.gz"
 elif [[ "${VSCODE_ARCH}" == "loong64" ]]; then
   VSCODE_REMOTE_DEPENDENCIES_CONTAINER_NAME="vscodium/vscodium-linux-build-agent:beige-devtoolset-loong64"
 

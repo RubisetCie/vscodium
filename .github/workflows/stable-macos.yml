@@ -44,6 +44,7 @@ env:
   GH_REPO_PATH: ${{ github.repository }}
   ORG_NAME: ${{ github.repository_owner }}
   OS_NAME: osx
+  MAX_OLD_SPACE_SIZE: 12288
   VSCODE_QUALITY: stable
   RELEASE_VERSION: ${{ github.event.inputs.version_tag }}
   SHOULD_BUILD_ZIP: ${{ github.event.inputs.build_zip == 'true' && 'yes' || 'no' }}
@@ -71,12 +72,12 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
 
       - name: Setup Python 3
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: '3.11'
         if: env.VSCODE_ARCH == 'x64'
