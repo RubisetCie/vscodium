@@ -74,6 +74,24 @@ index d192dd89..8bec6a04 100644
  	{ platform: 'linux', arch: 'arm64' },
 +	{ platform: 'linux', arch: 'ppc64le' },
  ];
+diff --git a/build/lib/copilot.ts b/build/lib/copilot.ts
+index 3d9cfbe2..ebd017ed 100644
+--- a/build/lib/copilot.ts
++++ b/build/lib/copilot.ts
+@@ -47,2 +47,5 @@ function toNodePlatformArch(platform: string, arch: string): { nodePlatform: str
+ 		nodeArch = 'arm';
++	} else if (arch === 'ppc64le') {
++		// VS Code build uses 'ppc64le'; Node reports process.arch === 'ppc64'
++		nodeArch = 'ppc64';
+ 	} else if (arch === 'alpine') {
+diff --git a/build/lib/osProxyResolver.ts b/build/lib/osProxyResolver.ts
+index 8772b8f8..b800f76f 100644
+--- a/build/lib/osProxyResolver.ts
++++ b/build/lib/osProxyResolver.ts
+@@ -24,2 +24,3 @@ function toOSProxyResolverPlatform(platform: string, arch: string): string | und
+ 				case 'arm64': return 'linux-arm64-gnu';
++				case 'ppc64le': return 'linux-ppc64le-gnu';
+ 				case 'x64': return 'linux-x64-gnu';
 diff --git a/build/linux/debian/calculate-deps.ts b/build/linux/debian/calculate-deps.ts
 index 98a96302..6c6bbf55 100644
 --- a/build/linux/debian/calculate-deps.ts

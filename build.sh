@@ -74,13 +74,11 @@ set -ex
   fi
 
   if [[ "${SHOULD_BUILD_REH}" != "no" ]]; then
-    npm run gulp "vscode-reh-${VSCODE_PLATFORM}-${VSCODE_ARCH}-min-prepare"
-    npm run gulp "vscode-reh-${VSCODE_PLATFORM}-${VSCODE_ARCH}-min-ci"
+    npm run gulp "vscode-reh-${VSCODE_PLATFORM}-${VSCODE_ARCH}-min-packing"
   fi
 
   if [[ "${SHOULD_BUILD_REH_WEB}" != "no" ]]; then
-    npm run gulp "vscode-reh-web-${VSCODE_PLATFORM}-${VSCODE_ARCH}-min-prepare"
-    npm run gulp "vscode-reh-web-${VSCODE_PLATFORM}-${VSCODE_ARCH}-min-ci"
+    npm run gulp "vscode-reh-web-${VSCODE_PLATFORM}-${VSCODE_ARCH}-min-packing"
   fi
 
   cd ..

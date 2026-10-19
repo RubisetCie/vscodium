@@ -1,6 +1,6 @@
-From dd8a5e9a7ba80251f98e3ccd5a97a5f71b1b70b8 Mon Sep 17 00:00:00 2001
+From 6f6103f857992c672b33372b0878fc24eecb3123 Mon Sep 17 00:00:00 2001
 From: Matthieu Carteron <rubisetcie@gmail.com>
-Date: Wed, 9 Sep 2026 11:06:56 +0200
+Date: Mon, 19 Oct 2026 09:50:17 +0200
 Subject: [PATCH] Added 'showSideBySideButton' setting to toggle 'Split Editor' button.
 
 ---
@@ -12,13 +12,13 @@ Subject: [PATCH] Added 'showSideBySideButton' setting to toggle 'Split Editor' b
  5 files changed, 23 insertions(+), 5 deletions(-)
 
 diff --git a/src/vs/workbench/browser/contextkeys.ts b/src/vs/workbench/browser/contextkeys.ts
-index 11fb7cce..22e1ba0e 100644
+index fe55713c..aa4a6f31 100644
 --- a/src/vs/workbench/browser/contextkeys.ts
 +++ b/src/vs/workbench/browser/contextkeys.ts
 @@ -6,7 +6,7 @@
  import { Disposable } from '../../base/common/lifecycle.js';
  import { IContextKeyService, IContextKey, setConstant as setConstantContextKey } from '../../platform/contextkey/common/contextkey.js';
- import { IsMacContext, IsLinuxContext, IsWindowsContext, IsWebContext, IsMacNativeContext, IsDevelopmentContext, IsIOSContext, ProductQualityContext, IsMobileContext } from '../../platform/contextkey/common/contextkeys.js';
+ import { IsMacContext, IsLinuxContext, IsWindowsContext, IsWebContext, IsMacNativeContext, IsDevelopmentContext, IsIOSContext, ProductQualityContext, IsMobileContext, IsChromeOSContext } from '../../platform/contextkey/common/contextkeys.js';
 -import { SplitEditorsVertically, InEditorZenModeContext, AuxiliaryBarVisibleContext, SecondarySideBarVisibleContext, SideBarVisibleContext, PanelAlignmentContext, PanelMaximizedContext, PanelVisibleContext, EmbedderIdentifierContext, EditorTabsVisibleContext, IsMainEditorCenteredLayoutContext, MainEditorAreaVisibleContext, DirtyWorkingCopiesContext, EmptyWorkspaceSupportContext, EnterMultiRootWorkspaceSupportContext, HasWebFileSystemAccess, IsMainWindowFullscreenContext, OpenFolderWorkspaceSupportContext, RemoteNameContext, VirtualWorkspaceContext, WorkbenchStateContext, WorkspaceFolderCountContext, PanelPositionContext, TemporaryWorkspaceContext, TitleBarVisibleContext, TitleBarStyleContext, IsAuxiliaryWindowFocusedContext, ActiveEditorGroupEmptyContext, ActiveEditorGroupIndexContext, ActiveEditorGroupLastContext, ActiveEditorGroupLockedContext, MultipleEditorGroupsContext, EditorsVisibleContext, AuxiliaryBarMaximizedContext, InAutomationContext, IsSessionsWindowContext } from '../common/contextkeys.js';
 +import { ShowSplitEditorsButton, SplitEditorsVertically, InEditorZenModeContext, AuxiliaryBarVisibleContext, SecondarySideBarVisibleContext, SideBarVisibleContext, PanelAlignmentContext, PanelMaximizedContext, PanelVisibleContext, EmbedderIdentifierContext, EditorTabsVisibleContext, IsMainEditorCenteredLayoutContext, MainEditorAreaVisibleContext, DirtyWorkingCopiesContext, EmptyWorkspaceSupportContext, EnterMultiRootWorkspaceSupportContext, HasWebFileSystemAccess, IsMainWindowFullscreenContext, OpenFolderWorkspaceSupportContext, RemoteNameContext, VirtualWorkspaceContext, WorkbenchStateContext, WorkspaceFolderCountContext, PanelPositionContext, TemporaryWorkspaceContext, TitleBarVisibleContext, TitleBarStyleContext, IsAuxiliaryWindowFocusedContext, ActiveEditorGroupEmptyContext, ActiveEditorGroupIndexContext, ActiveEditorGroupLastContext, ActiveEditorGroupLockedContext, MultipleEditorGroupsContext, EditorsVisibleContext, AuxiliaryBarMaximizedContext, InAutomationContext, IsSessionsWindowContext } from '../common/contextkeys.js';
  import { preferredSideBySideGroupDirection, GroupDirection, IEditorGroupsService } from '../services/editor/common/editorGroupsService.js';
@@ -32,7 +32,7 @@ index 11fb7cce..22e1ba0e 100644
  
  	private workbenchStateContext: IContextKey<string>;
  	private workspaceFolderCountContext: IContextKey<number>;
-@@ -163,6 +164,10 @@ export class WorkbenchContextKeysHandler extends Disposable {
+@@ -164,6 +165,10 @@ export class WorkbenchContextKeysHandler extends Disposable {
  		this.splitEditorsVerticallyContext = SplitEditorsVertically.bindTo(this.contextKeyService);
  		this.updateSplitEditorsVerticallyContext();
  
@@ -43,7 +43,7 @@ index 11fb7cce..22e1ba0e 100644
  		// Window
  		this.isMainWindowFullscreenContext = IsMainWindowFullscreenContext.bindTo(this.contextKeyService);
  		this.isAuxiliaryWindowFocusedContext = IsAuxiliaryWindowFocusedContext.bindTo(this.contextKeyService);
-@@ -234,6 +239,9 @@ export class WorkbenchContextKeysHandler extends Disposable {
+@@ -235,6 +240,9 @@ export class WorkbenchContextKeysHandler extends Disposable {
  			if (e.affectsConfiguration('workbench.editor.openSideBySideDirection')) {
  				this.updateSplitEditorsVerticallyContext();
  			}
@@ -53,7 +53,7 @@ index 11fb7cce..22e1ba0e 100644
  		}));
  
  		this._register(this.layoutService.onDidChangeZenMode(enabled => this.inZenModeContext.set(enabled)));
-@@ -320,6 +328,10 @@ export class WorkbenchContextKeysHandler extends Disposable {
+@@ -321,6 +329,10 @@ export class WorkbenchContextKeysHandler extends Disposable {
  		this.splitEditorsVerticallyContext.set(direction === GroupDirection.DOWN);
  	}
  
@@ -65,7 +65,7 @@ index 11fb7cce..22e1ba0e 100644
  		switch (this.contextService.getWorkbenchState()) {
  			case WorkbenchState.EMPTY: return 'empty';
 diff --git a/src/vs/workbench/browser/parts/editor/editor.contribution.ts b/src/vs/workbench/browser/parts/editor/editor.contribution.ts
-index 8a970a8e..f482fd49 100644
+index 5f4cad34..026cc2af 100644
 --- a/src/vs/workbench/browser/parts/editor/editor.contribution.ts
 +++ b/src/vs/workbench/browser/parts/editor/editor.contribution.ts
 @@ -10,7 +10,7 @@ import { IEditorFactoryRegistry, EditorExtensions } from '../../../common/editor
@@ -77,7 +77,7 @@ index 8a970a8e..f482fd49 100644
  	IsAuxiliaryWindowContext, ActiveCompareEditorCanSwapContext, MultipleEditorsSelectedInGroupContext, SplitEditorsVertically, ActiveEditorCannotCloseContext,
  	IsSessionsWindowContext, ActiveCustomEditorDiffCanToggleLayoutContext, ActiveCustomEditorTextDiffContext, EditorPartModalContext
  } from '../../../common/contextkeys.js';
-@@ -473,7 +473,7 @@ appendEditorToolItem(
+@@ -536,7 +536,7 @@ appendEditorToolItem(
  		title: localize('splitEditorRight', "Split Editor Right"),
  		icon: Codicon.splitHorizontal
  	},
@@ -86,7 +86,7 @@ index 8a970a8e..f482fd49 100644
  	SPLIT_ORDER,
  	{
  		id: SPLIT_EDITOR_DOWN,
-@@ -488,7 +488,7 @@ appendEditorToolItem(
+@@ -551,7 +551,7 @@ appendEditorToolItem(
  		title: localize('splitEditorDown', "Split Editor Down"),
  		icon: Codicon.splitVertical
  	},
@@ -109,10 +109,10 @@ index 42d71b82..a6a28c0e 100644
  	private static readonly VIEW_STATE_PREFERENCE_KEY = 'sideBySideEditorViewState';
  
 diff --git a/src/vs/workbench/browser/workbench.contribution.ts b/src/vs/workbench/browser/workbench.contribution.ts
-index 9953cb0c..ab536620 100644
+index 31a8afa3..80131170 100644
 --- a/src/vs/workbench/browser/workbench.contribution.ts
 +++ b/src/vs/workbench/browser/workbench.contribution.ts
-@@ -350,6 +350,11 @@ const registry = Registry.as<IConfigurationRegistry>(ConfigurationExtensions.Con
+@@ -360,6 +360,11 @@ const registry = Registry.as<IConfigurationRegistry>(ConfigurationExtensions.Con
  				'default': 'right',
  				'markdownDescription': localize('sideBySideDirection', "Controls the default direction of editors that are opened side by side (for example, from the Explorer). By default, editors will open on the right hand side of the currently active one. If changed to `down`, the editors will open below the currently active one. This also impacts the split editor action in the editor toolbar.")
  			},
@@ -125,7 +125,7 @@ index 9953cb0c..ab536620 100644
  				'type': 'boolean',
  				'description': localize('closeEmptyGroups', "Controls the behavior of empty editor groups when the last tab in the group is closed. When enabled, empty groups will automatically close. When disabled, empty groups will remain part of the grid."),
 diff --git a/src/vs/workbench/common/contextkeys.ts b/src/vs/workbench/common/contextkeys.ts
-index 41aace1b..d8f80bc8 100644
+index 6fc33f03..efdf2362 100644
 --- a/src/vs/workbench/common/contextkeys.ts
 +++ b/src/vs/workbench/common/contextkeys.ts
 @@ -124,6 +124,7 @@ export const EditorAreaFocusContext = new RawContextKey<boolean>('editorAreaFocu

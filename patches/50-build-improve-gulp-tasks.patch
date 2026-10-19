@@ -1,81 +1,69 @@
+diff --git a/build/gulpfile.reh.ts b/build/gulpfile.reh.ts
+index c643cf99..5688ee60 100644
+--- a/build/gulpfile.reh.ts
++++ b/build/gulpfile.reh.ts
+@@ -562,3 +562,3 @@ function prepareCopilotRipgrepShimTaskREH(platform: string, arch: string, destin
+ 
+-			const serverTask = task.define(`vscode-${type}${dashed(platform)}${dashed(arch)}${dashed(minified)}`, task.series(
++			const prepackTask = task.define(`vscode-${type}${dashed(minified)}-prepack`, task.series(
+ 				copyCodiconsTask,
+@@ -569,2 +569,6 @@ function prepareCopilotRipgrepShimTaskREH(platform: string, arch: string, destin
+ 				compileExtensionMediaBuildTask,
++			));
++			task.task(prepackTask);
++
++			const packingTask = task.define(`vscode-${type}${dashed(platform)}${dashed(arch)}${dashed(minified)}-packing`, task.series(
+ 				writeISODate('out-build'),
+@@ -573,2 +577,8 @@ function prepareCopilotRipgrepShimTaskREH(platform: string, arch: string, destin
+ 			));
++			task.task(packingTask);
++
++			const serverTask = task.define(`vscode-${type}${dashed(platform)}${dashed(arch)}${dashed(minified)}`, task.series(
++				prepackTask,
++				packingTask,
++			));
+ 			task.task(serverTask);
 diff --git a/build/gulpfile.vscode.ts b/build/gulpfile.vscode.ts
-index 53987f88..7c7789b7 100644
+index 95ae1790..28f786e6 100644
 --- a/build/gulpfile.vscode.ts
 +++ b/build/gulpfile.vscode.ts
-@@ -27,3 +27,3 @@ import { createAsar } from './lib/asar.ts';
- import minimist from 'minimist';
--import { compileBuildWithoutManglingTask, compileBuildWithManglingTask } from './gulpfile.compile.ts';
-+import { compileBuildWithoutManglingTask } from './gulpfile.compile.ts';
- import { compileNonNativeExtensionsBuildTask, compileNativeExtensionsBuildTask, compileAllExtensionsBuildTask, compileExtensionMediaBuildTask, cleanExtensionsBuildTask, compileCopilotExtensionBuildTask } from './gulpfile.extensions.ts';
-@@ -667,3 +667,26 @@ BUILD_TARGETS.forEach(buildTarget => {
- 			);
--			vscodeTask = task.define(`vscode${dashed(platform)}${dashed(arch)}${dashed(minified)}`, task.series(
+@@ -574,4 +574,4 @@ const BUILD_TARGETS = [
+ 	{ platform: 'win32', arch: 'arm64' },
+-	{ platform: 'darwin', arch: 'x64', opts: { stats: true } },
+-	{ platform: 'darwin', arch: 'arm64', opts: { stats: true } },
++	{ platform: 'darwin', arch: 'x64' },
++	{ platform: 'darwin', arch: 'arm64' },
+ 	{ platform: 'linux', arch: 'x64' },
+@@ -584,3 +584,2 @@ BUILD_TARGETS.forEach(buildTarget => {
+ 	const arch = buildTarget.arch;
+-	const opts = buildTarget.opts;
+ 
+@@ -593,3 +592,3 @@ BUILD_TARGETS.forEach(buildTarget => {
+ 			util.rimraf(path.join(buildRoot, destinationFolderName)),
+-			packageTask(platform, arch, sourceFolderName, destinationFolderName, opts),
++			packageTask(platform, arch, sourceFolderName, destinationFolderName),
+ 			prepareCopilotRipgrepShimTask(platform, arch, destinationFolderName)
+@@ -617,3 +616,4 @@ BUILD_TARGETS.forEach(buildTarget => {
+ 		);
+-		const vscodeTask = task.define(`vscode${dashed(platform)}${dashed(arch)}${dashed(minified)}`, task.series(
 +
-+			const esbuildServerTask = task.define(
-+				`esbuild-vscode-reh${dashed(platform)}${dashed(arch)}${dashed(minified)}`,
-+				() => runEsbuildBundle(
-+					`out-vscode-reh${dashed(minified)}`,
-+					!!minified,
-+					true,
-+					'server',
-+					minified && useCdnSourceMapsForPackagingTasks ? `${sourceMappingURLBase}/core` : undefined
-+				)
-+			);
++		const prepackTask = task.define(`vscode${dashed(minified)}-prepack`, task.series(
+ 			copyCodiconsTask,
+@@ -621,4 +621,7 @@ BUILD_TARGETS.forEach(buildTarget => {
+ 			compileNonNativeExtensionsBuildTask,
+-			compileCopilotExtensionBuildTask,
+ 			compileExtensionMediaBuildTask,
++		));
++		task.task(prepackTask);
 +
-+			const esbuildServerWebTask = task.define(
-+				`esbuild-vscode-reh-web${dashed(platform)}${dashed(arch)}${dashed(minified)}`,
-+				() => runEsbuildBundle(
-+					`out-vscode-reh-web${dashed(minified)}`,
-+					!!minified,
-+					true,
-+					'server-web',
-+					minified && useCdnSourceMapsForPackagingTasks ? `${sourceMappingURLBase}/core` : undefined
-+				)
-+			);
++		const packingTask = task.define(`vscode${dashed(platform)}${dashed(arch)}${dashed(minified)}-packing`, task.series(
+ 			writeISODate('out-build'),
+@@ -627,2 +630,8 @@ BUILD_TARGETS.forEach(buildTarget => {
+ 		));
++		task.task(packingTask);
 +
-+			const prepackTask = task.define(`vscode${dashed(minified)}-prepack`, task.series(
- 				copyCodiconsTask,
-@@ -673,9 +696,24 @@ BUILD_TARGETS.forEach(buildTarget => {
- 				compileExtensionMediaBuildTask,
--				writeISODate('out-build'),
- 				esbuildBundleTask,
-+			));
-+			task.task(prepackTask);
-+
-+			const packingTask = task.define(`vscode${dashed(platform)}${dashed(arch)}${dashed(minified)}-packing`, task.series(
-+				writeISODate('out-build'),
- 				vscodeTaskCI
- 			));
--		} else {
-+
-+			task.task(packingTask);
-+
-+			// Remote Extension Host related
-+			task.task(task.define(`vscode-reh${dashed(platform)}${dashed(arch)}${dashed(minified)}-prepare`, task.series(esbuildServerTask)));
-+			task.task(task.define(`vscode-reh-web${dashed(platform)}${dashed(arch)}${dashed(minified)}-prepare`, task.series(esbuildServerWebTask)));
-+
- 			vscodeTask = task.define(`vscode${dashed(platform)}${dashed(arch)}${dashed(minified)}`, task.series(
--				minified ? compileBuildWithManglingTask : compileBuildWithoutManglingTask,
-+				prepackTask,
-+				packingTask,
-+			));
-+		} else {
-+			const prepackTask = task.define(`vscode${dashed(minified)}-prepack`, task.series(
-+				compileBuildWithoutManglingTask,
- 				cleanExtensionsBuildTask,
-@@ -685,4 +723,15 @@ BUILD_TARGETS.forEach(buildTarget => {
- 				minified ? minifyVSCodeTask : bundleVSCodeTask,
-+			));
-+			task.task(prepackTask);
-+
-+			const packingTask = task.define(`vscode${dashed(platform)}${dashed(arch)}${dashed(minified)}-packing`, task.series(
- 				vscodeTaskCI
- 			));
-+
-+			task.task(packingTask);
-+
-+			vscodeTask = task.define(`vscode${dashed(platform)}${dashed(arch)}${dashed(minified)}`, task.series(
-+				prepackTask,
-+				packingTask,
-+			));
- 		}
++		const vscodeTask = task.define(`vscode${dashed(platform)}${dashed(arch)}${dashed(minified)}`, task.series(
++			prepackTask,
++			packingTask,
++		));
+ 		task.task(vscodeTask);
